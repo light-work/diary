@@ -34,6 +34,18 @@ public class ResCoupleRequireStoreImpl implements ResCoupleRequireStore {
         }
     }
 
+
+    @Override
+    @ConnectManager
+    public List<ResCoupleRequire> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resCoupleRequireService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
     @Override
     @ConnectManager
     public List<ResCoupleRequire> getListByCoupleId(Long jobId) throws StoreException {

@@ -31,6 +31,12 @@ public class ResCoupleEffectService extends HQuery implements ResCoupleEffectSto
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResCoupleEffect> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResCoupleEffect.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResCoupleEffect resCoupleEffect, Persistent persistent) throws StoreException {
         $(resCoupleEffect).save(persistent);

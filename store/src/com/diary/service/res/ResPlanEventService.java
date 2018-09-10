@@ -38,6 +38,13 @@ public class ResPlanEventService extends HQuery implements ResPlanEventStore {
         return $($alias("planId", "planId"), $eq("planId.id", planId)).list(ResPlanEvent.class);
     }
 
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResPlanEvent> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResPlanEvent.class);
+    }
+
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResPlanEvent resPlanEvent, Persistent persistent) throws StoreException {

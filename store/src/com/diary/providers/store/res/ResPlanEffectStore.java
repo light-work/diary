@@ -16,6 +16,9 @@ public interface ResPlanEffectStore {
 
     List<ResPlanEffect> getListByPlanId(Long planId) throws StoreException;
 
+    List<ResPlanEffect> getList(List<Selector> selectorList) throws StoreException;
+
+
     void save(ResPlanEffect resPlanEffect, Persistent persistent) throws StoreException;
 
     void delete(ResPlanEffect resPlanEffect) throws StoreException;

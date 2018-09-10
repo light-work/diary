@@ -16,6 +16,9 @@ public interface ResCoupleRequireStore {
 
     List<ResCoupleRequire> getListByCoupleId(Long coupleId) throws StoreException;
 
+    List<ResCoupleRequire> getList(List<Selector> selectorList) throws StoreException;
+
+
     void save(ResCoupleRequire resCoupleRequire, Persistent persistent) throws StoreException;
 
     void delete(ResCoupleRequire resCoupleRequire) throws StoreException;

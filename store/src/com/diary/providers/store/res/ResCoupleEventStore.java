@@ -19,6 +19,8 @@ public interface ResCoupleEventStore {
 
     List<ResCoupleEvent> getListByCoupleId(Long jobId) throws StoreException;
 
+    List<ResCoupleEvent> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResCoupleEvent resCoupleEvent, Persistent persistent) throws StoreException;
 
     void save(ResCoupleEvent resCoupleEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent,

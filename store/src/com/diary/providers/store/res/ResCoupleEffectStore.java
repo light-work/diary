@@ -16,6 +16,9 @@ public interface ResCoupleEffectStore {
 
     List<ResCoupleEffect> getListByCoupleId(Long coupleId) throws StoreException;
 
+    List<ResCoupleEffect> getList(List<Selector> selectorList) throws StoreException;
+
+
     void save(ResCoupleEffect resCoupleEffect, Persistent persistent) throws StoreException;
 
     void delete(ResCoupleEffect resCoupleEffect) throws StoreException;

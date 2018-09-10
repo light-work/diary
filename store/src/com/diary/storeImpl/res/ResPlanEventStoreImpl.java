@@ -48,7 +48,16 @@ public class ResPlanEventStoreImpl implements ResPlanEventStore {
         }
     }
 
-
+    @Override
+    @ConnectManager
+    public List<ResPlanEvent> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resPlanEventService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
 
     @Override

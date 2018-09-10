@@ -38,6 +38,13 @@ public class ResCoupleEventService extends HQuery implements ResCoupleEventStore
         return $($alias("coupleId", "coupleId"), $eq("coupleId.id", coupleId)).list(ResCoupleEvent.class);
     }
 
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResCoupleEvent> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResCoupleEvent.class);
+    }
+
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResCoupleEvent resCoupleEvent, Persistent persistent) throws StoreException {

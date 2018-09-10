@@ -24,6 +24,14 @@ public class ResCoupleRequireService extends HQuery implements ResCoupleRequireS
         return $(id, selectors).get(ResCoupleRequire.class);
     }
 
+
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResCoupleRequire> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResCoupleRequire.class);
+    }
+
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public List<ResCoupleRequire> getListByCoupleId(Long coupleId) throws StoreException {

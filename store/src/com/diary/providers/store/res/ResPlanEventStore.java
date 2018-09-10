@@ -19,6 +19,8 @@ public interface ResPlanEventStore {
 
     List<ResPlanEvent> getListByPlanId(Long jobId) throws StoreException;
 
+    List<ResPlanEvent> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResPlanEvent resPlanEvent, Persistent persistent) throws StoreException;
 
     void save(ResPlanEvent resPlanEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent,

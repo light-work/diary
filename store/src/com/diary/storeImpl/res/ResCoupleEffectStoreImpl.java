@@ -36,6 +36,17 @@ public class ResCoupleEffectStoreImpl implements ResCoupleEffectStore {
 
     @Override
     @ConnectManager
+    public List<ResCoupleEffect> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resCoupleEffectService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public List<ResCoupleEffect> getListByCoupleId(Long jobId) throws StoreException {
         try {
             return this.resCoupleEffectService.getListByCoupleId(jobId);
