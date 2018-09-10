@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="store">
+    <output-path>$PROJECT_DIR$/out/artifacts/store</output-path>
+    <root id="archive" name="store.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="store" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="common" />
+          <element id="library" level="project" name="api" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="store/web/Web" />
+    </root>
+  </artifact>
+</component>
