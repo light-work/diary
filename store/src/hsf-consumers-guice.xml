@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hsf>
+    <group id="diary_dev">
+        <consumer id="appUserCarStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserCarStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserClothesStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserClothesStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserCoupleStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserCoupleStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="appUserEventStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserHouseStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserHouseStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserJobStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserJobStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserLadyStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserLadyStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserLuxuryStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserLuxuryStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserManStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserManStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserPlanStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserPlanStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <!--      res   -->
+
+        <consumer id="resCarStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCarStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resCarEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCarEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resCarEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCarEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resClothesStoreConsumer"
+                  interface="com.diary.providers.store.res.ResClothesStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resClothesEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResClothesEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="resClothesEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResClothesEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resCoupleStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCoupleStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resCoupleEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCoupleEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resCoupleEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCoupleEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resCoupleRequireStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCoupleRequireStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resHouseStoreConsumer"
+                  interface="com.diary.providers.store.res.ResHouseStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resHouseEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResHouseEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resHouseEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResHouseEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resJobStoreConsumer"
+                  interface="com.diary.providers.store.res.ResJobStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resJobEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResJobEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resJobEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResJobEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resJobRequireStoreConsumer"
+                  interface="com.diary.providers.store.res.ResJobRequireStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resLuxuryStoreConsumer"
+                  interface="com.diary.providers.store.res.ResLuxuryStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resLuxuryEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResLuxuryEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resLuxuryEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResLuxuryEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resPlanStoreConsumer"
+                  interface="com.diary.providers.store.res.ResPlanStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resPlanEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResPlanEffectStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resPlanEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResPlanEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="resEventStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resEventYesStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventYesStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resEventNoStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventNoStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resEventYesResultStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventYesResultStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="resEventNoResultStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventNoResultStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+
+
+        <consumer id="jobBizConsumer"
+                  interface="com.diary.providers.biz.res.JobBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+    </group>
+
+</hsf>
