@@ -1,0 +1,37 @@
+<component name="libraryTable">
+  <library name="api">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libAPI/0-jersey2-guice-spi-1.0.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/aopalliance-repackaged-2.4.0-b25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/hk2-api-2.4.0-b25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/hk2-locator-2.4.0-b25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/hk2-utils-2.4.0-b25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/javax.annotation-api-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/javax.json-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/javax.json-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/javax.ws.rs-api-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-client-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-common-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-container-servlet-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-container-servlet-core-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-entity-filtering-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-guava-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-guice-1.19.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-json-1.19.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-media-jaxb-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-media-json-processing-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-media-multipart-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey-server-2.19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jersey2-guice-0.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jjwt-0.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jsonp-jaxrs-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/jsr305-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/mimepull-1.9.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/netty-3.2.4.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/osgi-resource-locator-2.5.0-b06.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libAPI/validation-api-1.1.0.Final.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

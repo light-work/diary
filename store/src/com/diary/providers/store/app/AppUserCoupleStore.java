@@ -1,0 +1,28 @@
+package com.diary.providers.store.app;
+
+
+import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserCouple;
+import org.guiceside.commons.Page;
+import org.guiceside.persistence.hibernate.dao.enums.Persistent;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
+
+import java.util.List;
+
+
+public interface AppUserCoupleStore {
+
+
+    AppUserCouple getById(Long id, Selector... selectors) throws StoreException;
+
+
+    Page<AppUserCouple> getPageList(int start,
+                                 int limit, List<Selector> selectorList) throws StoreException;
+
+    List<AppUserCouple> getByUserId(Long userId) throws StoreException;
+
+    void save(AppUserCouple appUserCouple, Persistent persistent) throws StoreException;
+
+    void delete(AppUserCouple appUserCouple) throws StoreException;
+
+}

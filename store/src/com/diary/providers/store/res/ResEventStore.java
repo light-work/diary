@@ -1,0 +1,28 @@
+package com.diary.providers.store.res;
+
+
+import com.diary.common.StoreException;
+import com.diary.entity.res.ResEvent;
+import com.diary.entity.res.ResEventNo;
+import com.diary.entity.res.ResEventYes;
+import org.guiceside.commons.Page;
+import org.guiceside.persistence.hibernate.dao.enums.Persistent;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
+
+import java.util.List;
+
+
+public interface ResEventStore {
+
+
+    ResEvent getById(Long id, Selector... selectors) throws StoreException;
+
+    Page<ResEvent> getPageList(int start,
+                             int limit, List<Selector> selectorList) throws StoreException;
+
+    void save(ResEvent resEvent, Persistent persistent, ResEventYes resEventYes, Persistent resEventYesPersistent,
+              ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException;
+
+    void delete(ResEvent resEvent) throws StoreException;
+
+}

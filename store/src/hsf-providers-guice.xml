@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hsf>
+    <group id="diary_dev">
+
+        <!-- package  sys -->
+
+        <service id="appUserCarStore" class="com.diary.storeImpl.app.AppUserCarStoreImpl"/>
+        <provider id="appUserCarStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserCarStore"
+                  ref="appUserCarStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserClothesStore" class="com.diary.storeImpl.app.AppUserClothesStoreImpl"/>
+        <provider id="appUserClothesStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserClothesStore"
+                  ref="appUserClothesStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserCoupleStore" class="com.diary.storeImpl.app.AppUserCoupleStoreImpl"/>
+        <provider id="appUserCoupleStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserCoupleStore"
+                  ref="appUserCoupleStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserEventStore" class="com.diary.storeImpl.app.AppUserEventStoreImpl"/>
+        <provider id="appUserEventStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserEventStore"
+                  ref="appUserEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserHouseStore" class="com.diary.storeImpl.app.AppUserHouseStoreImpl"/>
+        <provider id="appUserHouseStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserHouseStore"
+                  ref="appUserHouseStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserJobStore" class="com.diary.storeImpl.app.AppUserJobStoreImpl"/>
+        <provider id="appUserJobStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserJobStore"
+                  ref="appUserJobStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserLadyStore" class="com.diary.storeImpl.app.AppUserLadyStoreImpl"/>
+        <provider id="appUserLadyStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserLadyStore"
+                  ref="appUserLadyStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserLuxuryStore" class="com.diary.storeImpl.app.AppUserLuxuryStoreImpl"/>
+        <provider id="appUserLuxuryStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserLuxuryStore"
+                  ref="appUserLuxuryStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserManStore" class="com.diary.storeImpl.app.AppUserManStoreImpl"/>
+        <provider id="appUserManStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserManStore"
+                  ref="appUserManStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserPlanStore" class="com.diary.storeImpl.app.AppUserPlanStoreImpl"/>
+        <provider id="appUserPlanStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserPlanStore"
+                  ref="appUserPlanStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserStore" class="com.diary.storeImpl.app.AppUserStoreImpl"/>
+        <provider id="appUserStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserStore"
+                  ref="appUserStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+        
+        
+        
+        
+        
+        <!--      res   -->
+
+        <service id="resCarStore" class="com.diary.storeImpl.res.ResCarStoreImpl"/>
+        <provider id="resCarStoreProvider"
+                  interface="com.diary.providers.store.res.ResCarStore"
+                  ref="resCarStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resCarEffectStore" class="com.diary.storeImpl.res.ResCarEffectStoreImpl"/>
+        <provider id="resCarEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResCarEffectStore"
+                  ref="resCarEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resCarEventStore" class="com.diary.storeImpl.res.ResCarEventStoreImpl"/>
+        <provider id="resCarEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResCarEventStore"
+                  ref="resCarEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+
+        <service id="resClothesStore" class="com.diary.storeImpl.res.ResClothesStoreImpl"/>
+        <provider id="resClothesStoreProvider"
+                  interface="com.diary.providers.store.res.ResClothesStore"
+                  ref="resClothesStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resClothesEffectStore" class="com.diary.storeImpl.res.ResClothesEffectStoreImpl"/>
+        <provider id="resClothesEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResClothesEffectStore"
+                  ref="resClothesEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resClothesEventStore" class="com.diary.storeImpl.res.ResClothesEventStoreImpl"/>
+        <provider id="resClothesEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResClothesEventStore"
+                  ref="resClothesEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resCoupleStore" class="com.diary.storeImpl.res.ResCoupleStoreImpl"/>
+        <provider id="resCoupleStoreProvider"
+                  interface="com.diary.providers.store.res.ResCoupleStore"
+                  ref="resCoupleStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resCoupleEventStore" class="com.diary.storeImpl.res.ResCoupleEventStoreImpl"/>
+        <provider id="resCoupleEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResCoupleEventStore"
+                  ref="resCoupleEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resCoupleEffectStore" class="com.diary.storeImpl.res.ResCoupleEffectStoreImpl"/>
+        <provider id="resCoupleEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResCoupleEffectStore"
+                  ref="resCoupleEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resCoupleRequireStore" class="com.diary.storeImpl.res.ResCoupleRequireStoreImpl"/>
+        <provider id="resCoupleRequireStoreProvider"
+                  interface="com.diary.providers.store.res.ResCoupleRequireStore"
+                  ref="resCoupleRequireStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resHouseStore" class="com.diary.storeImpl.res.ResHouseStoreImpl"/>
+        <provider id="resHouseStoreProvider"
+                  interface="com.diary.providers.store.res.ResHouseStore"
+                  ref="resHouseStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resHouseEffectStore" class="com.diary.storeImpl.res.ResHouseEffectStoreImpl"/>
+        <provider id="resHouseEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResHouseEffectStore"
+                  ref="resHouseEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resHouseEventStore" class="com.diary.storeImpl.res.ResHouseEventStoreImpl"/>
+        <provider id="resHouseEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResHouseEventStore"
+                  ref="resHouseEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resJobStore" class="com.diary.storeImpl.res.ResJobStoreImpl"/>
+        <provider id="resJobStoreProvider"
+                  interface="com.diary.providers.store.res.ResJobStore"
+                  ref="resJobStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resJobEffectStore" class="com.diary.storeImpl.res.ResJobEffectStoreImpl"/>
+        <provider id="resJobEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResJobEffectStore"
+                  ref="resJobEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resJobEventStore" class="com.diary.storeImpl.res.ResJobEventStoreImpl"/>
+        <provider id="resJobEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResJobEventStore"
+                  ref="resJobEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resJobRequireStore" class="com.diary.storeImpl.res.ResJobRequireStoreImpl"/>
+        <provider id="resJobRequireStoreProvider"
+                  interface="com.diary.providers.store.res.ResJobRequireStore"
+                  ref="resJobRequireStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resLuxuryStore" class="com.diary.storeImpl.res.ResLuxuryStoreImpl"/>
+        <provider id="resLuxuryStoreProvider"
+                  interface="com.diary.providers.store.res.ResLuxuryStore"
+                  ref="resLuxuryStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resLuxuryEffectStore" class="com.diary.storeImpl.res.ResLuxuryEffectStoreImpl"/>
+        <provider id="resLuxuryEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResLuxuryEffectStore"
+                  ref="resLuxuryEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resLuxuryEventStore" class="com.diary.storeImpl.res.ResLuxuryEventStoreImpl"/>
+        <provider id="resLuxuryEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResLuxuryEventStore"
+                  ref="resLuxuryEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resPlanStore" class="com.diary.storeImpl.res.ResPlanStoreImpl"/>
+        <provider id="resPlanStoreProvider"
+                  interface="com.diary.providers.store.res.ResPlanStore"
+                  ref="resPlanStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resPlanEffectStore" class="com.diary.storeImpl.res.ResPlanEffectStoreImpl"/>
+        <provider id="resPlanEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResPlanEffectStore"
+                  ref="resPlanEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resPlanEventStore" class="com.diary.storeImpl.res.ResPlanEventStoreImpl"/>
+        <provider id="resPlanEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResPlanEventStore"
+                  ref="resPlanEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resEventStore" class="com.diary.storeImpl.res.ResEventStoreImpl"/>
+        <provider id="resEventStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventStore"
+                  ref="resEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resEventYesStore" class="com.diary.storeImpl.res.ResEventYesStoreImpl"/>
+        <provider id="resEventYesStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventYesStore"
+                  ref="resEventYesStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resEventNoStore" class="com.diary.storeImpl.res.ResEventNoStoreImpl"/>
+        <provider id="resEventNoStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventNoStore"
+                  ref="resEventNoStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resEventYesResultStore" class="com.diary.storeImpl.res.ResEventYesResultStoreImpl"/>
+        <provider id="resEventYesResultStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventYesResultStore"
+                  ref="resEventYesResultStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resEventNoResultStore" class="com.diary.storeImpl.res.ResEventNoResultStoreImpl"/>
+        <provider id="resEventNoResultStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventNoResultStore"
+                  ref="resEventNoResultStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+
+
+
+
+
+        <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
+        <provider id="commonBizProvider"
+                  interface="com.diary.providers.biz.res.CommonBiz"
+                  ref="commonBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="jobBiz" class="com.diary.bizImpl.res.JobBizImp"/>
+        <provider id="jobBizProvider"
+                  interface="com.diary.providers.biz.res.JobBiz"
+                  ref="jobBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="planBiz" class="com.diary.bizImpl.res.PlanBizImp"/>
+        <provider id="planBizProvider"
+                  interface="com.diary.providers.biz.res.PlanBiz"
+                  ref="planBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="coupleBiz" class="com.diary.bizImpl.res.CoupleBizImp"/>
+        <provider id="coupleBizProvider"
+                  interface="com.diary.providers.biz.res.CoupleBiz"
+                  ref="coupleBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+    </group>
+</hsf>
