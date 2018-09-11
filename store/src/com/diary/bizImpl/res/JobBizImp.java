@@ -75,7 +75,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     }
 
     @Override
-    public String add(String title, Long price, Integer gender, String desc) throws BizException {
+    public String add(String title, Integer price, Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -86,7 +86,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                 resJob.setTitle(title);
                 resJob.setPrice(price);
                 resJob.setGender(gender);
-                resJob.setDesc(desc);
+                resJob.setRemarks(remarks);
                 bind(resJob, 1l);
                 resJob.setUseYn("Y");
                 resJobStore.save(resJob, Persistent.SAVE);
@@ -103,7 +103,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Long price, Integer gender, String desc) throws BizException {
+    public String edit(Long id, String title, Integer price, Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -114,7 +114,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                     resJob.setTitle(title);
                     resJob.setPrice(price);
                     resJob.setGender(gender);
-                    resJob.setDesc(desc);
+                    resJob.setRemarks(remarks);
                     bind(resJob, 1l);
                     resJobStore.save(resJob, Persistent.UPDATE);
                     resultObj.put("result", 0);
@@ -181,7 +181,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     }
 
     @Override
-    public String addEffect(Long jobId, String operation, String attrKey, Long value) throws BizException {
+    public String addEffect(Long jobId, String operation, String attrKey, Integer value) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -213,7 +213,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     }
 
     @Override
-    public String editEffect(Long id, String operation, String attrKey, Long value) throws BizException {
+    public String editEffect(Long id, String operation, String attrKey, Integer value) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -296,7 +296,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     }
 
     @Override
-    public String addRequire(Long jobId, String attrKey, Long value) throws BizException {
+    public String addRequire(Long jobId, String attrKey, Integer value) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -327,7 +327,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     }
 
     @Override
-    public String editRequire(Long id, String attrKey, Long value) throws BizException {
+    public String editRequire(Long id, String attrKey, Integer value) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {

@@ -71,8 +71,8 @@
 
         <!--是否将运行期生成的SQL输出到日志以供调试-->
 
-        <property name="show_sql">false</property>
-        <property name="format_sql">false</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
 
         <!--指定连接的语言-->
         <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>

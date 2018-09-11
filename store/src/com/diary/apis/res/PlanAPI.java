@@ -77,8 +77,8 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
-            @FormParam("title") String title, @FormParam("price") Long price,
-            @FormParam("gender") Integer gender, @FormParam("desc") String desc) {
+            @FormParam("title") String title, @FormParam("price") Integer price,
+            @FormParam("gender") Integer gender, @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -91,15 +91,15 @@ public class PlanAPI extends BaseAPI {
         if (gender == null) {
             errorBuilder.append("gender was null.");
         }
-        if (StringUtils.isBlank(desc)) {
-            errorBuilder.append("desc was null.");
+        if (StringUtils.isBlank(remarks)) {
+            errorBuilder.append("remarks was null.");
         }
 
         if (errorBuilder.length() == 0) {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.add(title, price, gender, desc);
+                    bizResult = planBiz.add(title, price, gender, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -116,8 +116,8 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
-                         @FormParam("title") String title, @FormParam("price") Long price,
-                         @FormParam("gender") Integer gender, @FormParam("desc") String desc) {
+                         @FormParam("title") String title, @FormParam("price") Integer price,
+                         @FormParam("gender") Integer gender, @FormParam("desc") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -133,15 +133,15 @@ public class PlanAPI extends BaseAPI {
         if (gender == null) {
             errorBuilder.append("gender was null.");
         }
-        if (StringUtils.isBlank(desc)) {
-            errorBuilder.append("desc was null.");
+        if (StringUtils.isBlank(remarks)) {
+            errorBuilder.append("remarks was null.");
         }
 
         if (errorBuilder.length() == 0) {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, price, gender, desc);
+                    bizResult = planBiz.edit(id, title, price, gender, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -216,7 +216,7 @@ public class PlanAPI extends BaseAPI {
     public Response addEffect(@FormParam("planId") Long planId,
                               @FormParam("operation") String operation,
                               @FormParam("attrKey") String attrKey,
-                              @FormParam("value") Long value) {
+                              @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -255,7 +255,7 @@ public class PlanAPI extends BaseAPI {
     public Response editEffect(@FormParam("id") Long id,
                               @FormParam("operation") String operation,
                               @FormParam("attrKey") String attrKey,
-                              @FormParam("value") Long value) {
+                              @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
