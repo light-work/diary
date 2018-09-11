@@ -205,11 +205,27 @@
 
 
 
+        <consumer id="commonBizConsumer"
+                  interface="com.diary.providers.biz.res.CommonBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
 
         <consumer id="jobBizConsumer"
                   interface="com.diary.providers.biz.res.JobBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
+
+        <consumer id="coupleBizConsumer"
+                  interface="com.diary.providers.biz.res.CoupleBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="planBizConsumer"
+                  interface="com.diary.providers.biz.res.PlanBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
     </group>
 
 </hsf>

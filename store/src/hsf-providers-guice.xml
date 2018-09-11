@@ -299,11 +299,32 @@
 
 
 
+        <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
+        <provider id="commonBizProvider"
+                  interface="com.diary.providers.biz.res.CommonBiz"
+                  ref="commonBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
         <service id="jobBiz" class="com.diary.bizImpl.res.JobBizImp"/>
         <provider id="jobBizProvider"
                   interface="com.diary.providers.biz.res.JobBiz"
                   ref="jobBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="planBiz" class="com.diary.bizImpl.res.PlanBizImp"/>
+        <provider id="planBizProvider"
+                  interface="com.diary.providers.biz.res.PlanBiz"
+                  ref="planBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="coupleBiz" class="com.diary.bizImpl.res.CoupleBizImp"/>
+        <provider id="coupleBizProvider"
+                  interface="com.diary.providers.biz.res.CoupleBiz"
+                  ref="coupleBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>
