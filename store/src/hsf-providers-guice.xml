@@ -327,5 +327,33 @@
                   ref="coupleBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
+
+        <service id="carBiz" class="com.diary.bizImpl.res.CarBizImp"/>
+        <provider id="carBizProvider"
+                  interface="com.diary.providers.biz.res.CarBiz"
+                  ref="carBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="houseBiz" class="com.diary.bizImpl.res.HouseBizImp"/>
+        <provider id="houseBizProvider"
+                  interface="com.diary.providers.biz.res.HouseBiz"
+                  ref="houseBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="clothesBiz" class="com.diary.bizImpl.res.ClothesBizImp"/>
+        <provider id="clothesBizProvider"
+                  interface="com.diary.providers.biz.res.ClothesBiz"
+                  ref="clothesBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="luxuryBiz" class="com.diary.bizImpl.res.LuxuryBizImp"/>
+        <provider id="luxuryBizProvider"
+                  interface="com.diary.providers.biz.res.LuxuryBiz"
+                  ref="luxuryBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
     </group>
 </hsf>

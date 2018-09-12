@@ -226,6 +226,27 @@
         </consumer>
 
 
+        <consumer id="carBizConsumer"
+                  interface="com.diary.providers.biz.res.CarBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="houseBizConsumer"
+                  interface="com.diary.providers.biz.res.HouseBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="clothesBizConsumer"
+                  interface="com.diary.providers.biz.res.ClothesBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="luxuryBizConsumer"
+                  interface="com.diary.providers.biz.res.LuxuryBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
     </group>
 
 </hsf>

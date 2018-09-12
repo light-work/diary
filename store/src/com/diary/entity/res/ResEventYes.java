@@ -29,7 +29,7 @@ public class ResEventYes extends IdEntity implements Tracker {
 
     private String content;
 
-    private Integer order;
+    private Integer displayOrder;
 
     private String picUrl;
 
@@ -98,13 +98,13 @@ public class ResEventYes extends IdEntity implements Tracker {
         this.content = content;
     }
 
-    @Column(name = "ORDER")
-    public Integer getOrder() {
-        return order;
+    @Column(name = "DISPLAY_ORDER")
+    public Integer getDisplayOrder() {
+        return displayOrder;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
     @Column(name = "CREATED", updatable = false)

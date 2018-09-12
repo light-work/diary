@@ -31,6 +31,12 @@ public class ResCarEffectService extends HQuery implements ResCarEffectStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResCarEffect> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResCarEffect.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResCarEffect resCarEffect, Persistent persistent) throws StoreException {
         $(resCarEffect).save(persistent);

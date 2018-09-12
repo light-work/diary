@@ -47,6 +47,17 @@ public class ResHouseEffectStoreImpl implements ResHouseEffectStore {
 
     @Override
     @ConnectManager
+    public List<ResHouseEffect> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resHouseEffectService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResHouseEffect resHouseEffect) throws StoreException {
         try {
             this.resHouseEffectService.delete(resHouseEffect);
@@ -55,6 +66,7 @@ public class ResHouseEffectStoreImpl implements ResHouseEffectStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
 
     @Override
     @ConnectManager

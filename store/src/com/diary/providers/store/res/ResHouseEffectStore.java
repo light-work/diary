@@ -16,6 +16,9 @@ public interface ResHouseEffectStore {
 
     List<ResHouseEffect> getListByHouseId(Long jobId) throws StoreException;
 
+    List<ResHouseEffect> getList(List<Selector> selectorList) throws StoreException;
+
+
     void save(ResHouseEffect resHouseEffect, Persistent persistent) throws StoreException;
 
     void delete(ResHouseEffect resHouseEffect) throws StoreException;

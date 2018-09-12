@@ -36,6 +36,17 @@ public class ResCarEffectStoreImpl implements ResCarEffectStore {
 
     @Override
     @ConnectManager
+    public List<ResCarEffect> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resCarEffectService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public List<ResCarEffect> getListByCarId(Long jobId) throws StoreException {
         try {
             return this.resCarEffectService.getListByCarId(jobId);

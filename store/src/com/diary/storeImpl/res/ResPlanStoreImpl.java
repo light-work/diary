@@ -37,6 +37,17 @@ public class ResPlanStoreImpl implements ResPlanStore {
 
     @Override
     @ConnectManager
+    public Integer getMaxOrder() throws StoreException {
+        try {
+            return this.resPlanService.getMaxOrder();
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResPlan> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resPlanService.getPageList(start, limit, selectorList);

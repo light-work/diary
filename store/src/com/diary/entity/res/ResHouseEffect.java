@@ -27,7 +27,7 @@ public class ResHouseEffect extends IdEntity implements Tracker {
 
     private String attrKey;
 
-    private Long value;
+    private Integer value;
 
 
     private Date created;
@@ -78,11 +78,11 @@ public class ResHouseEffect extends IdEntity implements Tracker {
     }
 
     @Column(name = "VALUE")
-    public Long getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(Long value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 

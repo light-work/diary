@@ -16,6 +16,8 @@ public interface ResClothesEffectStore {
 
     List<ResClothesEffect> getListByClothesId(Long clothesId) throws StoreException;
 
+    List<ResClothesEffect> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResClothesEffect resClothesEffect, Persistent persistent) throws StoreException;
 
     void delete(ResClothesEffect resClothesEffect) throws StoreException;

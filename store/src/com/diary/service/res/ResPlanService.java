@@ -21,10 +21,16 @@ public class ResPlanService extends HQuery implements ResPlanStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResPlan getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResPlan.class);
     }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public Integer getMaxOrder() throws StoreException {
+        return $($max("displayOrder")).value(ResPlan.class,Integer.class);
+    }
+
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)

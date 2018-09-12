@@ -26,11 +26,11 @@ public class ResCar extends IdEntity implements Tracker {
 
     private String title;
 
-    private Long buyPrice;
+    private Integer buyPrice;
 
-    private Long sellPrice;
+    private Integer sellPrice;
 
-    private String desc;
+    private String remarks;
 
     private Date created;
 
@@ -61,32 +61,31 @@ public class ResCar extends IdEntity implements Tracker {
     }
 
     @Column(name = "BUY_PRICE")
-    public Long getBuyPrice() {
+    public Integer getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(Long buyPrice) {
+    public void setBuyPrice(Integer buyPrice) {
         this.buyPrice = buyPrice;
     }
 
     @Column(name = "SELL_PRICE")
-    public Long getSellPrice() {
+    public Integer getSellPrice() {
         return sellPrice;
     }
 
-    public void setSellPrice(Long sellPrice) {
+    public void setSellPrice(Integer sellPrice) {
         this.sellPrice = sellPrice;
     }
 
-    @Column(name = "DESC")
-    public String getDesc() {
-        return desc;
+    @Column(name = "REMARKS")
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
-
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {
         return created;

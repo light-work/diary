@@ -26,11 +26,13 @@ public class ResPlan extends IdEntity implements Tracker {
 
     private String title;
 
-    private Long price;
+    private Integer price;
 
     private Integer gender;
 
-    private String desc;
+    private String remarks;
+
+    private Integer displayOrder;
 
     private Date created;
 
@@ -61,11 +63,11 @@ public class ResPlan extends IdEntity implements Tracker {
     }
 
     @Column(name = "PRICE")
-    public Long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -78,13 +80,23 @@ public class ResPlan extends IdEntity implements Tracker {
         this.gender = gender;
     }
 
-    @Column(name = "DESC")
-    public String getDesc() {
-        return desc;
+    @Column(name = "DISPLAY_ORDER")
+    public Integer getDisplayOrder() {
+        return displayOrder;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+
+    @Column(name = "REMARKS")
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     @Column(name = "CREATED", updatable = false)

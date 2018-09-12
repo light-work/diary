@@ -43,7 +43,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
             ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
             if (resPlanStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$order("price", true));
+                selectorList.add(SelectorUtils.$order("displayOrder", true));
                 Page<ResPlan> resPlanPage = resPlanStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
                 if (resPlanPage != null) {
@@ -73,18 +73,23 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String add(String title, Long price, Integer gender, String desc) throws BizException {
+    public String add(String title, Integer price, Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
             if (resPlanStore != null) {
+                Integer currentOrder = resPlanStore.getMaxOrder();
+                if (currentOrder == null) {
+                    currentOrder = 0;
+                }
                 ResPlan resPlan = new ResPlan();
                 resPlan.setId(DrdsIDUtils.getID(DrdsTable.RES));
                 resPlan.setTitle(title);
                 resPlan.setPrice(price);
                 resPlan.setGender(gender);
-                resPlan.setDesc(desc);
+                resPlan.setDisplayOrder(currentOrder + 1);
+                resPlan.setRemarks(remarks);
                 bind(resPlan, 1l);
                 resPlan.setUseYn("Y");
                 resPlanStore.save(resPlan, Persistent.SAVE);
@@ -101,7 +106,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Long price, Integer gender, String desc) throws BizException {
+    public String edit(Long id, String title, Integer price, Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -112,7 +117,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     resPlan.setTitle(title);
                     resPlan.setPrice(price);
                     resPlan.setGender(gender);
-                    resPlan.setDesc(desc);
+                    resPlan.setRemarks(remarks);
                     bind(resPlan, 1l);
                     resPlanStore.save(resPlan, Persistent.UPDATE);
                     resultObj.put("result", 0);
@@ -179,7 +184,66 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String addEffect(Long jobId, String operation, String attrKey, Long value) throws BizException {
+    public String up(Long id) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
+            if (resPlanStore != null) {
+                ResPlan resPlan = resPlanStore.getById(id);
+                if (resPlan != null) {
+                    Integer currentOrder = resPlan.getDisplayOrder();
+                    if (currentOrder > 1) {
+                        currentOrder = currentOrder - 1;
+                        resPlan.setDisplayOrder(currentOrder);
+                    }
+                    bind(resPlan, 1l);
+                    resPlanStore.save(resPlan, Persistent.UPDATE);
+                    resultObj.put("result", 0);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String down(Long id) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
+            if (resPlanStore != null) {
+                ResPlan resPlan = resPlanStore.getById(id);
+                if (resPlan != null) {
+                    Integer maxOrder = resPlanStore.getMaxOrder();
+                    Integer currentOrder = resPlan.getDisplayOrder();
+                    if (currentOrder < maxOrder) {
+                        currentOrder = currentOrder + 1;
+                        resPlan.setDisplayOrder(currentOrder);
+                    }
+                    bind(resPlan, 1l);
+                    resPlanStore.save(resPlan, Persistent.UPDATE);
+                    resultObj.put("result", 0);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String addEffect(Long jobId, String operation, String attrKey, Integer value) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -211,7 +275,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String editEffect(Long id, String operation, String attrKey, Long value) throws BizException {
+    public String editEffect(Long id, String operation, String attrKey, Integer value) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -269,7 +333,6 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
             if (resPlanEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
-                selectorList.add(SelectorUtils.$order("value", true));
                 List<ResPlanEffect> jobEffectList = resPlanEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {
