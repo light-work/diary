@@ -15,6 +15,8 @@ public interface ResPlanStore {
 
     ResPlan getById(Long id, Selector... selectors) throws StoreException;
 
+    Integer getMaxOrder() throws StoreException;
+
     Page<ResPlan> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 

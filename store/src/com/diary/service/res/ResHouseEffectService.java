@@ -31,6 +31,11 @@ public class ResHouseEffectService extends HQuery implements ResHouseEffectStore
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResHouseEffect> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResHouseEffect.class);
+    }
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResHouseEffect resHouseEffect, Persistent persistent) throws StoreException {
         $(resHouseEffect).save(persistent);

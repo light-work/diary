@@ -1,7 +1,7 @@
 package com.diary.apis.res;
 
 import com.diary.common.BaseAPI;
-import com.diary.providers.biz.res.PlanBiz;
+import com.diary.providers.biz.res.LuxuryBiz;
 import net.sf.json.JSONObject;
 import org.guiceside.commons.lang.StringUtils;
 
@@ -12,8 +12,8 @@ import javax.ws.rs.core.Response;
 /**
  * Created by gbcp on 16/8/8.
  */
-@Path("/plan")
-public class PlanAPI extends BaseAPI {
+@Path("/luxury")
+public class LuxuryAPI extends BaseAPI {
 
 
     @Path("/list")
@@ -33,7 +33,7 @@ public class PlanAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.list(start, limit, keyword);
                 }
@@ -58,7 +58,7 @@ public class PlanAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.effectList(planId);
                 }
@@ -77,19 +77,19 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
-            @FormParam("title") String title, @FormParam("price") Integer price,
-            @FormParam("gender") Integer gender, @FormParam("remarks") String remarks) {
+            @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
+            @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
         if (StringUtils.isBlank(title)) {
             errorBuilder.append("title was null.");
         }
-        if (price == null) {
-            errorBuilder.append("price was null.");
+        if (buyPrice == null) {
+            errorBuilder.append("buyPrice was null.");
         }
-        if (gender == null) {
-            errorBuilder.append("gender was null.");
+        if (sellPrice == null) {
+            errorBuilder.append("sellPrice was null.");
         }
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
@@ -97,9 +97,9 @@ public class PlanAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.add(title, price, gender, remarks);
+                    bizResult = planBiz.add(title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -116,8 +116,8 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
-                         @FormParam("title") String title, @FormParam("price") Integer price,
-                         @FormParam("gender") Integer gender, @FormParam("desc") String remarks) {
+                         @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
+                         @FormParam("sellPrice") Integer sellPrice, @FormParam("desc") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -127,11 +127,11 @@ public class PlanAPI extends BaseAPI {
         if (StringUtils.isBlank(title)) {
             errorBuilder.append("title was null.");
         }
-        if (price == null) {
-            errorBuilder.append("price was null.");
+        if (buyPrice == null) {
+            errorBuilder.append("buyPrice was null.");
         }
-        if (gender == null) {
-            errorBuilder.append("gender was null.");
+        if (sellPrice == null) {
+            errorBuilder.append("sellPrice was null.");
         }
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
@@ -139,9 +139,9 @@ public class PlanAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, price, gender, remarks);
+                    bizResult = planBiz.edit(id, title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -168,7 +168,7 @@ public class PlanAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.enable(id);
                 }
@@ -196,65 +196,9 @@ public class PlanAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.disable(id);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        result = buildResult(result, errorBuilder, bizResult);
-        return Response.ok().entity(result.toString()).build();
-    }
-
-    @Path("/up")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    @Consumes("application/x-www-form-urlencoded")
-    public Response up(@FormParam("id") Long id) {
-        JSONObject result = new JSONObject();
-        String bizResult = null;
-        StringBuilder errorBuilder = new StringBuilder();
-        if (id == null) {
-            errorBuilder.append("id was null.");
-        }
-
-
-        if (errorBuilder.length() == 0) {
-            try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.up(id);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        result = buildResult(result, errorBuilder, bizResult);
-        return Response.ok().entity(result.toString()).build();
-    }
-
-    @Path("/down")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    @Consumes("application/x-www-form-urlencoded")
-    public Response down(@FormParam("id") Long id) {
-        JSONObject result = new JSONObject();
-        String bizResult = null;
-        StringBuilder errorBuilder = new StringBuilder();
-        if (id == null) {
-            errorBuilder.append("id was null.");
-        }
-
-
-        if (errorBuilder.length() == 0) {
-            try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.down(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -291,7 +235,7 @@ public class PlanAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.addEffect(planId, operation, attrKey, value);
                 }
@@ -330,7 +274,7 @@ public class PlanAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.editEffect(id, operation, attrKey, value);
                 }
@@ -356,7 +300,7 @@ public class PlanAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
+                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (planBiz != null) {
                     bizResult = planBiz.deleteEffect(id);
                 }

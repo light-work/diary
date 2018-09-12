@@ -31,6 +31,12 @@ public class ResLuxuryEffectService extends HQuery implements ResLuxuryEffectSto
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResLuxuryEffect> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResLuxuryEffect.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResLuxuryEffect resLuxuryEffect, Persistent persistent) throws StoreException {
         $(resLuxuryEffect).save(persistent);

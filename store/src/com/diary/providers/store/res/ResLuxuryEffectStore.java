@@ -16,6 +16,9 @@ public interface ResLuxuryEffectStore {
 
     List<ResLuxuryEffect> getListByLuxuryId(Long jobId) throws StoreException;
 
+    List<ResLuxuryEffect> getList(List<Selector> selectorList) throws StoreException;
+
+
     void save(ResLuxuryEffect resLuxuryEffect, Persistent persistent) throws StoreException;
 
     void delete(ResLuxuryEffect resLuxuryEffect) throws StoreException;

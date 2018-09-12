@@ -36,6 +36,17 @@ public class ResLuxuryEffectStoreImpl implements ResLuxuryEffectStore {
 
     @Override
     @ConnectManager
+    public List<ResLuxuryEffect> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resLuxuryEffectService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public List<ResLuxuryEffect> getListByLuxuryId(Long jobId) throws StoreException {
         try {
             return this.resLuxuryEffectService.getListByLuxuryId(jobId);

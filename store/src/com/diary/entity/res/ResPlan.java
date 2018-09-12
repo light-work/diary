@@ -32,6 +32,8 @@ public class ResPlan extends IdEntity implements Tracker {
 
     private String remarks;
 
+    private Integer displayOrder;
+
     private Date created;
 
     private String createdBy;
@@ -76,6 +78,15 @@ public class ResPlan extends IdEntity implements Tracker {
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    @Column(name = "DISPLAY_ORDER")
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 

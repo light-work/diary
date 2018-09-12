@@ -16,6 +16,9 @@ public interface ResCarEffectStore {
 
     List<ResCarEffect> getListByCarId(Long carId) throws StoreException;
 
+    List<ResCarEffect> getList(List<Selector> selectorList) throws StoreException;
+
+
     void save(ResCarEffect resCarEffect, Persistent persistent) throws StoreException;
 
     void delete(ResCarEffect resCarEffect) throws StoreException;

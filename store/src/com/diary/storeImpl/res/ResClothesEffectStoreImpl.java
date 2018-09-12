@@ -36,6 +36,17 @@ public class ResClothesEffectStoreImpl implements ResClothesEffectStore {
 
     @Override
     @ConnectManager
+    public List<ResClothesEffect> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resClothesEffectService.getList(selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public List<ResClothesEffect> getListByClothesId(Long jobId) throws StoreException {
         try {
             return this.resClothesEffectService.getListByClothesId(jobId);
