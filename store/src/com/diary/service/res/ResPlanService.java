@@ -25,10 +25,17 @@ public class ResPlanService extends HQuery implements ResPlanStore {
         return $(id, selectors).get(ResPlan.class);
     }
 
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResPlan getByOrder(Integer displayOrder) throws StoreException {
+        return $($eq("displayOrder", displayOrder)).get(ResPlan.class);
+    }
+
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public Integer getMaxOrder() throws StoreException {
-        return $($max("displayOrder")).value(ResPlan.class,Integer.class);
+        return $($max("displayOrder")).value(ResPlan.class, Integer.class);
     }
 
 
@@ -42,6 +49,13 @@ public class ResPlanService extends HQuery implements ResPlanStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResPlan resPlan, Persistent persistent) throws StoreException {
         $(resPlan).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void saveOrder(ResPlan resPlan, Persistent persistent, ResPlan resPlanOrder) throws StoreException {
+        $(resPlan).save(persistent);
+        $(resPlanOrder).save(persistent);
     }
 
     @Override

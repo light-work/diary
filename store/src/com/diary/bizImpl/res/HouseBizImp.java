@@ -268,7 +268,8 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
             ResHouseEffectStore resHouseEffectStore = hsfServiceFactory.consumer(ResHouseEffectStore.class);
             if (resHouseEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
+                selectorList.add(SelectorUtils.$alias("houseId", "houseId"));
+                selectorList.add(SelectorUtils.$eq("houseId.id", jobId));
                 List<ResHouseEffect> jobEffectList = resHouseEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {

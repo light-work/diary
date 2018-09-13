@@ -268,7 +268,8 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
             ResClothesEffectStore resClothesEffectStore = hsfServiceFactory.consumer(ResClothesEffectStore.class);
             if (resClothesEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
+                selectorList.add(SelectorUtils.$alias("clothesId", "clothesId"));
+                selectorList.add(SelectorUtils.$eq("clothesId.id", jobId));
                 List<ResClothesEffect> jobEffectList = resClothesEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {

@@ -268,7 +268,8 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
             ResLuxuryEffectStore resLuxuryEffectStore = hsfServiceFactory.consumer(ResLuxuryEffectStore.class);
             if (resLuxuryEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
+                selectorList.add(SelectorUtils.$alias("luxuryId", "luxuryId"));
+                selectorList.add(SelectorUtils.$eq("luxuryId.id", jobId));
                 List<ResLuxuryEffect> jobEffectList = resLuxuryEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {

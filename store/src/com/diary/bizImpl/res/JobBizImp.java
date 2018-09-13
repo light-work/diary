@@ -272,7 +272,6 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$alias("jobId", "jobId"));
                 selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
-                selectorList.add(SelectorUtils.$order("attrKey", true));
                 List<ResJobEffect> jobEffectList = resJobEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {
@@ -386,7 +385,6 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$alias("jobId", "jobId"));
                 selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
-                selectorList.add(SelectorUtils.$order("attrKey", true));
                 List<ResJobRequire> jobRequireList = resJobRequireStore.getList(selectorList);
                 JSONArray jobRequireArray = new JSONArray();
                 if (jobRequireList != null && !jobRequireList.isEmpty()) {

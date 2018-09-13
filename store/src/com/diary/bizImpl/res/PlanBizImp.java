@@ -73,7 +73,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String add(String title,  Integer gender, String remarks) throws BizException {
+    public String add(String title, Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -105,7 +105,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String edit(Long id, String title,  Integer gender, String remarks) throws BizException {
+    public String edit(Long id, String title, Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -193,11 +193,16 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     Integer currentOrder = resPlan.getDisplayOrder();
                     if (currentOrder > 1) {
                         currentOrder = currentOrder - 1;
-                        resPlan.setDisplayOrder(currentOrder);
+                        ResPlan resPlanOrder = resPlanStore.getByOrder(currentOrder);
+                        if (resPlanOrder != null) {
+                            resPlanOrder.setDisplayOrder(resPlanOrder.getDisplayOrder() + 1);
+                            resPlan.setDisplayOrder(currentOrder);
+                            bind(resPlan, 1l);
+                            bind(resPlanOrder, 1l);
+                            resPlanStore.saveOrder(resPlan, Persistent.UPDATE, resPlanOrder);
+                            resultObj.put("result", 0);
+                        }
                     }
-                    bind(resPlan, 1l);
-                    resPlanStore.save(resPlan, Persistent.UPDATE);
-                    resultObj.put("result", 0);
                 }
             }
         } catch (Exception ex) {
@@ -223,11 +228,16 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     Integer currentOrder = resPlan.getDisplayOrder();
                     if (currentOrder < maxOrder) {
                         currentOrder = currentOrder + 1;
-                        resPlan.setDisplayOrder(currentOrder);
+                        ResPlan resPlanOrder = resPlanStore.getByOrder(currentOrder);
+                        if(resPlanOrder!=null){
+                            resPlanOrder.setDisplayOrder(resPlanOrder.getDisplayOrder()-1);
+                            resPlan.setDisplayOrder(currentOrder);
+                            bind(resPlan, 1l);
+                            bind(resPlanOrder, 1l);
+                            resPlanStore.saveOrder(resPlan, Persistent.UPDATE,resPlanOrder);
+                            resultObj.put("result", 0);
+                        }
                     }
-                    bind(resPlan, 1l);
-                    resPlanStore.save(resPlan, Persistent.UPDATE);
-                    resultObj.put("result", 0);
                 }
             }
         } catch (Exception ex) {
@@ -330,7 +340,8 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
             ResPlanEffectStore resPlanEffectStore = hsfServiceFactory.consumer(ResPlanEffectStore.class);
             if (resPlanEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
+                selectorList.add(SelectorUtils.$alias("planId", "planId"));
+                selectorList.add(SelectorUtils.$eq("planId.id", jobId));
                 List<ResPlanEffect> jobEffectList = resPlanEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {
