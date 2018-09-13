@@ -7,9 +7,9 @@ public interface PlanBiz {
 
     String list(Integer start, Integer limit, String keyword) throws BizException;
 
-    String add(String title, Integer price, Integer gender, String remarks) throws BizException;
+    String add(String title, Integer gender, String remarks) throws BizException;
 
-    String edit(Long id, String title, Integer price, Integer gender, String remarks) throws BizException;
+    String edit(Long id, String title, Integer gender, String remarks) throws BizException;
 
     String enable(Long id) throws BizException;
 

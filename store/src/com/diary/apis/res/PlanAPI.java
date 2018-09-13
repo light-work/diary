@@ -77,7 +77,7 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
-            @FormParam("title") String title, @FormParam("price") Integer price,
+            @FormParam("title") String title,
             @FormParam("gender") Integer gender, @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
@@ -85,9 +85,7 @@ public class PlanAPI extends BaseAPI {
         if (StringUtils.isBlank(title)) {
             errorBuilder.append("title was null.");
         }
-        if (price == null) {
-            errorBuilder.append("price was null.");
-        }
+
         if (gender == null) {
             errorBuilder.append("gender was null.");
         }
@@ -99,7 +97,7 @@ public class PlanAPI extends BaseAPI {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.add(title, price, gender, remarks);
+                    bizResult = planBiz.add(title,  gender, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -116,7 +114,7 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
-                         @FormParam("title") String title, @FormParam("price") Integer price,
+                         @FormParam("title") String title,
                          @FormParam("gender") Integer gender, @FormParam("desc") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
@@ -127,9 +125,7 @@ public class PlanAPI extends BaseAPI {
         if (StringUtils.isBlank(title)) {
             errorBuilder.append("title was null.");
         }
-        if (price == null) {
-            errorBuilder.append("price was null.");
-        }
+
         if (gender == null) {
             errorBuilder.append("gender was null.");
         }
@@ -141,7 +137,7 @@ public class PlanAPI extends BaseAPI {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, price, gender, remarks);
+                    bizResult = planBiz.edit(id, title,  gender, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
