@@ -26,8 +26,6 @@ public class ResPlan extends IdEntity implements Tracker {
 
     private String title;
 
-    private Integer price;
-
     private Integer gender;
 
     private String remarks;
@@ -60,15 +58,6 @@ public class ResPlan extends IdEntity implements Tracker {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    @Column(name = "PRICE")
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
     }
 
     @Column(name = "GENDER")
