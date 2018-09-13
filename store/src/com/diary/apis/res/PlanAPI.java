@@ -115,7 +115,7 @@ public class PlanAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
                          @FormParam("title") String title,
-                         @FormParam("gender") Integer gender, @FormParam("desc") String remarks) {
+                         @FormParam("gender") Integer gender, @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();

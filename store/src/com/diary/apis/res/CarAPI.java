@@ -117,7 +117,7 @@ public class CarAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
                          @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-                         @FormParam("sellPrice") Integer sellPrice, @FormParam("desc") String remarks) {
+                         @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
