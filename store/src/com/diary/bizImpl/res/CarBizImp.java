@@ -268,7 +268,8 @@ public class CarBizImp extends BaseBiz implements CarBiz {
             ResCarEffectStore resCarEffectStore = hsfServiceFactory.consumer(ResCarEffectStore.class);
             if (resCarEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
+                selectorList.add(SelectorUtils.$alias("carId", "carId"));
+                selectorList.add(SelectorUtils.$eq("carId.id", jobId));
                 List<ResCarEffect> jobEffectList = resCarEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {

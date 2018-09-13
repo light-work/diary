@@ -35,6 +35,18 @@ public class ResPlanStoreImpl implements ResPlanStore {
         }
     }
 
+
+    @Override
+    @ConnectManager
+    public ResPlan getByOrder(Integer displayOrder) throws StoreException {
+        try {
+            return this.resPlanService.getByOrder(displayOrder);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
     @Override
     @ConnectManager
     public Integer getMaxOrder() throws StoreException {
@@ -73,6 +85,17 @@ public class ResPlanStoreImpl implements ResPlanStore {
     public void save(ResPlan appUser, Persistent persistent) throws StoreException {
         try {
             this.resPlanService.save(appUser, persistent);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void saveOrder(ResPlan resPlan, Persistent persistent, ResPlan resPlanOrder) throws StoreException {
+        try {
+            this.resPlanService.saveOrder(resPlan, persistent,resPlanOrder);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

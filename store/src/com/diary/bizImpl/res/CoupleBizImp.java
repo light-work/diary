@@ -270,8 +270,7 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
             ResCoupleEffectStore resCoupleEffectStore = hsfServiceFactory.consumer(ResCoupleEffectStore.class);
             if (resCoupleEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
-                selectorList.add(SelectorUtils.$order("value", true));
+                selectorList.add(SelectorUtils.$eq("coupleId.id", jobId));
                 List<ResCoupleEffect> jobEffectList = resCoupleEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {
@@ -383,8 +382,8 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
             ResCoupleRequireStore resCoupleRequireStore = hsfServiceFactory.consumer(ResCoupleRequireStore.class);
             if (resCoupleRequireStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
-                selectorList.add(SelectorUtils.$order("value", true));
+                selectorList.add(SelectorUtils.$alias("coupleId", "coupleId"));
+                selectorList.add(SelectorUtils.$eq("coupleId.id", jobId));
                 List<ResCoupleRequire> jobRequireList = resCoupleRequireStore.getList(selectorList);
                 JSONArray jobRequireArray = new JSONArray();
                 if (jobRequireList != null && !jobRequireList.isEmpty()) {
