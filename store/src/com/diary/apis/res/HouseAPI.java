@@ -33,9 +33,9 @@ public class HouseAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.list(start, limit, keyword);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.list(start, limit, keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -49,18 +49,18 @@ public class HouseAPI extends BaseAPI {
     @Path("/effectList")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response effectList(@QueryParam("planId") Long planId) {
+    public Response effectList(@QueryParam("houseId") Long houseId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (houseId == null) {
+            errorBuilder.append("houseId was null.");
         }
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.effectList(planId);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.effectList(houseId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -97,9 +97,9 @@ public class HouseAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.add(title, buyPrice, sellPrice, remarks);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.add(title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -139,9 +139,9 @@ public class HouseAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.edit(id, title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -168,9 +168,9 @@ public class HouseAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.enable(id);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.enable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -196,9 +196,9 @@ public class HouseAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.disable(id);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.disable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -213,15 +213,15 @@ public class HouseAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response addEffect(@FormParam("planId") Long planId,
+    public Response addEffect(@FormParam("houseId") Long houseId,
                               @FormParam("operation") String operation,
                               @FormParam("attrKey") String attrKey,
                               @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (houseId == null) {
+            errorBuilder.append("houseId was null.");
         }
         if (StringUtils.isBlank(operation)) {
             errorBuilder.append("operation was null.");
@@ -235,9 +235,9 @@ public class HouseAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.addEffect(planId, operation, attrKey, value);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.addEffect(houseId, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -274,9 +274,9 @@ public class HouseAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.editEffect(id, operation, attrKey, value);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.editEffect(id, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -300,9 +300,9 @@ public class HouseAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                HouseBiz planBiz = hsfServiceFactory.consumer(HouseBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.deleteEffect(id);
+                HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
+                if (houseBiz != null) {
+                    bizResult = houseBiz.deleteEffect(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

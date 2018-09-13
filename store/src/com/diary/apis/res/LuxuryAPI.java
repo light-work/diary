@@ -33,9 +33,9 @@ public class LuxuryAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.list(start, limit, keyword);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.list(start, limit, keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -49,18 +49,18 @@ public class LuxuryAPI extends BaseAPI {
     @Path("/effectList")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response effectList(@QueryParam("planId") Long planId) {
+    public Response effectList(@QueryParam("luxuryId") Long luxuryId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (luxuryId == null) {
+            errorBuilder.append("luxuryId was null.");
         }
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.effectList(planId);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.effectList(luxuryId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -97,9 +97,9 @@ public class LuxuryAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.add(title, buyPrice, sellPrice, remarks);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.add(title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -139,9 +139,9 @@ public class LuxuryAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.edit(id, title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -168,9 +168,9 @@ public class LuxuryAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.enable(id);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.enable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -196,9 +196,9 @@ public class LuxuryAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.disable(id);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.disable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -213,15 +213,15 @@ public class LuxuryAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response addEffect(@FormParam("planId") Long planId,
+    public Response addEffect(@FormParam("luxuryId") Long luxuryId,
                               @FormParam("operation") String operation,
                               @FormParam("attrKey") String attrKey,
                               @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (luxuryId == null) {
+            errorBuilder.append("luxuryId was null.");
         }
         if (StringUtils.isBlank(operation)) {
             errorBuilder.append("operation was null.");
@@ -235,9 +235,9 @@ public class LuxuryAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.addEffect(planId, operation, attrKey, value);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.addEffect(luxuryId, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -274,9 +274,9 @@ public class LuxuryAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.editEffect(id, operation, attrKey, value);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.editEffect(id, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -300,9 +300,9 @@ public class LuxuryAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                LuxuryBiz planBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.deleteEffect(id);
+                LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
+                if (luxuryBiz != null) {
+                    bizResult = luxuryBiz.deleteEffect(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
