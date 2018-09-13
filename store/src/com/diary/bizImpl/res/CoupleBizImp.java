@@ -75,7 +75,7 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
     }
 
     @Override
-    public String add(String title, Integer price, Integer gender, String remarks) throws BizException {
+    public String add(String title,  Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -84,7 +84,6 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
                 ResCouple resCouple = new ResCouple();
                 resCouple.setId(DrdsIDUtils.getID(DrdsTable.RES));
                 resCouple.setTitle(title);
-                resCouple.setPrice(price);
                 resCouple.setGender(gender);
                 resCouple.setRemarks(remarks);
                 bind(resCouple, 1l);
@@ -103,7 +102,7 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Integer price, Integer gender, String remarks) throws BizException {
+    public String edit(Long id, String title,  Integer gender, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -112,7 +111,6 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
                 ResCouple resCouple = resCoupleStore.getById(id);
                 if (resCouple != null) {
                     resCouple.setTitle(title);
-                    resCouple.setPrice(price);
                     resCouple.setGender(gender);
                     resCouple.setRemarks(remarks);
                     bind(resCouple, 1l);

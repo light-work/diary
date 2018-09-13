@@ -26,8 +26,6 @@ public class ResCouple extends IdEntity implements Tracker {
 
     private String title;
 
-    private Integer price;
-
     private Integer gender;
 
     private String remarks;
@@ -60,14 +58,6 @@ public class ResCouple extends IdEntity implements Tracker {
         this.title = title;
     }
 
-    @Column(name = "PRICE")
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
 
     @Column(name = "GENDER")
     public Integer getGender() {
