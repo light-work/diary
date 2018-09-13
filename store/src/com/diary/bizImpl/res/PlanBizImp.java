@@ -333,7 +333,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String effectList(Long jobId) throws BizException {
+    public String effectList(Long planId) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -341,7 +341,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
             if (resPlanEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$alias("planId", "planId"));
-                selectorList.add(SelectorUtils.$eq("planId.id", jobId));
+                selectorList.add(SelectorUtils.$eq("planId.id", planId));
                 List<ResPlanEffect> jobEffectList = resPlanEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();
                 if (jobEffectList != null && !jobEffectList.isEmpty()) {

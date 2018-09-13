@@ -33,9 +33,9 @@ public class ClothesAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.list(start, limit, keyword);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.list(start, limit, keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -49,18 +49,18 @@ public class ClothesAPI extends BaseAPI {
     @Path("/effectList")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response effectList(@QueryParam("planId") Long planId) {
+    public Response effectList(@QueryParam("clothesId") Long clothesId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (clothesId == null) {
+            errorBuilder.append("clothesId was null.");
         }
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.effectList(planId);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.effectList(clothesId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -97,9 +97,9 @@ public class ClothesAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.add(title, buyPrice, sellPrice, remarks);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.add(title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -139,9 +139,9 @@ public class ClothesAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.edit(id, title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -168,9 +168,9 @@ public class ClothesAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.enable(id);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.enable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -196,9 +196,9 @@ public class ClothesAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.disable(id);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.disable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -213,15 +213,15 @@ public class ClothesAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response addEffect(@FormParam("planId") Long planId,
+    public Response addEffect(@FormParam("clothesId") Long clothesId,
                               @FormParam("operation") String operation,
                               @FormParam("attrKey") String attrKey,
                               @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (clothesId == null) {
+            errorBuilder.append("clothesId was null.");
         }
         if (StringUtils.isBlank(operation)) {
             errorBuilder.append("operation was null.");
@@ -235,9 +235,9 @@ public class ClothesAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.addEffect(planId, operation, attrKey, value);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.addEffect(clothesId, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -274,9 +274,9 @@ public class ClothesAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.editEffect(id, operation, attrKey, value);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.editEffect(id, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -300,9 +300,9 @@ public class ClothesAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                ClothesBiz planBiz = hsfServiceFactory.consumer(ClothesBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.deleteEffect(id);
+                ClothesBiz clothesBiz = hsfServiceFactory.consumer(ClothesBiz.class);
+                if (clothesBiz != null) {
+                    bizResult = clothesBiz.deleteEffect(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

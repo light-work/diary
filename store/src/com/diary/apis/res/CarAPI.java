@@ -33,9 +33,9 @@ public class CarAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.list(start, limit, keyword);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.list(start, limit, keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -49,18 +49,18 @@ public class CarAPI extends BaseAPI {
     @Path("/effectList")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response effectList(@QueryParam("planId") Long planId) {
+    public Response effectList(@QueryParam("carId") Long carId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (carId == null) {
+            errorBuilder.append("carId was null.");
         }
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.effectList(planId);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.effectList(carId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -97,9 +97,9 @@ public class CarAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.add(title, buyPrice, sellPrice, remarks);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.add(title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -139,9 +139,9 @@ public class CarAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.edit(id, title, buyPrice, sellPrice, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -168,9 +168,9 @@ public class CarAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.enable(id);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.enable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -196,9 +196,9 @@ public class CarAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.disable(id);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.disable(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -213,15 +213,15 @@ public class CarAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response addEffect(@FormParam("planId") Long planId,
+    public Response addEffect(@FormParam("carId") Long carId,
                               @FormParam("operation") String operation,
                               @FormParam("attrKey") String attrKey,
                               @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
-        if (planId == null) {
-            errorBuilder.append("planId was null.");
+        if (carId == null) {
+            errorBuilder.append("carId was null.");
         }
         if (StringUtils.isBlank(operation)) {
             errorBuilder.append("operation was null.");
@@ -235,9 +235,9 @@ public class CarAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.addEffect(planId, operation, attrKey, value);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.addEffect(carId, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -274,9 +274,9 @@ public class CarAPI extends BaseAPI {
 
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.editEffect(id, operation, attrKey, value);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.editEffect(id, operation, attrKey, value);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -300,9 +300,9 @@ public class CarAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                CarBiz planBiz = hsfServiceFactory.consumer(CarBiz.class);
-                if (planBiz != null) {
-                    bizResult = planBiz.deleteEffect(id);
+                CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
+                if (carBiz != null) {
+                    bizResult = carBiz.deleteEffect(id);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
