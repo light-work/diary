@@ -28,10 +28,6 @@ public class ResEvent extends IdEntity implements Tracker {
 
     private String content;
 
-    private String yesText;
-
-    private String noText;
-
     private String source;
 
     private Date created;
@@ -71,23 +67,6 @@ public class ResEvent extends IdEntity implements Tracker {
         this.content = content;
     }
 
-    @Column(name = "YES_TEXT")
-    public String getYesText() {
-        return yesText;
-    }
-
-    public void setYesText(String yesText) {
-        this.yesText = yesText;
-    }
-
-    @Column(name = "NO_TEXT")
-    public String getNoText() {
-        return noText;
-    }
-
-    public void setNoText(String noText) {
-        this.noText = noText;
-    }
 
     @Column(name = "SOURCE")
     public String getSource() {
