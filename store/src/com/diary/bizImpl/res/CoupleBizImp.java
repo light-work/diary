@@ -45,7 +45,6 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
             ResCoupleStore resCoupleStore = hsfServiceFactory.consumer(ResCoupleStore.class);
             if (resCoupleStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$order("price", true));
                 Page<ResCouple> resCouplePage = resCoupleStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
                 if (resCouplePage != null) {
