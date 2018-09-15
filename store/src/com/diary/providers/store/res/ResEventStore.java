@@ -3,8 +3,6 @@ package com.diary.providers.store.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
@@ -20,8 +18,7 @@ public interface ResEventStore {
     Page<ResEvent> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
-    void save(ResEvent resEvent, Persistent persistent, ResEventYes resEventYes, Persistent resEventYesPersistent,
-              ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException;
+    void save(ResEvent resEvent, Persistent persistent) throws StoreException;
 
     void delete(ResEvent resEvent) throws StoreException;
 

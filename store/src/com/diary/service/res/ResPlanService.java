@@ -26,6 +26,7 @@ public class ResPlanService extends HQuery implements ResPlanStore {
     }
 
 
+
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public ResPlan getByOrder(Integer displayOrder) throws StoreException {

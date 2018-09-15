@@ -1,13 +1,11 @@
 package com.diary.storeImpl.res;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResPlanEvent;
-import com.diary.providers.store.res.ResPlanEventStore;
-import com.diary.service.res.ResPlanEventService;
+import com.diary.entity.res.ResEventResult;
+import com.diary.providers.store.res.ResEventResultStore;
+import com.diary.service.res.ResEventResultService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.ConnectManager;
@@ -19,17 +17,17 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResPlanEventStoreImpl implements ResPlanEventStore {
+public class ResEventResultStoreImpl implements ResEventResultStore {
 
     @Inject
-    private ResPlanEventService resPlanEventService;
+    private ResEventResultService resEventResultService;
 
 
     @Override
     @ConnectManager
-    public ResPlanEvent getById(Long id, Selector... selectors) throws StoreException {
+    public ResEventResult getById(Long id, Selector... selectors) throws StoreException {
         try {
-            return this.resPlanEventService.getById(id, selectors);
+            return this.resEventResultService.getById(id, selectors);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -38,9 +36,9 @@ public class ResPlanEventStoreImpl implements ResPlanEventStore {
 
     @Override
     @ConnectManager
-    public Page<ResPlanEvent> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+    public List<ResEventResult> getList(List<Selector> selectorList) throws StoreException {
         try {
-            return this.resPlanEventService.getPageList(start, limit, selectorList);
+            return this.resEventResultService.getList(selectorList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -49,9 +47,9 @@ public class ResPlanEventStoreImpl implements ResPlanEventStore {
 
     @Override
     @ConnectManager
-    public List<ResPlanEvent> getListByPlanId(Long jobId) throws StoreException {
+    public ResEventResult getByOrder(Integer displayOrder) throws StoreException {
         try {
-            return this.resPlanEventService.getListByPlanId(jobId);
+            return this.resEventResultService.getByOrder(displayOrder);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -60,21 +58,9 @@ public class ResPlanEventStoreImpl implements ResPlanEventStore {
 
     @Override
     @ConnectManager
-    public List<ResPlanEvent> getList(List<Selector> selectorList) throws StoreException {
+    public Integer getMaxOrder() throws StoreException {
         try {
-            return this.resPlanEventService.getList(selectorList);
-        } catch (HibernateException e) {
-            Throwable throwable = e.getCause() != null ? e.getCause() : e;
-            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
-        }
-    }
-
-
-    @Override
-    @ConnectManager
-    public void delete(ResPlanEvent resPlanEvent) throws StoreException {
-        try {
-            this.resPlanEventService.delete(resPlanEvent);
+            return this.resEventResultService.getMaxOrder();
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -83,9 +69,9 @@ public class ResPlanEventStoreImpl implements ResPlanEventStore {
 
     @Override
     @ConnectManager
-    public void save(ResPlanEvent appUser, Persistent persistent) throws StoreException {
+    public void delete(ResEventResult resEventResult) throws StoreException {
         try {
-            this.resPlanEventService.save(appUser, persistent);
+            this.resEventResultService.delete(resEventResult);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -94,9 +80,20 @@ public class ResPlanEventStoreImpl implements ResPlanEventStore {
 
     @Override
     @ConnectManager
-    public void save(ResPlanEvent resPlanEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent) throws StoreException {
+    public void save(ResEventResult appUser, Persistent persistent) throws StoreException {
         try {
-            this.resPlanEventService.save(resPlanEvent, persistent, resEvent, resEventPersistent);
+            this.resEventResultService.save(appUser, persistent);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void saveOrder(ResEventResult resEventResult, Persistent persistent, ResEventResult resEventResultOrder) throws StoreException {
+        try {
+            this.resEventResultService.saveOrder(resEventResult, persistent, resEventResultOrder);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

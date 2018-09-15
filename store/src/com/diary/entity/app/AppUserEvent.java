@@ -1,9 +1,6 @@
 package com.diary.entity.app;
 
-import com.diary.entity.res.ResCar;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
@@ -28,10 +25,6 @@ public class AppUserEvent extends IdEntity implements Tracker {
     private AppUser userId;
 
     private ResEvent eventId;
-
-    private ResEventYes yesId;
-
-    private ResEventNo noId;
 
     private Date created;
 
@@ -72,25 +65,6 @@ public class AppUserEvent extends IdEntity implements Tracker {
         this.eventId = eventId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "YES_ID")
-    public ResEventYes getYesId() {
-        return yesId;
-    }
-
-    public void setYesId(ResEventYes yesId) {
-        this.yesId = yesId;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NO_ID")
-    public ResEventNo getNoId() {
-        return noId;
-    }
-
-    public void setNoId(ResEventNo noId) {
-        this.noId = noId;
-    }
 
 
 

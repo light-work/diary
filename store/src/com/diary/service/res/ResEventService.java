@@ -2,10 +2,7 @@ package com.diary.service.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.providers.store.res.ResEventStore;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
@@ -23,11 +20,6 @@ import java.util.List;
 public class ResEventService extends HQuery implements ResEventStore {
 
 
-    @Inject
-    private ResEventNoService resEventNoService;
-
-    @Inject
-    private ResEventYesService resEventYesService;
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
@@ -43,14 +35,8 @@ public class ResEventService extends HQuery implements ResEventStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(ResEvent resEvent, Persistent persistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResEvent resEvent, Persistent persistent) throws StoreException {
         $(resEvent).save(persistent);
-        if(resEventYes!=null){
-            resEventYesService.save(resEventYes,resEventYesPersistent);
-        }
-        if(resEventNo!=null){
-            resEventNoService.save(resEventNo,resEventNoPersistent);
-        }
     }
 
     @Override

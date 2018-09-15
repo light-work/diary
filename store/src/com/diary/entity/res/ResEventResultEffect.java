@@ -14,24 +14,22 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_EVENT_YES")
-public class ResEventYes extends IdEntity implements Tracker {
+@Table(name = "RES_EVENT_RESULT_EFFECT")
+public class ResEventResultEffect extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private ResEvent eventId;
+    private ResEventResult resultId;
+
+    private String operation;
 
     private String attrKey;
 
-    private Long value;
+    private Integer value;
 
-    private String content;
 
-    private Integer displayOrder;
-
-    private String picUrl;
 
     private Date created;
 
@@ -52,23 +50,26 @@ public class ResEventYes extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @Column(name = "PIC_URL")
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EVENT_ID")
-    public ResEvent getEventId() {
-        return eventId;
+    @JoinColumn(name = "RESULT_ID")
+    public ResEventResult getResultId() {
+        return resultId;
     }
 
-    public void setEventId(ResEvent eventId) {
-        this.eventId = eventId;
+    public void setResultId(ResEventResult resultId) {
+        this.resultId = resultId;
+    }
+
+
+
+
+    @Column(name = "OPERATION")
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 
     @Column(name = "ATTR_KEY")
@@ -81,31 +82,15 @@ public class ResEventYes extends IdEntity implements Tracker {
     }
 
     @Column(name = "VALUE")
-    public Long getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(Long value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 
-    @Column(name = "CONTENT")
-    public String getContent() {
-        return content;
-    }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    @Column(name = "DISPLAY_ORDER")
-    public Integer getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Integer displayOrder) {
-        this.displayOrder = displayOrder;
-    }
 
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {

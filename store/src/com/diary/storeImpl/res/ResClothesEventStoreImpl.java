@@ -2,8 +2,6 @@ package com.diary.storeImpl.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.entity.res.ResClothesEvent;
 import com.diary.providers.store.res.ResClothesEventStore;
 import com.diary.service.res.ResClothesEventService;
@@ -72,9 +70,9 @@ public class ResClothesEventStoreImpl implements ResClothesEventStore {
 
     @Override
     @ConnectManager
-    public void save(ResClothesEvent resClothesEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResClothesEvent resClothesEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent) throws StoreException {
         try {
-            this.resClothesEventService.save(resClothesEvent, persistent, resEvent, resEventPersistent, resEventYes, resEventYesPersistent, resEventNo, resEventNoPersistent);
+            this.resClothesEventService.save(resClothesEvent, persistent, resEvent, resEventPersistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

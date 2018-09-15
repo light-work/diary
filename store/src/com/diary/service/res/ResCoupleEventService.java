@@ -2,8 +2,6 @@ package com.diary.service.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.entity.res.ResCoupleEvent;
 import com.diary.providers.store.res.ResCoupleEventStore;
 import com.google.inject.Inject;
@@ -53,9 +51,9 @@ public class ResCoupleEventService extends HQuery implements ResCoupleEventStore
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(ResCoupleEvent resCoupleEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResCoupleEvent resCoupleEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent) throws StoreException {
         $(resCoupleEvent).save(persistent);
-        resEventService.save(resEvent, persistent, resEventYes, resEventYesPersistent, resEventNo, resEventNoPersistent);
+        resEventService.save(resEvent, resEventPersistent);
     }
 
     @Override
