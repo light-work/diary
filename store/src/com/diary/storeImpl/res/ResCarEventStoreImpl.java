@@ -2,8 +2,6 @@ package com.diary.storeImpl.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.entity.res.ResCarEvent;
 import com.diary.providers.store.res.ResCarEventStore;
 import com.diary.service.res.ResCarEventService;
@@ -70,11 +68,12 @@ public class ResCarEventStoreImpl implements ResCarEventStore {
         }
     }
 
+
     @Override
     @ConnectManager
-    public void save(ResCarEvent resCarEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResCarEvent resCarEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent) throws StoreException {
         try {
-            this.resCarEventService.save(resCarEvent, persistent, resEvent, resEventPersistent, resEventYes, resEventYesPersistent, resEventNo, resEventNoPersistent);
+            this.resCarEventService.save(resCarEvent, persistent, resEvent, resEventPersistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

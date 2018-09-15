@@ -14,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_EVENT_NO")
-public class ResEventNo extends IdEntity implements Tracker {
+@Table(name = "RES_EVENT_RESULT")
+public class ResEventResult extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,15 +23,11 @@ public class ResEventNo extends IdEntity implements Tracker {
 
     private ResEvent eventId;
 
-    private String attrKey;
-
-    private Long value;
-
-    private String content;
+    private String resultText;
 
     private Integer displayOrder;
 
-    private String picUrl;
+    private String content;
 
     private Date created;
 
@@ -52,15 +48,6 @@ public class ResEventNo extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @Column(name = "PIC_URL")
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EVENT_ID")
     public ResEvent getEventId() {
@@ -71,22 +58,22 @@ public class ResEventNo extends IdEntity implements Tracker {
         this.eventId = eventId;
     }
 
-    @Column(name = "ATTR_KEY")
-    public String getAttrKey() {
-        return attrKey;
+    @Column(name = "RESULT_TEXT")
+    public String getResultText() {
+        return resultText;
     }
 
-    public void setAttrKey(String attrKey) {
-        this.attrKey = attrKey;
+    public void setResultText(String resultText) {
+        this.resultText = resultText;
     }
 
-    @Column(name = "VALUE")
-    public Long getValue() {
-        return value;
+    @Column(name = "DISPLAY_ORDER")
+    public Integer getDisplayOrder() {
+        return displayOrder;
     }
 
-    public void setValue(Long value) {
-        this.value = value;
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
     @Column(name = "CONTENT")
@@ -98,14 +85,7 @@ public class ResEventNo extends IdEntity implements Tracker {
         this.content = content;
     }
 
-    @Column(name = "DISPLAY_ORDER")
-    public Integer getDisplayOrder() {
-        return displayOrder;
-    }
 
-    public void setDisplayOrder(Integer displayOrder) {
-        this.displayOrder = displayOrder;
-    }
 
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {

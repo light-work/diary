@@ -182,27 +182,16 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
-        <consumer id="resEventYesStoreConsumer"
-                  interface="com.diary.providers.store.res.ResEventYesStore"
+
+        <consumer id="resEventResultStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventResultStore"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
-        <consumer id="resEventNoStoreConsumer"
-                  interface="com.diary.providers.store.res.ResEventNoStore"
+        <consumer id="resEventResultEffectStoreConsumer"
+                  interface="com.diary.providers.store.res.ResEventResultEffectStore"
                   version="for-dev" clientTimeout="5000">
         </consumer>
-
-        <consumer id="resEventYesResultStoreConsumer"
-                  interface="com.diary.providers.store.res.ResEventYesResultStore"
-                  version="for-dev" clientTimeout="5000">
-        </consumer>
-
-
-        <consumer id="resEventNoResultStoreConsumer"
-                  interface="com.diary.providers.store.res.ResEventNoResultStore"
-                  version="for-dev" clientTimeout="5000">
-        </consumer>
-
 
 
         <consumer id="commonBizConsumer"
@@ -245,6 +234,12 @@
 
         <consumer id="luxuryBizConsumer"
                   interface="com.diary.providers.biz.res.LuxuryBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="eventBizConsumer"
+                  interface="com.diary.providers.biz.res.EventBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
     </group>

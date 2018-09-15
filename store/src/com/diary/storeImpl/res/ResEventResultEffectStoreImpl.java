@@ -1,9 +1,9 @@
 package com.diary.storeImpl.res;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResEventYes;
-import com.diary.providers.store.res.ResEventYesStore;
-import com.diary.service.res.ResEventYesService;
+import com.diary.entity.res.ResEventResultEffect;
+import com.diary.providers.store.res.ResEventResultEffectStore;
+import com.diary.service.res.ResEventResultEffectService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -17,29 +17,17 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResEventYesStoreImpl implements ResEventYesStore {
+public class ResEventResultEffectStoreImpl implements ResEventResultEffectStore {
 
     @Inject
-    private ResEventYesService resEventYesService;
+    private ResEventResultEffectService resEventResultEffectService;
 
 
     @Override
     @ConnectManager
-    public ResEventYes getById(Long id, Selector... selectors) throws StoreException {
+    public ResEventResultEffect getById(Long id, Selector... selectors) throws StoreException {
         try {
-            return this.resEventYesService.getById(id, selectors);
-        } catch (HibernateException e) {
-            Throwable throwable = e.getCause() != null ? e.getCause() : e;
-            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
-        }
-    }
-
-
-    @Override
-    @ConnectManager
-    public ResEventYes getByEventId(Long eventId) throws StoreException {
-        try {
-            return this.resEventYesService.getByEventId(eventId);
+            return this.resEventResultEffectService.getById(id, selectors);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -48,9 +36,9 @@ public class ResEventYesStoreImpl implements ResEventYesStore {
 
     @Override
     @ConnectManager
-    public void save(ResEventYes resEventYes, Persistent persistent) throws StoreException {
+    public List<ResEventResultEffect> getList(List<Selector> selectorList) throws StoreException {
         try {
-             this.resEventYesService.save(resEventYes, persistent);
+            return this.resEventResultEffectService.getList(selectorList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -59,14 +47,23 @@ public class ResEventYesStoreImpl implements ResEventYesStore {
 
     @Override
     @ConnectManager
-    public void delete(ResEventYes resEventYes) throws StoreException {
+    public void delete(ResEventResultEffect resEventResultEffect) throws StoreException {
         try {
-            this.resEventYesService.delete(resEventYes);
+            this.resEventResultEffectService.delete(resEventResultEffect);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
 
-
+    @Override
+    @ConnectManager
+    public void save(ResEventResultEffect appUser, Persistent persistent) throws StoreException {
+        try {
+            this.resEventResultEffectService.save(appUser, persistent);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

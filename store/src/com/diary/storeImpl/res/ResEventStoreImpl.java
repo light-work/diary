@@ -2,8 +2,6 @@ package com.diary.storeImpl.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.providers.store.res.ResEventStore;
 import com.diary.service.res.ResEventService;
 import com.google.inject.Inject;
@@ -61,9 +59,9 @@ public class ResEventStoreImpl implements ResEventStore {
 
     @Override
     @ConnectManager
-    public void save(ResEvent resEvent, Persistent persistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResEvent resEvent, Persistent persistent) throws StoreException {
         try {
-            this.resEventService.save(resEvent, persistent, resEventYes, resEventYesPersistent, resEventNo, resEventNoPersistent);
+            this.resEventService.save(resEvent, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

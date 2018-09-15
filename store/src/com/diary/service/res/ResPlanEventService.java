@@ -2,12 +2,11 @@ package com.diary.service.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.entity.res.ResPlanEvent;
 import com.diary.providers.store.res.ResPlanEventStore;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
 import org.guiceside.persistence.Transactional;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -29,6 +28,12 @@ public class ResPlanEventService extends HQuery implements ResPlanEventStore {
     @Transactional(type = TransactionType.READ_ONLY)
     public ResPlanEvent getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResPlanEvent.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public Page<ResPlanEvent> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+        return $(selectorList).page(ResPlanEvent.class, start, limit);
     }
 
 
@@ -53,9 +58,9 @@ public class ResPlanEventService extends HQuery implements ResPlanEventStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(ResPlanEvent resPlanEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResPlanEvent resPlanEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent) throws StoreException {
         $(resPlanEvent).save(persistent);
-        resEventService.save(resEvent, persistent, resEventYes, resEventYesPersistent, resEventNo, resEventNoPersistent);
+        resEventService.save(resEvent, resEventPersistent);
     }
 
     @Override

@@ -2,13 +2,11 @@ package com.diary.bizImpl.res;
 
 import com.diary.common.BizException;
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResPlan;
-import com.diary.entity.res.ResPlanEffect;
+import com.diary.entity.res.*;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.providers.biz.res.PlanBiz;
-import com.diary.providers.store.res.ResPlanEffectStore;
-import com.diary.providers.store.res.ResPlanStore;
+import com.diary.providers.store.res.*;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -229,12 +227,12 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     if (currentOrder < maxOrder) {
                         currentOrder = currentOrder + 1;
                         ResPlan resPlanOrder = resPlanStore.getByOrder(currentOrder);
-                        if(resPlanOrder!=null){
-                            resPlanOrder.setDisplayOrder(resPlanOrder.getDisplayOrder()-1);
+                        if (resPlanOrder != null) {
+                            resPlanOrder.setDisplayOrder(resPlanOrder.getDisplayOrder() - 1);
                             resPlan.setDisplayOrder(currentOrder);
                             bind(resPlan, 1l);
                             bind(resPlanOrder, 1l);
-                            resPlanStore.saveOrder(resPlan, Persistent.UPDATE,resPlanOrder);
+                            resPlanStore.saveOrder(resPlan, Persistent.UPDATE, resPlanOrder);
                             resultObj.put("result", 0);
                         }
                     }
@@ -365,4 +363,108 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
         return resultObj.toString();
     }
 
+
+    @Override
+    public String addEvent(Long planId, String content) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResPlanEventStore resPlanEventStore = hsfServiceFactory.consumer(ResPlanEventStore.class);
+            ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
+            if (resPlanEventStore != null && resPlanStore != null) {
+                ResPlan resPlan = resPlanStore.getById(planId);
+                if (resPlan != null) {
+                    ResEvent resEvent = new ResEvent();
+                    resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
+                    resEvent.setSource("PLAN");
+                    resEvent.setContent(content);
+                    bind(resEvent, 1l);
+                    resEvent.setUseYn("Y");
+
+
+                    ResPlanEvent resPlanEvent = new ResPlanEvent();
+                    resPlanEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
+                    resPlanEvent.setPlanId(resPlan);
+                    resPlanEvent.setEventId(resEvent);
+                    bind(resPlanEvent, 1l);
+                    resPlanEvent.setUseYn("Y");
+
+                    resPlanEventStore.save(resPlanEvent, Persistent.SAVE, resEvent, Persistent.SAVE);
+                    resultObj.put("result", 0);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String eventList(Long planId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResPlanEventStore resPlanEventStore = hsfServiceFactory.consumer(ResPlanEventStore.class);
+            ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
+            ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
+            if (resPlanEventStore != null && resEventResultStore != null && resEventResultEffectStore != null) {
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$alias("planId", "planId"));
+                selectorList.add(SelectorUtils.$alias("eventId", "eventId"));
+                selectorList.add(SelectorUtils.$eq("planId.id", planId));
+                List<ResPlanEvent> resPlanEventList = resPlanEventStore.getList(selectorList);
+                JSONArray jobArray = new JSONArray();
+                if (resPlanEventList != null && !resPlanEventList.isEmpty()) {
+                    for (ResPlanEvent resPlanEvent : resPlanEventList) {
+                        ResEvent resEvent = resPlanEvent.getEventId();
+                        if (resEvent != null) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("eventId.id", resEvent.getId()));
+                            JSONArray eventResultArray = new JSONArray();
+                            List<ResEventResult> eventResultList = resEventResultStore.getList(selectorList);
+                            if (eventResultList != null && !eventResultList.isEmpty()) {
+                                for (ResEventResult resEventResult : eventResultList) {
+                                    selectorList.clear();
+                                    selectorList.add(SelectorUtils.$eq("resultId.id", resEventResult.getId()));
+                                    JSONArray eventResultEffectArray = new JSONArray();
+                                    List<ResEventResultEffect> eventResultEffectList = resEventResultEffectStore.getList(selectorList);
+                                    if (eventResultEffectList != null && !eventResultEffectList.isEmpty()) {
+                                        for (ResEventResultEffect resEventResultEffect : eventResultEffectList) {
+                                            JSONObject resEventResultEffectObj = JsonUtils.formIdEntity(resEventResultEffect);
+                                            if (resEventResultEffectObj != null) {
+                                                eventResultEffectArray.add(resEventResultEffectObj);
+                                            }
+                                        }
+                                    }
+                                    JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
+                                    if (resEventResultObj != null) {
+                                        resEventResultObj.put("effectList", eventResultEffectArray);
+                                        eventResultArray.add(resEventResultObj);
+                                    }
+                                }
+                            }
+                            JSONObject resPlanEventObj = JsonUtils.formIdEntity(resPlanEvent);
+                            if (resPlanEventObj != null) {
+                                resPlanEventObj.put("resultList", eventResultArray);
+                                jobArray.add(resPlanEventObj);
+                            }
+                        }
+                    }
+                }
+                resultObj.put("list", jobArray);
+                resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
 }

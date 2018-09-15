@@ -2,8 +2,6 @@ package com.diary.service.res;
 
 import com.diary.common.StoreException;
 import com.diary.entity.res.ResEvent;
-import com.diary.entity.res.ResEventNo;
-import com.diary.entity.res.ResEventYes;
 import com.diary.entity.res.ResClothesEvent;
 import com.diary.providers.store.res.ResClothesEventStore;
 import com.google.inject.Inject;
@@ -46,9 +44,9 @@ public class ResClothesEventService extends HQuery implements ResClothesEventSto
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(ResClothesEvent resClothesEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent, ResEventYes resEventYes, Persistent resEventYesPersistent, ResEventNo resEventNo, Persistent resEventNoPersistent) throws StoreException {
+    public void save(ResClothesEvent resClothesEvent, Persistent persistent, ResEvent resEvent, Persistent resEventPersistent) throws StoreException {
         $(resClothesEvent).save(persistent);
-        resEventService.save(resEvent, persistent, resEventYes, resEventYesPersistent, resEventNo, resEventNoPersistent);
+        resEventService.save(resEvent, resEventPersistent);
     }
 
     @Override

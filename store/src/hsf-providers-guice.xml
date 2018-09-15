@@ -265,35 +265,22 @@
                   enableTXC="true">
         </provider>
 
-        <service id="resEventYesStore" class="com.diary.storeImpl.res.ResEventYesStoreImpl"/>
-        <provider id="resEventYesStoreProvider"
-                  interface="com.diary.providers.store.res.ResEventYesStore"
-                  ref="resEventYesStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
-                  enableTXC="true">
-        </provider>
 
-        <service id="resEventNoStore" class="com.diary.storeImpl.res.ResEventNoStoreImpl"/>
-        <provider id="resEventNoStoreProvider"
-                  interface="com.diary.providers.store.res.ResEventNoStore"
-                  ref="resEventNoStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
-                  enableTXC="true">
-        </provider>
-
-        <service id="resEventYesResultStore" class="com.diary.storeImpl.res.ResEventYesResultStoreImpl"/>
-        <provider id="resEventYesResultStoreProvider"
-                  interface="com.diary.providers.store.res.ResEventYesResultStore"
-                  ref="resEventYesResultStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
-                  enableTXC="true">
-        </provider>
-
-        <service id="resEventNoResultStore" class="com.diary.storeImpl.res.ResEventNoResultStoreImpl"/>
-        <provider id="resEventNoResultStoreProvider"
-                  interface="com.diary.providers.store.res.ResEventNoResultStore"
-                  ref="resEventNoResultStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+        <service id="resEventResultStore" class="com.diary.storeImpl.res.ResEventResultStoreImpl"/>
+        <provider id="resEventResultStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventResultStore"
+                  ref="resEventResultStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
 
 
+
+        <service id="resEventResultEffectStore" class="com.diary.storeImpl.res.ResEventResultEffectStoreImpl"/>
+        <provider id="resEventResultEffectStoreProvider"
+                  interface="com.diary.providers.store.res.ResEventResultEffectStore"
+                  ref="resEventResultEffectStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
 
 
 
@@ -353,6 +340,13 @@
         <provider id="luxuryBizProvider"
                   interface="com.diary.providers.biz.res.LuxuryBiz"
                   ref="luxuryBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="eventBiz" class="com.diary.bizImpl.res.EventBizImp"/>
+        <provider id="eventBizProvider"
+                  interface="com.diary.providers.biz.res.EventBiz"
+                  ref="eventBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>

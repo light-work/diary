@@ -27,5 +27,7 @@ public interface PlanBiz {
 
     String effectList(Long planId) throws BizException;
 
+    String addEvent(Long planId,String content) throws BizException;
 
+    String eventList(Long planId) throws BizException;
 }
