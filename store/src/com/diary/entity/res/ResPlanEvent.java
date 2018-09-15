@@ -45,7 +45,7 @@ public class ResPlanEvent extends IdEntity implements Tracker {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "JOB_ID")
+    @JoinColumn(name = "PLAN_ID")
     public ResPlan getPlanId() {
         return planId;
     }

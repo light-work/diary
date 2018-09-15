@@ -15,11 +15,11 @@ import javax.ws.rs.core.Response;
 @Path("/event")
 public class EventAPI extends BaseAPI {
 
-    @Path("/editEvent")
+    @Path("/edit")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response editEvent(@FormParam("id") Long id,
+    public Response edit(@FormParam("id") Long id,
                              @FormParam("content") String content) {
         JSONObject result = new JSONObject();
         String bizResult = null;
