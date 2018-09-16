@@ -439,4 +439,61 @@ public class JobAPI extends BaseAPI {
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }
+
+
+    @Path("/addEvent")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response addEvent(@FormParam("jobId") Long jobId,
+                             @FormParam("content") String content) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (jobId == null) {
+            errorBuilder.append("jobId was null.");
+        }
+        if (StringUtils.isBlank(content)) {
+            errorBuilder.append("content was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                JobBiz jobBiz = hsfServiceFactory.consumer(JobBiz.class);
+                if (jobBiz != null) {
+                    bizResult = jobBiz.addEvent(jobId,content);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+    @Path("/eventList")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response eventList(@QueryParam("jobId") Long jobId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (jobId == null) {
+            errorBuilder.append("jobId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                JobBiz jobBiz = hsfServiceFactory.consumer(JobBiz.class);
+                if (jobBiz != null) {
+                    bizResult = jobBiz.eventList(jobId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
 }

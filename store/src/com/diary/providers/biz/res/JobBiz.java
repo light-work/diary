@@ -30,4 +30,8 @@ public interface JobBiz {
     String deleteRequire(Long id) throws BizException;
 
     String requireList(Long jobId) throws BizException;
+
+    String addEvent(Long jobId,String content) throws BizException;
+
+    String eventList(Long jobId) throws BizException;
 }
