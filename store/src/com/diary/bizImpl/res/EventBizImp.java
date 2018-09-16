@@ -12,10 +12,18 @@ import com.diary.providers.store.res.ResEventResultEffectStore;
 import com.diary.providers.store.res.ResEventResultStore;
 import com.diary.providers.store.res.ResEventStore;
 import com.google.inject.Inject;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.JsonUtils;
+import org.guiceside.commons.Page;
+import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,6 +36,98 @@ public class EventBizImp extends BaseBiz implements EventBiz {
 
     @Inject
     private HSFServiceFactory hsfServiceFactory;
+
+
+    @Override
+    public String list(Integer start, Integer limit, String source, String keyword) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResEventStore resEventStore = hsfServiceFactory.consumer(ResEventStore.class);
+            ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
+            ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
+            if (resEventStore!=null&& resEventResultStore != null && resEventResultEffectStore != null) {
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$eq("source", "source"));
+                Page<ResEvent> resEventPage = resEventStore.getPageList(start,limit,selectorList);
+                JSONArray eventArray = new JSONArray();
+                if(resEventPage!=null){
+                    List<ResEvent> resEventList=resEventPage.getResultList();
+                    if (resEventList != null && !resEventList.isEmpty()) {
+                        for (ResEvent resEvent : resEventList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("eventId.id", resEvent.getId()));
+                            selectorList.add(SelectorUtils.$order("displayOrder",true));
+                            JSONArray eventResultArray = new JSONArray();
+                            List<ResEventResult> eventResultList = resEventResultStore.getList(selectorList);
+                            if (eventResultList != null && !eventResultList.isEmpty()) {
+                                for (ResEventResult resEventResult : eventResultList) {
+                                    selectorList.clear();
+                                    selectorList.add(SelectorUtils.$eq("resultId.id", resEventResult.getId()));
+                                    JSONArray eventResultEffectArray = new JSONArray();
+                                    List<ResEventResultEffect> eventResultEffectList = resEventResultEffectStore.getList(selectorList);
+                                    if (eventResultEffectList != null && !eventResultEffectList.isEmpty()) {
+                                        for (ResEventResultEffect resEventResultEffect : eventResultEffectList) {
+                                            JSONObject resEventResultEffectObj = JsonUtils.formIdEntity(resEventResultEffect);
+                                            if (resEventResultEffectObj != null) {
+                                                eventResultEffectArray.add(resEventResultEffectObj);
+                                            }
+                                        }
+                                    }
+                                    JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
+                                    if (resEventResultObj != null) {
+                                        resEventResultObj.put("effectList", eventResultEffectArray);
+                                        eventResultArray.add(resEventResultObj);
+                                    }
+                                }
+                            }
+                            JSONObject resEventObj = JsonUtils.formIdEntity(resEvent);
+                            if (resEventObj != null) {
+                                resEventObj.put("resultList", eventResultArray);
+                                eventArray.add(resEventObj);
+                            }
+                        }
+                    }
+                    JSONObject pageObj = buildPage2Obj(resEventPage);
+                    resultObj.put("pageObj", pageObj);
+                }
+                resultObj.put("list", eventArray);
+                resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String addEvent(String source, String content) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResEventStore resEventStore = hsfServiceFactory.consumer(ResEventStore.class);
+            if (resEventStore != null) {
+                ResEvent resEvent=new ResEvent();
+                resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
+                resEvent.setContent(content);
+                resEvent.setSource(source);
+                bind(resEvent, 1l);
+                resEventStore.save(resEvent, Persistent.UPDATE);
+                resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
 
     @Override
     public String enable(Long id) throws BizException {

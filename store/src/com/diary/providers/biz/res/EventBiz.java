@@ -5,6 +5,10 @@ import com.diary.common.BizException;
 
 public interface EventBiz {
 
+    String list(Integer start, Integer limit,String source, String keyword) throws BizException;
+
+    String addEvent(String source,String content) throws BizException;
+
     String editEvent(Long id, String content) throws BizException;
 
     String enable(Long id) throws BizException;
