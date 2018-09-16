@@ -368,4 +368,58 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         }
         return resultObj.toString();
     }
+
+    @Override
+    public String setRequire(Long resultId, String compare, String attrKey, Integer value) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
+            if (resEventResultStore != null) {
+                ResEventResult resEventResult = resEventResultStore.getById(resultId);
+                if (resEventResult != null) {
+                    bind(resEventResult, 1l);
+                    resEventResult.setCompare(compare);
+                    resEventResult.setAttrKey(attrKey);
+                    resEventResult.setValue(value);
+                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                    resultObj.put("result", 0);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String clearRequire(Long resultId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
+            if (resEventResultStore != null) {
+                ResEventResult resEventResult = resEventResultStore.getById(resultId);
+                if (resEventResult != null) {
+                    bind(resEventResult, 1l);
+                    resEventResult.setCompare(null);
+                    resEventResult.setAttrKey(null);
+                    resEventResult.setValue(null);
+                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                    resultObj.put("result", 0);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
 }

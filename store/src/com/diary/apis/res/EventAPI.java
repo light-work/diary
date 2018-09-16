@@ -392,5 +392,72 @@ public class EventAPI extends BaseAPI {
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }
+
+
+    @Path("/setRequire")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response setRequire(@FormParam("resultId") Long resultId, @FormParam("compare") String compare,
+                               @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (resultId == null) {
+            errorBuilder.append("resultId was null.");
+        }
+
+        if (StringUtils.isBlank(compare)) {
+            errorBuilder.append("compare was null.");
+        }
+
+        if (StringUtils.isBlank(attrKey)) {
+            errorBuilder.append("attrKey was null.");
+        }
+        if (value==null) {
+            errorBuilder.append("value was null.");
+        }
+
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.setRequire(resultId, compare, attrKey, value);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/clearRequire")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response clearRequire(@FormParam("resultId") Long resultId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (resultId == null) {
+            errorBuilder.append("resultId was null.");
+        }
+
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.clearRequire(resultId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
 }
 

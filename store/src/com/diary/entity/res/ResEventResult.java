@@ -29,6 +29,12 @@ public class ResEventResult extends IdEntity implements Tracker {
 
     private String content;
 
+    private String compare;
+
+    private Integer value;
+
+    private String attrKey;
+
     private Date created;
 
     private String createdBy;
@@ -46,6 +52,34 @@ public class ResEventResult extends IdEntity implements Tracker {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    @Column(name = "COMPARE")
+    public String getCompare() {
+        return compare;
+    }
+
+    public void setCompare(String compare) {
+        this.compare = compare;
+    }
+
+    @Column(name = "VALUE")
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    @Column(name = "ATTR_KEY")
+    public String getAttrKey() {
+        return attrKey;
+    }
+
+    public void setAttrKey(String attrKey) {
+        this.attrKey = attrKey;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
