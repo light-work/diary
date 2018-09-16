@@ -424,6 +424,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                         if (resEvent != null) {
                             selectorList.clear();
                             selectorList.add(SelectorUtils.$eq("eventId.id", resEvent.getId()));
+                            selectorList.add(SelectorUtils.$order("displayOrder",true));
                             JSONArray eventResultArray = new JSONArray();
                             List<ResEventResult> eventResultList = resEventResultStore.getList(selectorList);
                             if (eventResultList != null && !eventResultList.isEmpty()) {

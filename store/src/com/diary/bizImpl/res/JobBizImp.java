@@ -2,15 +2,11 @@ package com.diary.bizImpl.res;
 
 import com.diary.common.BizException;
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResJob;
-import com.diary.entity.res.ResJobEffect;
-import com.diary.entity.res.ResJobRequire;
+import com.diary.entity.res.*;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.providers.biz.res.JobBiz;
-import com.diary.providers.store.res.ResJobEffectStore;
-import com.diary.providers.store.res.ResJobRequireStore;
-import com.diary.providers.store.res.ResJobStore;
+import com.diary.providers.store.res.*;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -396,6 +392,111 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                     }
                 }
                 resultObj.put("list", jobRequireArray);
+                resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String addEvent(Long jobId, String content) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResJobEventStore resJobEventStore = hsfServiceFactory.consumer(ResJobEventStore.class);
+            ResJobStore resJobStore = hsfServiceFactory.consumer(ResJobStore.class);
+            if (resJobEventStore != null && resJobStore != null) {
+                ResJob resJob = resJobStore.getById(jobId);
+                if (resJob != null) {
+                    ResEvent resEvent = new ResEvent();
+                    resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
+                    resEvent.setSource("JOB");
+                    resEvent.setContent(content);
+                    bind(resEvent, 1l);
+                    resEvent.setUseYn("Y");
+
+
+                    ResJobEvent resJobEvent = new ResJobEvent();
+                    resJobEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
+                    resJobEvent.setJobId(resJob);
+                    resJobEvent.setEventId(resEvent);
+                    bind(resJobEvent, 1l);
+                    resJobEvent.setUseYn("Y");
+
+                    resJobEventStore.save(resJobEvent, Persistent.SAVE, resEvent, Persistent.SAVE);
+                    resultObj.put("result", 0);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String eventList(Long jobId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResJobEventStore resJobEventStore = hsfServiceFactory.consumer(ResJobEventStore.class);
+            ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
+            ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
+            if (resJobEventStore != null && resEventResultStore != null && resEventResultEffectStore != null) {
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$alias("jobId", "jobId"));
+                selectorList.add(SelectorUtils.$alias("eventId", "eventId"));
+                selectorList.add(SelectorUtils.$eq("jobId.id", jobId));
+                List<ResJobEvent> resJobEventList = resJobEventStore.getList(selectorList);
+                JSONArray jobArray = new JSONArray();
+                if (resJobEventList != null && !resJobEventList.isEmpty()) {
+                    for (ResJobEvent resJobEvent : resJobEventList) {
+                        ResEvent resEvent = resJobEvent.getEventId();
+                        if (resEvent != null) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("eventId.id", resEvent.getId()));
+                            selectorList.add(SelectorUtils.$order("displayOrder",true));
+                            JSONArray eventResultArray = new JSONArray();
+                            List<ResEventResult> eventResultList = resEventResultStore.getList(selectorList);
+                            if (eventResultList != null && !eventResultList.isEmpty()) {
+                                for (ResEventResult resEventResult : eventResultList) {
+                                    selectorList.clear();
+                                    selectorList.add(SelectorUtils.$eq("resultId.id", resEventResult.getId()));
+                                    JSONArray eventResultEffectArray = new JSONArray();
+                                    List<ResEventResultEffect> eventResultEffectList = resEventResultEffectStore.getList(selectorList);
+                                    if (eventResultEffectList != null && !eventResultEffectList.isEmpty()) {
+                                        for (ResEventResultEffect resEventResultEffect : eventResultEffectList) {
+                                            JSONObject resEventResultEffectObj = JsonUtils.formIdEntity(resEventResultEffect);
+                                            if (resEventResultEffectObj != null) {
+                                                eventResultEffectArray.add(resEventResultEffectObj);
+                                            }
+                                        }
+                                    }
+                                    JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
+                                    if (resEventResultObj != null) {
+                                        resEventResultObj.put("effectList", eventResultEffectArray);
+                                        eventResultArray.add(resEventResultObj);
+                                    }
+                                }
+                            }
+                            JSONObject resJobEventObj = JsonUtils.formIdEntity(resJobEvent);
+                            if (resJobEventObj != null) {
+                                resJobEventObj.put("resultList", eventResultArray);
+                                jobArray.add(resJobEventObj);
+                            }
+                        }
+                    }
+                }
+                resultObj.put("list", jobArray);
                 resultObj.put("result", 0);
             }
         } catch (Exception ex) {
