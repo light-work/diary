@@ -377,6 +377,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     ResEvent resEvent = new ResEvent();
                     resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
                     resEvent.setSource("PLAN");
+                    resEvent.setGender(resPlan.getGender());
                     resEvent.setContent(content);
                     bind(resEvent, 1l);
                     resEvent.setUseYn("Y");
@@ -440,6 +441,9 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                                                 eventResultEffectArray.add(resEventResultEffectObj);
                                             }
                                         }
+                                    }
+                                    if(resEventResult.getValue()==null){
+                                        resEventResult.setValue(0);
                                     }
                                     JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
                                     if (resEventResultObj != null) {

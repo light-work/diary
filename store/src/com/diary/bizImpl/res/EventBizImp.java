@@ -48,7 +48,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
             ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
             if (resEventStore!=null&& resEventResultStore != null && resEventResultEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("source", "source"));
+                selectorList.add(SelectorUtils.$eq("source", source));
                 Page<ResEvent> resEventPage = resEventStore.getPageList(start,limit,selectorList);
                 JSONArray eventArray = new JSONArray();
                 if(resEventPage!=null){
@@ -73,6 +73,9 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                                                 eventResultEffectArray.add(resEventResultEffectObj);
                                             }
                                         }
+                                    }
+                                    if(resEventResult.getValue()==null){
+                                        resEventResult.setValue(0);
                                     }
                                     JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
                                     if (resEventResultObj != null) {
@@ -105,7 +108,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
     }
 
     @Override
-    public String addEvent(String source, String content) throws BizException {
+    public String addEvent(Integer gender,String source, String content) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -114,9 +117,10 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                 ResEvent resEvent=new ResEvent();
                 resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
                 resEvent.setContent(content);
+                resEvent.setGender(gender);
                 resEvent.setSource(source);
                 bind(resEvent, 1l);
-                resEventStore.save(resEvent, Persistent.UPDATE);
+                resEventStore.save(resEvent, Persistent.SAVE);
                 resultObj.put("result", 0);
             }
         } catch (Exception ex) {

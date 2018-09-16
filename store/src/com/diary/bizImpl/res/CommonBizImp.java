@@ -174,11 +174,32 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
     }
 
     @Override
-    public String getEventSource() throws BizException {
+    public String getEventSource(Integer gender) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             JSONArray jsonArray = new JSONArray();
+            if(gender.intValue()==1){
+                JSONObject carObj = new JSONObject();
+                carObj.put("text", "汽车类事件");
+                carObj.put("value", "CAR");
+                jsonArray.add(carObj);
+
+                JSONObject houseObj = new JSONObject();
+                houseObj.put("text", "房屋类事件");
+                houseObj.put("value", "HOUSE");
+                jsonArray.add(houseObj);
+            }else if(gender.intValue()==0){
+                JSONObject clothesObj = new JSONObject();
+                clothesObj.put("text", "服装类事件");
+                clothesObj.put("value", "CLOTHES");
+                jsonArray.add(clothesObj);
+
+                JSONObject luxuryObj = new JSONObject();
+                luxuryObj.put("text", "奢侈品类事件");
+                luxuryObj.put("value", "LUXURY");
+                jsonArray.add(luxuryObj);
+            }
             JSONObject planObj = new JSONObject();
             planObj.put("text", "日常消遣类事件");
             planObj.put("value", "PLAN");
@@ -189,30 +210,10 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
             jobObj.put("value", "JOB");
             jsonArray.add(jobObj);
 
-            JSONObject houseObj = new JSONObject();
-            houseObj.put("text", "房屋类事件");
-            houseObj.put("value", "HOUSE");
-            jsonArray.add(houseObj);
-
-            JSONObject carObj = new JSONObject();
-            carObj.put("text", "汽车类事件");
-            carObj.put("value", "CAR");
-            jsonArray.add(carObj);
-
-            JSONObject clothesObj = new JSONObject();
-            clothesObj.put("text", "服装类事件");
-            clothesObj.put("value", "CLOTHES");
-            jsonArray.add(clothesObj);
-
-            JSONObject luxuryObj = new JSONObject();
-            luxuryObj.put("text", "奢侈品类事件");
-            luxuryObj.put("value", "LUXURY");
-            jsonArray.add(luxuryObj);
-
-            JSONObject coupleObj = new JSONObject();
-            coupleObj.put("text", "情侣类事件");
-            coupleObj.put("value", "COUPLE");
-            jsonArray.add(coupleObj);
+//            JSONObject coupleObj = new JSONObject();
+//            coupleObj.put("text", "情侣类事件");
+//            coupleObj.put("value", "COUPLE");
+//            jsonArray.add(coupleObj);
 
             resultObj.put("result", 0);
             resultObj.put("list", jsonArray);

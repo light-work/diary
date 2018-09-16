@@ -417,6 +417,7 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                     ResEvent resEvent = new ResEvent();
                     resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
                     resEvent.setSource("JOB");
+                    resEvent.setGender(resJob.getGender());
                     resEvent.setContent(content);
                     bind(resEvent, 1l);
                     resEvent.setUseYn("Y");
@@ -480,6 +481,9 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                                                 eventResultEffectArray.add(resEventResultEffectObj);
                                             }
                                         }
+                                    }
+                                    if(resEventResult.getValue()==null){
+                                        resEventResult.setValue(0);
                                     }
                                     JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
                                     if (resEventResultObj != null) {

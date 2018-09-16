@@ -53,11 +53,15 @@ public class EventAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response add(@FormParam("source") String source,
+    public Response add(@FormParam("gender") Integer gender,
+                        @FormParam("source") String source,
                         @FormParam("content") String content) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
+        if (gender==null) {
+            errorBuilder.append("gender was null.");
+        }
         if (StringUtils.isBlank(source)) {
             errorBuilder.append("source was null.");
         }
@@ -68,7 +72,7 @@ public class EventAPI extends BaseAPI {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.addEvent(source, content);
+                    bizResult = eventBiz.addEvent(gender,source, content);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
