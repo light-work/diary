@@ -39,7 +39,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
 
 
     @Override
-    public String list(Integer start, Integer limit, String source, String keyword) throws BizException {
+    public String list(Integer start, Integer limit,Integer gender, String source, String keyword) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -48,6 +48,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
             ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
             if (resEventStore!=null&& resEventResultStore != null && resEventResultEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$eq("gender", gender));
                 selectorList.add(SelectorUtils.$eq("source", source));
                 Page<ResEvent> resEventPage = resEventStore.getPageList(start,limit,selectorList);
                 JSONArray eventArray = new JSONArray();

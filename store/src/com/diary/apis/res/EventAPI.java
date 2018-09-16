@@ -20,6 +20,7 @@ public class EventAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response list(@QueryParam("start") Integer start,
                          @QueryParam("limit") Integer limit,
+                         @QueryParam("gender") Integer gender,
                          @QueryParam("source") String source,
                          @QueryParam("keyword") String keyword) {
         JSONObject result = new JSONObject();
@@ -31,6 +32,9 @@ public class EventAPI extends BaseAPI {
         if (limit == null) {
             errorBuilder.append("limit was null.");
         }
+        if (gender == null) {
+            errorBuilder.append("gender was null.");
+        }
         if(StringUtils.isBlank(source)){
             errorBuilder.append("source was null.");
         }
@@ -38,7 +42,7 @@ public class EventAPI extends BaseAPI {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.list(start, limit, source, keyword);
+                    bizResult = eventBiz.list(start, limit,gender, source, keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
