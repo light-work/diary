@@ -5,7 +5,7 @@ import com.diary.common.BizException;
 
 public interface EventBiz {
 
-    String list(Integer start, Integer limit,String source, String keyword) throws BizException;
+    String list(Integer start, Integer limit,Integer gender,String source, String keyword) throws BizException;
 
     String addEvent(Integer gender,String source,String content) throws BizException;
 
