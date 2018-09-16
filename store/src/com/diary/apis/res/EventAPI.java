@@ -286,5 +286,111 @@ public class EventAPI extends BaseAPI {
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }
+
+
+    @Path("/addEffect")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response addEffect(@FormParam("resultId") Long resultId, @FormParam("operation") String operation,
+                              @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (resultId == null) {
+            errorBuilder.append("resultId was null.");
+        }
+
+        if (StringUtils.isBlank(operation)) {
+            errorBuilder.append("operation was null.");
+        }
+
+        if (StringUtils.isBlank(attrKey)) {
+            errorBuilder.append("attrKey was null.");
+        }
+        if (value==null) {
+            errorBuilder.append("value was null.");
+        }
+
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.addEffect(resultId, operation, attrKey, value);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/editEffect")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response editEffect(@FormParam("id") Long id, @FormParam("operation") String operation,
+                              @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (id == null) {
+            errorBuilder.append("id was null.");
+        }
+
+        if (StringUtils.isBlank(operation)) {
+            errorBuilder.append("operation was null.");
+        }
+
+        if (StringUtils.isBlank(attrKey)) {
+            errorBuilder.append("attrKey was null.");
+        }
+        if (value==null) {
+            errorBuilder.append("value was null.");
+        }
+
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.editEffect(id, operation, attrKey, value);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+    @Path("/deleteEffect")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response deleteEffect(@FormParam("id") Long id) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (id == null) {
+            errorBuilder.append("id was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.deleteEffect(id);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
 }
 
