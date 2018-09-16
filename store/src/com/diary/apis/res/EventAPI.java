@@ -15,12 +15,76 @@ import javax.ws.rs.core.Response;
 @Path("/event")
 public class EventAPI extends BaseAPI {
 
+    @Path("/list")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response list(@QueryParam("start") Integer start,
+                         @QueryParam("limit") Integer limit,
+                         @QueryParam("source") String source,
+                         @QueryParam("keyword") String keyword) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (start == null) {
+            errorBuilder.append("start was null.");
+        }
+        if (limit == null) {
+            errorBuilder.append("limit was null.");
+        }
+        if(StringUtils.isBlank(source)){
+            errorBuilder.append("source was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.list(start, limit, source, keyword);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/add")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response add(@FormParam("source") String source,
+                        @FormParam("content") String content) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (StringUtils.isBlank(source)) {
+            errorBuilder.append("source was null.");
+        }
+        if (StringUtils.isBlank(content)) {
+            errorBuilder.append("content was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
+                if (eventBiz != null) {
+                    bizResult = eventBiz.addEvent(source, content);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
     @Path("/edit")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
-                             @FormParam("content") String content) {
+                         @FormParam("content") String content) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -34,7 +98,7 @@ public class EventAPI extends BaseAPI {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.editEvent(id,content);
+                    bizResult = eventBiz.editEvent(id, content);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -107,7 +171,7 @@ public class EventAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response addResult(@FormParam("eventId") Long eventId,
-                       @FormParam("resultText") String resultText, @FormParam("content")String content) {
+                              @FormParam("resultText") String resultText, @FormParam("content") String content) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -127,7 +191,7 @@ public class EventAPI extends BaseAPI {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.addResult(eventId,resultText,content);
+                    bizResult = eventBiz.addResult(eventId, resultText, content);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -143,7 +207,7 @@ public class EventAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response editResult(@FormParam("id") Long id,
-                              @FormParam("resultText") String resultText, @FormParam("content")String content) {
+                               @FormParam("resultText") String resultText, @FormParam("content") String content) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -163,7 +227,7 @@ public class EventAPI extends BaseAPI {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.editResult(id,resultText,content);
+                    bizResult = eventBiz.editResult(id, resultText, content);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -308,7 +372,7 @@ public class EventAPI extends BaseAPI {
         if (StringUtils.isBlank(attrKey)) {
             errorBuilder.append("attrKey was null.");
         }
-        if (value==null) {
+        if (value == null) {
             errorBuilder.append("value was null.");
         }
 
@@ -332,7 +396,7 @@ public class EventAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response editEffect(@FormParam("id") Long id, @FormParam("operation") String operation,
-                              @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
+                               @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -347,7 +411,7 @@ public class EventAPI extends BaseAPI {
         if (StringUtils.isBlank(attrKey)) {
             errorBuilder.append("attrKey was null.");
         }
-        if (value==null) {
+        if (value == null) {
             errorBuilder.append("value was null.");
         }
 
@@ -414,7 +478,7 @@ public class EventAPI extends BaseAPI {
         if (StringUtils.isBlank(attrKey)) {
             errorBuilder.append("attrKey was null.");
         }
-        if (value==null) {
+        if (value == null) {
             errorBuilder.append("value was null.");
         }
 

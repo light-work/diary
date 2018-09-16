@@ -10,4 +10,6 @@ public interface CommonBiz {
     String getOperation() throws BizException;
 
     String getCompare() throws BizException;
+
+    String getEventSource() throws BizException;
 }
