@@ -267,10 +267,15 @@ public class EventBizImp extends BaseBiz implements EventBiz {
             if (resEventStore != null && resEventResultStore != null) {
                 ResEvent resEvent = resEventStore.getById(eventId);
                 if (resEvent != null) {
+                    Integer currentOrder = resEventResultStore.getMaxOrder();
+                    if (currentOrder == null) {
+                        currentOrder = 0;
+                    }
                     ResEventResult resEventResult = new ResEventResult();
                     resEventResult.setId(DrdsIDUtils.getID(DrdsTable.RES));
                     resEventResult.setEventId(resEvent);
                     resEventResult.setResultText(resultText);
+                    resEventResult.setDisplayOrder(currentOrder+1);
                     resEventResult.setContent(content);
                     bind(resEventResult, 1l);
                     resEventResult.setUseYn("Y");
