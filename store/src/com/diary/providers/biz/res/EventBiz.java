@@ -29,4 +29,9 @@ public interface EventBiz {
 
     String deleteEffect(Long id) throws BizException;
 
+
+    String setRequire(Long resultId, String compare, String attrKey, Integer value) throws BizException;
+
+    String clearRequire(Long resultId) throws BizException;
+
 }

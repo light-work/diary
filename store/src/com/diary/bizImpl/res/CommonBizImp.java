@@ -144,4 +144,33 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
         }
         return resultObj.toString();
     }
+
+    @Override
+    public String getCompare() throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            JSONArray jsonArray = new JSONArray();
+            JSONObject compareGt = new JSONObject();
+            compareGt.put("text", "大于");
+            compareGt.put("value", ">");
+            jsonArray.add(compareGt);
+
+            JSONObject compareLt = new JSONObject();
+            compareLt.put("text", "小于");
+            compareLt.put("value", "<");
+            jsonArray.add(compareLt);
+            jsonArray.add(compareLt);
+
+            resultObj.put("result", 0);
+            resultObj.put("list", jsonArray);
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
 }

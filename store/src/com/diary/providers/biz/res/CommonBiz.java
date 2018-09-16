@@ -8,4 +8,6 @@ public interface CommonBiz {
     String getAttr(Integer gender) throws BizException;
 
     String getOperation() throws BizException;
+
+    String getCompare() throws BizException;
 }
