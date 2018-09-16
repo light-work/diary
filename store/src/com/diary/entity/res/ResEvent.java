@@ -30,6 +30,8 @@ public class ResEvent extends IdEntity implements Tracker {
 
     private String source;
 
+    private Integer gender;
+
     private Date created;
 
     private String createdBy;
@@ -47,6 +49,15 @@ public class ResEvent extends IdEntity implements Tracker {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Column(name = "GENDER")
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
     @Column(name = "PIC_URL")

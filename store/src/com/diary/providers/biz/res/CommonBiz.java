@@ -11,5 +11,5 @@ public interface CommonBiz {
 
     String getCompare() throws BizException;
 
-    String getEventSource() throws BizException;
+    String getEventSource(Integer gender) throws BizException;
 }

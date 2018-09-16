@@ -87,18 +87,21 @@ public class CommonAPI extends BaseAPI {
         return Response.ok().entity(result.toString()).build();
     }
 
-    @Path("/getEventSource")
+    @Path("/getEventSource/{gender}")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getEventSource() {
+    public Response getEventSource(@PathParam("gender") Integer gender) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
+        if (gender == null) {
+            errorBuilder.append("gender was null.");
+        }
         if (errorBuilder.length() == 0) {
             try {
                 CommonBiz commonBiz = hsfServiceFactory.consumer(CommonBiz.class);
                 if (commonBiz != null) {
-                    bizResult = commonBiz.getEventSource();
+                    bizResult = commonBiz.getEventSource(gender);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
