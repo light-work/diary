@@ -81,19 +81,19 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
                 jsonArray.add(operationABILITY);
 
                 JSONObject operationWISDOM = new JSONObject();
-                operationWISDOM.put("text", "智慧");
+                operationWISDOM.put("text", "处世智慧");
                 operationWISDOM.put("value", "WISDOM");
                 jsonArray.add(operationWISDOM);
-
-                JSONObject operationBEAUTY = new JSONObject();
-                operationBEAUTY.put("text", "美貌");
-                operationBEAUTY.put("value", "BEAUTY");
-                jsonArray.add(operationBEAUTY);
 
                 JSONObject operationHAPPY = new JSONObject();
                 operationHAPPY.put("text", "快乐");
                 operationHAPPY.put("value", "HAPPY");
                 jsonArray.add(operationHAPPY);
+
+                JSONObject operationBEAUTY = new JSONObject();
+                operationBEAUTY.put("text", "美貌");
+                operationBEAUTY.put("value", "BEAUTY");
+                jsonArray.add(operationBEAUTY);
 
 
 
@@ -209,6 +209,11 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
             jobObj.put("text", "工作类事件");
             jobObj.put("value", "JOB");
             jsonArray.add(jobObj);
+
+            JSONObject randomObj = new JSONObject();
+            randomObj.put("text", "随机类事件");
+            randomObj.put("value", "RANDOM");
+            jsonArray.add(randomObj);
 
 //            JSONObject coupleObj = new JSONObject();
 //            coupleObj.put("text", "情侣类事件");

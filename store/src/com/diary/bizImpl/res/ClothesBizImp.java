@@ -41,6 +41,7 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
         resultObj.put("result", -1);
         try {
             ResClothesStore resClothesStore = hsfServiceFactory.consumer(ResClothesStore.class);
+            ResClothesEffectStore resClothesEffectStore = hsfServiceFactory.consumer(ResClothesEffectStore.class);
             if (resClothesStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$order("buyPrice", true));
@@ -50,8 +51,21 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
                     List<ResClothes> jobList = resClothesPage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResClothes resClothes : jobList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("clothesId.id", resClothes.getId()));
+                            List<ResClothesEffect> jobEffectList = resClothesEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResClothesEffect resClothesEffect : jobEffectList) {
+                                    JSONObject resClothesEffectObj = JsonUtils.formIdEntity(resClothesEffect);
+                                    if (resClothesEffectObj != null) {
+                                        jobEffectArray.add(resClothesEffectObj);
+                                    }
+                                }
+                            }
                             JSONObject jobObj = JsonUtils.formIdEntity(resClothes);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
                                 jobArray.add(jobObj);
                             }
                         }

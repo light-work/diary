@@ -39,26 +39,26 @@ public class EventBizImp extends BaseBiz implements EventBiz {
 
 
     @Override
-    public String list(Integer start, Integer limit,Integer gender, String source, String keyword) throws BizException {
+    public String list(Integer start, Integer limit, Integer gender, String source, String keyword) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             ResEventStore resEventStore = hsfServiceFactory.consumer(ResEventStore.class);
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
-            if (resEventStore!=null&& resEventResultStore != null && resEventResultEffectStore != null) {
+            if (resEventStore != null && resEventResultStore != null && resEventResultEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$eq("gender", gender));
                 selectorList.add(SelectorUtils.$eq("source", source));
-                Page<ResEvent> resEventPage = resEventStore.getPageList(start,limit,selectorList);
+                Page<ResEvent> resEventPage = resEventStore.getPageList(start, limit, selectorList);
                 JSONArray eventArray = new JSONArray();
-                if(resEventPage!=null){
-                    List<ResEvent> resEventList=resEventPage.getResultList();
+                if (resEventPage != null) {
+                    List<ResEvent> resEventList = resEventPage.getResultList();
                     if (resEventList != null && !resEventList.isEmpty()) {
                         for (ResEvent resEvent : resEventList) {
                             selectorList.clear();
                             selectorList.add(SelectorUtils.$eq("eventId.id", resEvent.getId()));
-                            selectorList.add(SelectorUtils.$order("displayOrder",true));
+                            selectorList.add(SelectorUtils.$order("displayOrder", true));
                             JSONArray eventResultArray = new JSONArray();
                             List<ResEventResult> eventResultList = resEventResultStore.getList(selectorList);
                             if (eventResultList != null && !eventResultList.isEmpty()) {
@@ -75,7 +75,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                                             }
                                         }
                                     }
-                                    if(resEventResult.getValue()==null){
+                                    if (resEventResult.getValue() == null) {
                                         resEventResult.setValue(0);
                                     }
                                     JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
@@ -108,18 +108,76 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         return resultObj.toString();
     }
 
+    private void buildResultList(Long eventId, JSONObject jsonObject) throws Exception {
+        ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
+        ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
+        if (resEventResultStore != null && eventId != null && resEventResultEffectStore != null) {
+            List<Selector> selectorList = new ArrayList<>();
+            selectorList.add(SelectorUtils.$eq("eventId.id", eventId));
+            selectorList.add(SelectorUtils.$order("displayOrder", true));
+            JSONArray eventResultArray = new JSONArray();
+            List<ResEventResult> eventResultList = resEventResultStore.getList(selectorList);
+            if (eventResultList != null && !eventResultList.isEmpty()) {
+                for (ResEventResult resEventResult : eventResultList) {
+                    selectorList.clear();
+                    selectorList.add(SelectorUtils.$eq("resultId.id", resEventResult.getId()));
+                    JSONArray eventResultEffectArray = new JSONArray();
+                    List<ResEventResultEffect> eventResultEffectList = resEventResultEffectStore.getList(selectorList);
+                    if (eventResultEffectList != null && !eventResultEffectList.isEmpty()) {
+                        for (ResEventResultEffect resEventResultEffect : eventResultEffectList) {
+                            JSONObject resEventResultEffectObj = JsonUtils.formIdEntity(resEventResultEffect);
+                            if (resEventResultEffectObj != null) {
+                                eventResultEffectArray.add(resEventResultEffectObj);
+                            }
+                        }
+                    }
+                    if (resEventResult.getValue() == null) {
+                        resEventResult.setValue(0);
+                    }
+                    JSONObject resEventResultObj = JsonUtils.formIdEntity(resEventResult);
+                    if (resEventResultObj != null) {
+                        resEventResultObj.put("effectList", eventResultEffectArray);
+                        eventResultArray.add(resEventResultObj);
+                    }
+                }
+            }
+            jsonObject.put("resultList", eventResultArray);
+        }
+    }
+
+    private void buildEffectList(Long resultId, JSONObject jsonObject) throws Exception {
+        ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
+        if (resultId != null && resEventResultEffectStore != null) {
+            List<Selector> selectorList = new ArrayList<>();
+            selectorList.clear();
+            selectorList.add(SelectorUtils.$eq("resultId.id", resultId));
+            JSONArray eventResultEffectArray = new JSONArray();
+            List<ResEventResultEffect> eventResultEffectList = resEventResultEffectStore.getList(selectorList);
+            if (eventResultEffectList != null && !eventResultEffectList.isEmpty()) {
+                for (ResEventResultEffect resEventResultEffect : eventResultEffectList) {
+                    JSONObject resEventResultEffectObj = JsonUtils.formIdEntity(resEventResultEffect);
+                    if (resEventResultEffectObj != null) {
+                        eventResultEffectArray.add(resEventResultEffectObj);
+                    }
+                }
+            }
+            jsonObject.put("effectList", eventResultEffectArray);
+        }
+    }
+
     @Override
-    public String addEvent(Integer gender,String source, String content) throws BizException {
+    public String addEvent(Integer gender, String source, String content) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             ResEventStore resEventStore = hsfServiceFactory.consumer(ResEventStore.class);
             if (resEventStore != null) {
-                ResEvent resEvent=new ResEvent();
+                ResEvent resEvent = new ResEvent();
                 resEvent.setId(DrdsIDUtils.getID(DrdsTable.RES));
                 resEvent.setContent(content);
                 resEvent.setGender(gender);
                 resEvent.setSource(source);
+                resEvent.setUseYn("Y");
                 bind(resEvent, 1l);
                 resEventStore.save(resEvent, Persistent.SAVE);
                 resultObj.put("result", 0);
@@ -191,21 +249,26 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(id);
+                ResEventResult resEventResult = resEventResultStore.getById(id,SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    Integer currentOrder = resEventResult.getDisplayOrder();
-                    if (currentOrder > 1) {
-                        currentOrder = currentOrder - 1;
-                        ResEventResult resEventResultOrder = resEventResultStore.getByOrder(currentOrder);
-                        if (resEventResultOrder != null) {
-                            resEventResultOrder.setDisplayOrder(resEventResultOrder.getDisplayOrder() + 1);
-                            resEventResult.setDisplayOrder(currentOrder);
-                            bind(resEventResult, 1l);
-                            bind(resEventResultOrder, 1l);
-                            resEventResultStore.saveOrder(resEventResult, Persistent.UPDATE, resEventResultOrder);
-                            resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        Integer currentOrder = resEventResult.getDisplayOrder();
+                        if (currentOrder > 1) {
+                            currentOrder = currentOrder - 1;
+                            ResEventResult resEventResultOrder = resEventResultStore.getByOrder(currentOrder);
+                            if (resEventResultOrder != null) {
+                                resEventResultOrder.setDisplayOrder(resEventResultOrder.getDisplayOrder() + 1);
+                                resEventResult.setDisplayOrder(currentOrder);
+                                bind(resEventResult, 1l);
+                                bind(resEventResultOrder, 1l);
+                                resEventResultStore.saveOrder(resEventResult, Persistent.UPDATE, resEventResultOrder);
+                                buildResultList(resEvent.getId(), resultObj);
+                                resultObj.put("result", 0);
+                            }
                         }
                     }
+
                 }
             }
         } catch (Exception ex) {
@@ -225,22 +288,27 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(id);
+                ResEventResult resEventResult = resEventResultStore.getById(id,SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    Integer maxOrder = resEventResultStore.getMaxOrder();
-                    Integer currentOrder = resEventResult.getDisplayOrder();
-                    if (currentOrder < maxOrder) {
-                        currentOrder = currentOrder + 1;
-                        ResEventResult resEventResultOrder = resEventResultStore.getByOrder(currentOrder);
-                        if (resEventResultOrder != null) {
-                            resEventResultOrder.setDisplayOrder(resEventResultOrder.getDisplayOrder() - 1);
-                            resEventResult.setDisplayOrder(currentOrder);
-                            bind(resEventResult, 1l);
-                            bind(resEventResultOrder, 1l);
-                            resEventResultStore.saveOrder(resEventResult, Persistent.UPDATE, resEventResultOrder);
-                            resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        Integer maxOrder = resEventResultStore.getMaxOrder();
+                        Integer currentOrder = resEventResult.getDisplayOrder();
+                        if (currentOrder < maxOrder) {
+                            currentOrder = currentOrder + 1;
+                            ResEventResult resEventResultOrder = resEventResultStore.getByOrder(currentOrder);
+                            if (resEventResultOrder != null) {
+                                resEventResultOrder.setDisplayOrder(resEventResultOrder.getDisplayOrder() - 1);
+                                resEventResult.setDisplayOrder(currentOrder);
+                                bind(resEventResult, 1l);
+                                bind(resEventResultOrder, 1l);
+                                resEventResultStore.saveOrder(resEventResult, Persistent.UPDATE, resEventResultOrder);
+                                buildResultList(resEvent.getId(), resultObj);
+                                resultObj.put("result", 0);
+                            }
                         }
                     }
+
                 }
             }
         } catch (Exception ex) {
@@ -272,6 +340,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                     bind(resEventResultEffect, 1l);
                     resEventResultEffect.setUseYn("Y");
                     resEventResultEffectStore.save(resEventResultEffect, Persistent.SAVE);
+                    buildEffectList(resultId, resultObj);
                     resultObj.put("result", 0);
                 }
             }
@@ -292,14 +361,19 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
             if (resEventResultEffectStore != null) {
-                ResEventResultEffect resEventResultEffect = resEventResultEffectStore.getById(id);
+                ResEventResultEffect resEventResultEffect = resEventResultEffectStore.getById(id,SelectorUtils.$alias("resultId","resultId"));
                 if (resEventResultEffect != null) {
-                    resEventResultEffect.setOperation(operation);
-                    resEventResultEffect.setAttrKey(attrKey);
-                    resEventResultEffect.setValue(value);
-                    bind(resEventResultEffect, 1l);
-                    resEventResultEffectStore.save(resEventResultEffect, Persistent.UPDATE);
-                    resultObj.put("result", 0);
+                    ResEventResult resEventResult=resEventResultEffect.getResultId();
+                    if(resEventResult!=null){
+                        resEventResultEffect.setOperation(operation);
+                        resEventResultEffect.setAttrKey(attrKey);
+                        resEventResultEffect.setValue(value);
+                        bind(resEventResultEffect, 1l);
+                        resEventResultEffectStore.save(resEventResultEffect, Persistent.UPDATE);
+                        buildEffectList(resEventResult.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
+
                 }
             }
         } catch (Exception ex) {
@@ -319,10 +393,14 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultEffectStore resEventResultEffectStore = hsfServiceFactory.consumer(ResEventResultEffectStore.class);
             if (resEventResultEffectStore != null) {
-                ResEventResultEffect resEventResultEffect = resEventResultEffectStore.getById(id);
+                ResEventResultEffect resEventResultEffect = resEventResultEffectStore.getById(id,SelectorUtils.$alias("resultId","resultId"));
                 if (resEventResultEffect != null) {
-                    resEventResultEffectStore.delete(resEventResultEffect);
-                    resultObj.put("result", 0);
+                    ResEventResult resEventResult=resEventResultEffect.getResultId();
+                    if(resEventResult!=null){
+                        resEventResultEffectStore.delete(resEventResultEffect);
+                        buildEffectList(resEventResult.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -380,11 +458,12 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                     resEventResult.setId(DrdsIDUtils.getID(DrdsTable.RES));
                     resEventResult.setEventId(resEvent);
                     resEventResult.setResultText(resultText);
-                    resEventResult.setDisplayOrder(currentOrder+1);
+                    resEventResult.setDisplayOrder(currentOrder + 1);
                     resEventResult.setContent(content);
                     bind(resEventResult, 1l);
                     resEventResult.setUseYn("Y");
                     resEventResultStore.save(resEventResult, Persistent.SAVE);
+                    buildResultList(eventId, resultObj);
                     resultObj.put("result", 0);
                 }
             }
@@ -405,13 +484,17 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(id);
+                ResEventResult resEventResult = resEventResultStore.getById(id, SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    resEventResult.setResultText(resultText);
-                    resEventResult.setContent(content);
-                    bind(resEventResult, 1l);
-                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
-                    resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        resEventResult.setResultText(resultText);
+                        resEventResult.setContent(content);
+                        bind(resEventResult, 1l);
+                        resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                        buildResultList(resEvent.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -431,12 +514,16 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(resultId);
+                ResEventResult resEventResult = resEventResultStore.getById(resultId, SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    bind(resEventResult, 1l);
-                    resEventResult.setUseYn("Y");
-                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
-                    resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        bind(resEventResult, 1l);
+                        resEventResult.setUseYn("Y");
+                        resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                        buildResultList(resEvent.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -456,12 +543,16 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(resultId);
+                ResEventResult resEventResult = resEventResultStore.getById(resultId, SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    bind(resEventResult, 1l);
-                    resEventResult.setUseYn("N");
-                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
-                    resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        bind(resEventResult, 1l);
+                        resEventResult.setUseYn("N");
+                        resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                        buildResultList(resEvent.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -481,14 +572,18 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(resultId);
+                ResEventResult resEventResult = resEventResultStore.getById(resultId, SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    bind(resEventResult, 1l);
-                    resEventResult.setCompare(compare);
-                    resEventResult.setAttrKey(attrKey);
-                    resEventResult.setValue(value);
-                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
-                    resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        bind(resEventResult, 1l);
+                        resEventResult.setCompare(compare);
+                        resEventResult.setAttrKey(attrKey);
+                        resEventResult.setValue(value);
+                        resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                        buildResultList(resEvent.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -508,14 +603,18 @@ public class EventBizImp extends BaseBiz implements EventBiz {
         try {
             ResEventResultStore resEventResultStore = hsfServiceFactory.consumer(ResEventResultStore.class);
             if (resEventResultStore != null) {
-                ResEventResult resEventResult = resEventResultStore.getById(resultId);
+                ResEventResult resEventResult = resEventResultStore.getById(resultId, SelectorUtils.$alias("eventId", "eventId"));
                 if (resEventResult != null) {
-                    bind(resEventResult, 1l);
-                    resEventResult.setCompare(null);
-                    resEventResult.setAttrKey(null);
-                    resEventResult.setValue(null);
-                    resEventResultStore.save(resEventResult, Persistent.UPDATE);
-                    resultObj.put("result", 0);
+                    ResEvent resEvent = resEventResult.getEventId();
+                    if (resEvent != null) {
+                        bind(resEventResult, 1l);
+                        resEventResult.setCompare(null);
+                        resEventResult.setAttrKey(null);
+                        resEventResult.setValue(null);
+                        resEventResultStore.save(resEventResult, Persistent.UPDATE);
+                        buildResultList(resEvent.getId(), resultObj);
+                        resultObj.put("result", 0);
+                    }
                 }
             }
         } catch (Exception ex) {
