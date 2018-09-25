@@ -2,9 +2,7 @@ package com.diary.bizImpl.res;
 
 import com.diary.common.BizException;
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResCouple;
-import com.diary.entity.res.ResCoupleEffect;
-import com.diary.entity.res.ResCoupleRequire;
+import com.diary.entity.res.*;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.providers.biz.res.CoupleBiz;
@@ -38,21 +36,55 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
     private HSFServiceFactory hsfServiceFactory;
 
     @Override
-    public String list(Integer start, Integer limit, String keyword) throws BizException {
+    public String list(Integer start, Integer limit,Integer gender, String keyword) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             ResCoupleStore resCoupleStore = hsfServiceFactory.consumer(ResCoupleStore.class);
-            if (resCoupleStore != null) {
+            ResCoupleRequireStore resCoupleRequireStore = hsfServiceFactory.consumer(ResCoupleRequireStore.class);
+            ResCoupleEffectStore resCoupleEffectStore = hsfServiceFactory.consumer(ResCoupleEffectStore.class);
+            if (resCoupleStore != null&&resCoupleEffectStore!=null&&resCoupleRequireStore!=null) {
                 List<Selector> selectorList = new ArrayList<>();
+                if(gender!=null){
+                    selectorList.add(SelectorUtils.$eq("gender", gender));
+                }
                 Page<ResCouple> resCouplePage = resCoupleStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
                 if (resCouplePage != null) {
                     List<ResCouple> jobList = resCouplePage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResCouple resCouple : jobList) {
+
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("coupleId.id", resCouple.getId()));
+                            List<ResCoupleEffect> jobEffectList = resCoupleEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResCoupleEffect resCoupleEffect : jobEffectList) {
+                                    JSONObject resCoupleEffectObj = JsonUtils.formIdEntity(resCoupleEffect);
+                                    if (resCoupleEffectObj != null) {
+                                        jobEffectArray.add(resCoupleEffectObj);
+                                    }
+                                }
+                            }
+
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("coupleId.id", resCouple.getId()));
+                            List<ResCoupleRequire> jobRequireList = resCoupleRequireStore.getList(selectorList);
+                            JSONArray jobRequireArray = new JSONArray();
+                            if (jobRequireList != null && !jobRequireList.isEmpty()) {
+                                for (ResCoupleRequire resCoupleRequire : jobRequireList) {
+                                    JSONObject resCoupleRequireObj = JsonUtils.formIdEntity(resCoupleRequire);
+                                    if (resCoupleRequireObj != null) {
+                                        jobRequireArray.add(resCoupleRequireObj);
+                                    }
+                                }
+                            }
+
                             JSONObject jobObj = JsonUtils.formIdEntity(resCouple);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
+                                jobObj.put("requireList",jobRequireArray);
                                 jobArray.add(jobObj);
                             }
                         }
@@ -267,6 +299,7 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
             ResCoupleEffectStore resCoupleEffectStore = hsfServiceFactory.consumer(ResCoupleEffectStore.class);
             if (resCoupleEffectStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$alias("coupleId", "coupleId"));
                 selectorList.add(SelectorUtils.$eq("coupleId.id", jobId));
                 List<ResCoupleEffect> jobEffectList = resCoupleEffectStore.getList(selectorList);
                 JSONArray jobEffectArray = new JSONArray();

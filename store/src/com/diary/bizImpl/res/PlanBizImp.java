@@ -34,13 +34,17 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     private HSFServiceFactory hsfServiceFactory;
 
     @Override
-    public String list(Integer start, Integer limit, String keyword) throws BizException {
+    public String list(Integer start, Integer limit,Integer gender, String keyword) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
-            if (resPlanStore != null) {
+            ResPlanEffectStore resPlanEffectStore = hsfServiceFactory.consumer(ResPlanEffectStore.class);
+            if (resPlanStore != null&&resPlanEffectStore!=null) {
                 List<Selector> selectorList = new ArrayList<>();
+                if(gender!=null){
+                    selectorList.add(SelectorUtils.$eq("gender", gender));
+                }
                 selectorList.add(SelectorUtils.$order("displayOrder", true));
                 Page<ResPlan> resPlanPage = resPlanStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
@@ -48,8 +52,21 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     List<ResPlan> jobList = resPlanPage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResPlan resPlan : jobList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("planId.id", resPlan.getId()));
+                            List<ResPlanEffect> jobEffectList = resPlanEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResPlanEffect resPlanEffect : jobEffectList) {
+                                    JSONObject resPlanEffectObj = JsonUtils.formIdEntity(resPlanEffect);
+                                    if (resPlanEffectObj != null) {
+                                        jobEffectArray.add(resPlanEffectObj);
+                                    }
+                                }
+                            }
                             JSONObject jobObj = JsonUtils.formIdEntity(resPlan);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
                                 jobArray.add(jobObj);
                             }
                         }

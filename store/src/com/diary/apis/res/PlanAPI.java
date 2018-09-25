@@ -21,6 +21,7 @@ public class PlanAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response list(@QueryParam("start") Integer start,
                          @QueryParam("limit") Integer limit,
+                         @QueryParam("gender") Integer gender,
                          @QueryParam("keyword") String keyword) {
         JSONObject result = new JSONObject();
         String bizResult = null;
@@ -35,7 +36,7 @@ public class PlanAPI extends BaseAPI {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.list(start, limit, keyword);
+                    bizResult = planBiz.list(start, limit, gender,keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

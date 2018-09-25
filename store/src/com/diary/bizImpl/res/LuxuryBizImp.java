@@ -41,7 +41,8 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
         resultObj.put("result", -1);
         try {
             ResLuxuryStore resLuxuryStore = hsfServiceFactory.consumer(ResLuxuryStore.class);
-            if (resLuxuryStore != null) {
+            ResLuxuryEffectStore resLuxuryEffectStore = hsfServiceFactory.consumer(ResLuxuryEffectStore.class);
+            if (resLuxuryStore != null&&resLuxuryEffectStore!=null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$order("buyPrice", true));
                 Page<ResLuxury> resLuxuryPage = resLuxuryStore.getPageList(start, limit, selectorList);
@@ -50,8 +51,21 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
                     List<ResLuxury> jobList = resLuxuryPage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResLuxury resLuxury : jobList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("luxuryId.id", resLuxury.getId()));
+                            List<ResLuxuryEffect> jobEffectList = resLuxuryEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResLuxuryEffect resLuxuryEffect : jobEffectList) {
+                                    JSONObject resLuxuryEffectObj = JsonUtils.formIdEntity(resLuxuryEffect);
+                                    if (resLuxuryEffectObj != null) {
+                                        jobEffectArray.add(resLuxuryEffectObj);
+                                    }
+                                }
+                            }
                             JSONObject jobObj = JsonUtils.formIdEntity(resLuxury);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
                                 jobArray.add(jobObj);
                             }
                         }

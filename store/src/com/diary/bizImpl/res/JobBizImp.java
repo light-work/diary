@@ -34,13 +34,18 @@ public class JobBizImp extends BaseBiz implements JobBiz {
     private HSFServiceFactory hsfServiceFactory;
 
     @Override
-    public String list(Integer start, Integer limit, String keyword) throws BizException {
+    public String list(Integer start, Integer limit,Integer gender, String keyword) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
             ResJobStore resJobStore = hsfServiceFactory.consumer(ResJobStore.class);
-            if (resJobStore != null) {
+            ResJobEffectStore resJobEffectStore = hsfServiceFactory.consumer(ResJobEffectStore.class);
+            ResJobRequireStore resJobRequireStore = hsfServiceFactory.consumer(ResJobRequireStore.class);
+            if (resJobStore != null&&resJobEffectStore!=null&&resJobRequireStore!=null) {
                 List<Selector> selectorList = new ArrayList<>();
+                if(gender!=null){
+                    selectorList.add(SelectorUtils.$eq("gender", gender));
+                }
                 selectorList.add(SelectorUtils.$order("price", true));
                 Page<ResJob> resJobPage = resJobStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
@@ -48,8 +53,35 @@ public class JobBizImp extends BaseBiz implements JobBiz {
                     List<ResJob> jobList = resJobPage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResJob resJob : jobList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("jobId.id", resJob.getId()));
+                            List<ResJobEffect> jobEffectList = resJobEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResJobEffect resJobEffect : jobEffectList) {
+                                    JSONObject resJobEffectObj = JsonUtils.formIdEntity(resJobEffect);
+                                    if (resJobEffectObj != null) {
+                                        jobEffectArray.add(resJobEffectObj);
+                                    }
+                                }
+                            }
+
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("jobId.id", resJob.getId()));
+                            List<ResJobRequire> jobRequireList = resJobRequireStore.getList(selectorList);
+                            JSONArray jobRequireArray = new JSONArray();
+                            if (jobRequireList != null && !jobRequireList.isEmpty()) {
+                                for (ResJobRequire resJobRequire : jobRequireList) {
+                                    JSONObject resJobRequireObj = JsonUtils.formIdEntity(resJobRequire);
+                                    if (resJobRequireObj != null) {
+                                        jobRequireArray.add(resJobRequireObj);
+                                    }
+                                }
+                            }
                             JSONObject jobObj = JsonUtils.formIdEntity(resJob);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
+                                jobObj.put("requireList",jobRequireArray);
                                 jobArray.add(jobObj);
                             }
                         }
@@ -370,6 +402,8 @@ public class JobBizImp extends BaseBiz implements JobBiz {
         }
         return resultObj.toString();
     }
+
+
 
     @Override
     public String requireList(Long jobId) throws BizException {

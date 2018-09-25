@@ -21,6 +21,7 @@ public class CoupleAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response list(@QueryParam("start") Integer start,
                          @QueryParam("limit") Integer limit,
+                         @QueryParam("gender") Integer gender,
                          @QueryParam("keyword") String keyword) {
         JSONObject result = new JSONObject();
         String bizResult = null;
@@ -35,7 +36,7 @@ public class CoupleAPI extends BaseAPI {
             try {
                 CoupleBiz coupleBiz = hsfServiceFactory.consumer(CoupleBiz.class);
                 if (coupleBiz != null) {
-                    bizResult = coupleBiz.list(start, limit, keyword);
+                    bizResult = coupleBiz.list(start, limit,gender, keyword);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

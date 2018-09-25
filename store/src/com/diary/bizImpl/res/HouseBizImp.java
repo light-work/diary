@@ -41,7 +41,8 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
         resultObj.put("result", -1);
         try {
             ResHouseStore resHouseStore = hsfServiceFactory.consumer(ResHouseStore.class);
-            if (resHouseStore != null) {
+            ResHouseEffectStore resHouseEffectStore = hsfServiceFactory.consumer(ResHouseEffectStore.class);
+            if (resHouseStore != null&&resHouseEffectStore!=null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$order("buyPrice", true));
                 Page<ResHouse> resHousePage = resHouseStore.getPageList(start, limit, selectorList);
@@ -50,8 +51,21 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
                     List<ResHouse> jobList = resHousePage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResHouse resHouse : jobList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("houseId.id", resHouse.getId()));
+                            List<ResHouseEffect> jobEffectList = resHouseEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResHouseEffect resHouseEffect : jobEffectList) {
+                                    JSONObject resHouseEffectObj = JsonUtils.formIdEntity(resHouseEffect);
+                                    if (resHouseEffectObj != null) {
+                                        jobEffectArray.add(resHouseEffectObj);
+                                    }
+                                }
+                            }
                             JSONObject jobObj = JsonUtils.formIdEntity(resHouse);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
                                 jobArray.add(jobObj);
                             }
                         }

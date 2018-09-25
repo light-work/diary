@@ -41,7 +41,8 @@ public class CarBizImp extends BaseBiz implements CarBiz {
         resultObj.put("result", -1);
         try {
             ResCarStore resCarStore = hsfServiceFactory.consumer(ResCarStore.class);
-            if (resCarStore != null) {
+            ResCarEffectStore resCarEffectStore = hsfServiceFactory.consumer(ResCarEffectStore.class);
+            if (resCarStore != null&&resCarEffectStore!=null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$order("buyPrice", true));
                 Page<ResCar> resCarPage = resCarStore.getPageList(start, limit, selectorList);
@@ -50,8 +51,21 @@ public class CarBizImp extends BaseBiz implements CarBiz {
                     List<ResCar> jobList = resCarPage.getResultList();
                     if (jobList != null && !jobList.isEmpty()) {
                         for (ResCar resCar : jobList) {
+                            selectorList.clear();
+                            selectorList.add(SelectorUtils.$eq("carId.id", resCar.getId()));
+                            List<ResCarEffect> jobEffectList = resCarEffectStore.getList(selectorList);
+                            JSONArray jobEffectArray = new JSONArray();
+                            if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                for (ResCarEffect resCarEffect : jobEffectList) {
+                                    JSONObject resCarEffectObj = JsonUtils.formIdEntity(resCarEffect);
+                                    if (resCarEffectObj != null) {
+                                        jobEffectArray.add(resCarEffectObj);
+                                    }
+                                }
+                            }
                             JSONObject jobObj = JsonUtils.formIdEntity(resCar);
                             if (jobObj != null) {
+                                jobObj.put("effectList",jobEffectArray);
                                 jobArray.add(jobObj);
                             }
                         }

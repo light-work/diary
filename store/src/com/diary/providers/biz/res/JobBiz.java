@@ -5,7 +5,7 @@ import com.diary.common.BizException;
 
 public interface JobBiz {
 
-    String list(Integer start, Integer limit, String keyword) throws BizException;
+    String list(Integer start, Integer limit,Integer gender, String keyword) throws BizException;
 
     String add(String title, Integer price, Integer gender, String remarks) throws BizException;
 
