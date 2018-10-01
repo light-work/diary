@@ -48,6 +48,17 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
+    public List<ResLuxury> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resLuxuryService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResLuxury resLuxury) throws StoreException {
         try {
             this.resLuxuryService.delete(resLuxury);

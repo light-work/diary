@@ -71,6 +71,17 @@ public class ResPlanStoreImpl implements ResPlanStore {
 
     @Override
     @ConnectManager
+    public List<ResPlan> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resPlanService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResPlan resPlan) throws StoreException {
         try {
             this.resPlanService.delete(resPlan);

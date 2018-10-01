@@ -33,6 +33,12 @@ public class ResClothesService extends HQuery implements ResClothesStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResClothes> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResClothes.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResClothes resClothes, Persistent persistent) throws StoreException {
         $(resClothes).save(persistent);

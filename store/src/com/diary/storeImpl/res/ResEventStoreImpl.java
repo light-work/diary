@@ -48,6 +48,17 @@ public class ResEventStoreImpl implements ResEventStore {
 
     @Override
     @ConnectManager
+    public List<ResEvent> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resEventService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResEvent resEvent) throws StoreException {
         try {
             this.resEventService.delete(resEvent);

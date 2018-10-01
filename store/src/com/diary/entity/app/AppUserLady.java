@@ -23,22 +23,23 @@ public class AppUserLady extends IdEntity implements Tracker {
 
     private AppUser userId;
 
-    private Long health;
+    private Integer health;
 
-    private Long money;
+    private Integer money;
 
+    private Integer profit;
 
-    private Long ability;
-
-
-    private Long wisdom;
-
-    private Long happly;
+    private Integer ability;
 
 
-    private Long beauty;
+    private Integer wisdom;
 
-    private Long popularity;
+    private Integer happy;
+
+
+    private Integer beauty;
+
+    private Integer popularity;
 
     private Integer days;
 
@@ -75,68 +76,76 @@ public class AppUserLady extends IdEntity implements Tracker {
     }
 
     @Column(name = "HEALTH")
-    public Long getHealth() {
+    public Integer getHealth() {
         return health;
     }
 
-    public void setHealth(Long health) {
+    public void setHealth(Integer health) {
         this.health = health;
     }
 
+    @Column(name = "PROFIT")
+    public Integer getProfit() {
+        return profit;
+    }
+
+    public void setProfit(Integer profit) {
+        this.profit = profit;
+    }
+
     @Column(name = "MONEY")
-    public Long getMoney() {
+    public Integer getMoney() {
         return money;
     }
 
-    public void setMoney(Long money) {
+    public void setMoney(Integer money) {
         this.money = money;
     }
 
     @Column(name = "ABILITY")
-    public Long getAbility() {
+    public Integer getAbility() {
         return ability;
     }
 
-    public void setAbility(Long ability) {
+    public void setAbility(Integer ability) {
         this.ability = ability;
     }
 
 
 
-    @Column(name = "HAPPLY")
-    public Long getHapply() {
-        return happly;
+    @Column(name = "HAPPY")
+    public Integer getHappy() {
+        return happy;
     }
 
-    public void setHapply(Long happly) {
-        this.happly = happly;
+    public void setHappy(Integer happy) {
+        this.happy = happy;
     }
-
 
     @Column(name = "WISDOM")
-    public Long getWisdom() {
+    public Integer getWisdom() {
         return wisdom;
     }
 
-    public void setWisdom(Long wisdom) {
+    public void setWisdom(Integer wisdom) {
         this.wisdom = wisdom;
     }
 
     @Column(name = "BEAUTY")
-    public Long getBeauty() {
+    public Integer getBeauty() {
         return beauty;
     }
 
-    public void setBeauty(Long beauty) {
+    public void setBeauty(Integer beauty) {
         this.beauty = beauty;
     }
 
     @Column(name = "POPULARITY")
-    public Long getPopularity() {
+    public Integer getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(Long popularity) {
+    public void setPopularity(Integer popularity) {
         this.popularity = popularity;
     }
 

@@ -33,6 +33,12 @@ public class ResJobService extends HQuery implements ResJobStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResJob> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResJob.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResJob resJob, Persistent persistent) throws StoreException {
         $(resJob).save(persistent);

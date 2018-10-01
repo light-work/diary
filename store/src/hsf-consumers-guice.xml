@@ -242,6 +242,11 @@
                   interface="com.diary.providers.biz.res.EventBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
+
+        <consumer id="userBizConsumer"
+                  interface="com.diary.providers.biz.app.UserBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
     </group>
 
 </hsf>

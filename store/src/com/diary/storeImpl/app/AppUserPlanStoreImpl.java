@@ -1,6 +1,8 @@
 package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import com.diary.providers.store.app.AppUserPlanStore;
 import com.diary.service.app.AppUserPlanService;
@@ -61,9 +63,20 @@ public class AppUserPlanStoreImpl implements AppUserPlanStore {
 
     @Override
     @ConnectManager
-    public void save(AppUserPlan appUserPlan, Persistent persistent) throws StoreException {
+    public void save(AppUserPlan appUserPlan, Persistent persistent,AppUserMan appUserMan) throws StoreException {
         try {
-            this.appUserPlanService.save(appUserPlan, persistent);
+            this.appUserPlanService.save(appUserPlan, persistent,appUserMan);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void save(AppUserPlan appUserPlan, Persistent persistent,AppUserLady appUserLady) throws StoreException {
+        try {
+            this.appUserPlanService.save(appUserPlan, persistent,appUserLady);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

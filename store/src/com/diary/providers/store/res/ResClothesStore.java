@@ -18,6 +18,8 @@ public interface ResClothesStore {
     Page<ResClothes> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+    List<ResClothes> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResClothes resClothes, Persistent persistent) throws StoreException;
 
     void delete(ResClothes resClothes) throws StoreException;

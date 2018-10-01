@@ -34,6 +34,12 @@ public class ResEventService extends HQuery implements ResEventStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResEvent> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResEvent.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResEvent resEvent, Persistent persistent) throws StoreException {
         $(resEvent).save(persistent);

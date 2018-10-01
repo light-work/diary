@@ -18,6 +18,8 @@ public interface ResHouseStore {
     Page<ResHouse> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+    List<ResHouse> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResHouse resHouse, Persistent persistent) throws StoreException;
 
     void delete(ResHouse resHouse) throws StoreException;

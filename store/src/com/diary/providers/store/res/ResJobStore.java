@@ -18,6 +18,9 @@ public interface ResJobStore {
     Page<ResJob> getPageList(int start,
                               int limit, List<Selector> selectorList) throws StoreException;
 
+
+    List<ResJob> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResJob resJob, Persistent persistent) throws StoreException;
 
     void delete(ResJob resJob) throws StoreException;

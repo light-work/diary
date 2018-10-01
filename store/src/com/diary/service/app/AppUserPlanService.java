@@ -1,8 +1,11 @@
 package com.diary.service.app;
 
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import com.diary.providers.store.app.AppUserPlanStore;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
@@ -18,6 +21,12 @@ import java.util.List;
  */
 @Singleton
 public class AppUserPlanService extends HQuery implements AppUserPlanStore {
+
+    @Inject
+    private AppUserManService appUserManService;
+
+    @Inject
+    private AppUserLadyService appUserLadyService;
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserPlan getById(Long id, Selector... selectors) throws StoreException {
@@ -44,7 +53,16 @@ public class AppUserPlanService extends HQuery implements AppUserPlanStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(AppUserPlan appUserPlan, Persistent persistent) throws StoreException {
+    public void save(AppUserPlan appUserPlan, Persistent persistent, AppUserMan appUserMan) throws StoreException {
         $(appUserPlan).save(persistent);
+        appUserManService.save(appUserMan,Persistent.UPDATE);
+    }
+
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserPlan appUserPlan, Persistent persistent, AppUserLady appUserLady) throws StoreException {
+        $(appUserPlan).save(persistent);
+        appUserLadyService.save(appUserLady,Persistent.UPDATE);
     }
 }

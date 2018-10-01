@@ -48,6 +48,17 @@ public class ResClothesStoreImpl implements ResClothesStore {
 
     @Override
     @ConnectManager
+    public List<ResClothes> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resClothesService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResClothes resClothes) throws StoreException {
         try {
             this.resClothesService.delete(resClothes);

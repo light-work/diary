@@ -2,7 +2,10 @@ package com.diary.service.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserJob;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserJobStore;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
@@ -19,6 +22,12 @@ import java.util.List;
 @Singleton
 public class AppUserJobService extends HQuery implements AppUserJobStore {
 
+    @Inject
+    private AppUserManService appUserManService;
+
+    @Inject
+    private AppUserLadyService appUserLadyService;
+
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserJob getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserJob.class);
@@ -32,8 +41,8 @@ public class AppUserJobService extends HQuery implements AppUserJobStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-    public List<AppUserJob> getByUserId(Long userId) throws StoreException {
-        return $($alias("userId", "userId"), $eq("userId.id", userId)).list(AppUserJob.class);
+    public AppUserJob getByUserId(Long userId) throws StoreException {
+        return $($eq("userId.id", userId)).get(AppUserJob.class);
     }
 
     @Override
@@ -44,7 +53,15 @@ public class AppUserJobService extends HQuery implements AppUserJobStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(AppUserJob appUserJob, Persistent persistent) throws StoreException {
+    public void save(AppUserJob appUserJob, Persistent persistent, AppUserMan appUserMan) throws StoreException {
         $(appUserJob).save(persistent);
+        this.appUserManService.save(appUserMan,Persistent.UPDATE);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserJob appUserJob, Persistent persistent, AppUserLady appUserLady) throws StoreException {
+        $(appUserJob).save(persistent);
+        this.appUserLadyService.save(appUserLady,Persistent.UPDATE);
     }
 }

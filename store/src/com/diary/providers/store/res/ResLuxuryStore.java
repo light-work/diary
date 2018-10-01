@@ -18,6 +18,8 @@ public interface ResLuxuryStore {
     Page<ResLuxury> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+    List<ResLuxury> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResLuxury resLuxury, Persistent persistent) throws StoreException;
 
     void delete(ResLuxury resLuxury) throws StoreException;

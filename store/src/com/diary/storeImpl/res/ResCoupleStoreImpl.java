@@ -46,6 +46,18 @@ public class ResCoupleStoreImpl implements ResCoupleStore {
         }
     }
 
+
+    @Override
+    @ConnectManager
+    public List<ResCouple> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resCoupleService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
     @Override
     @ConnectManager
     public void delete(ResCouple resCouple) throws StoreException {
