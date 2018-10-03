@@ -3,6 +3,7 @@ package com.diary.service.app;
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserJob;
 import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserJobStore;
 import com.google.inject.Inject;
@@ -28,6 +29,9 @@ public class AppUserJobService extends HQuery implements AppUserJobStore {
     @Inject
     private AppUserLadyService appUserLadyService;
 
+    @Inject
+    private AppUserLimitService appUserLimitService;
+
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserJob getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserJob.class);
@@ -42,7 +46,7 @@ public class AppUserJobService extends HQuery implements AppUserJobStore {
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserJob getByUserId(Long userId) throws StoreException {
-        return $($eq("userId.id", userId)).get(AppUserJob.class);
+        return $($alias("jobId","jobId"),$eq("userId.id", userId)).get(AppUserJob.class);
     }
 
     @Override
@@ -53,15 +57,21 @@ public class AppUserJobService extends HQuery implements AppUserJobStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(AppUserJob appUserJob, Persistent persistent, AppUserMan appUserMan) throws StoreException {
+    public void save(AppUserJob appUserJob, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
         $(appUserJob).save(persistent);
         this.appUserManService.save(appUserMan,Persistent.UPDATE);
+        if(appUserLimit!=null){
+            this.appUserLimitService.save(appUserLimit, Persistent.SAVE);
+        }
     }
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(AppUserJob appUserJob, Persistent persistent, AppUserLady appUserLady) throws StoreException {
+    public void save(AppUserJob appUserJob, Persistent persistent, AppUserLady appUserLady,AppUserLimit appUserLimit) throws StoreException {
         $(appUserJob).save(persistent);
         this.appUserLadyService.save(appUserLady,Persistent.UPDATE);
+        if(appUserLimit!=null){
+            this.appUserLimitService.save(appUserLimit, Persistent.SAVE);
+        }
     }
 }

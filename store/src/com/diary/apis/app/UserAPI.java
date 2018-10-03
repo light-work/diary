@@ -152,11 +152,11 @@ public class UserAPI extends BaseAPI {
         return Response.ok().entity(result.toString()).build();
     }
 
-    @Path("/callPlan")
+    @Path("/applyPlan")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response callPlan(@FormParam("userId") Long userId,
+    public Response applyPlan(@FormParam("userId") Long userId,
                              @FormParam("planId") Long planId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
@@ -171,13 +171,40 @@ public class UserAPI extends BaseAPI {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
-                    bizResult = userBiz.callPlan(userId, planId);
+                    bizResult = userBiz.applyPlan(userId, planId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
 
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+
+    @Path("/nextDay")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response nextDay(@FormParam("userId") Long userId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.nextDay(userId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }

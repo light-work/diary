@@ -16,7 +16,6 @@ import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.OKHttpUtil;
 import org.guiceside.commons.lang.BeanUtils;
-import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -92,39 +91,60 @@ public class UserBizImp extends BaseBiz implements UserBiz {
         return resultObj.toString();
     }
 
-    @Override
-    public String refresh(Long userId) throws BizException {
-        JSONObject resultObj = new JSONObject();
+    private void loadUserData(JSONObject resultObj, Long userId) throws BizException {
         JSONObject infoObj = null;
-        resultObj.put("result", -1);
         try {
             AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
             AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
-            if (appUserStore != null && appUserManStore != null && appUserLadyStore != null) {
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
+            if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserLimitStore != null && appUserJobStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray attrArray = new JSONArray();
                     GameUtils.attrList(attrArray, appUser.getUserGender(), 1);
                     resultObj.put("attrList", attrArray);
+                    AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
+                    String myJobId="";
+                    if(appUserJob!=null){
+                        myJobId=appUserJob.getJobId().getId()+"";
+                    }
                     if (appUser.getUserGender().intValue() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
-                        if(appUserMan!=null){
+                        if (appUserMan != null) {
+                            Integer day = appUserMan.getDays();
+                            Integer jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "JOB");
+                            Integer financialLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FINANCIAL");
+                            Integer luckLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "LUCK");
+                            Integer houseLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "HOUSE");
+                            Integer carLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "CAR");
+                            Integer coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "COUPLE");
                             infoObj = JsonUtils.formIdEntity(appUserMan, 0);
                             if (infoObj != null) {
-                                GameUtils.man(infoObj);
+                                GameUtils.man(infoObj, jobLimit, financialLimit, luckLimit, houseLimit, carLimit, coupleLimit);
                             }
                         }
                     } else if (appUser.getUserGender().intValue() == 0) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
-                        if(appUserLady!=null){
+                        if (appUserLady != null) {
+                            Integer day = appUserLady.getDays();
+                            Integer jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "JOB");
+                            Integer financialLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FINANCIAL");
+                            Integer luckLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "LUCK");
+                            Integer clothesLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "CLOTHES");
+                            Integer luxuryLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "LUXURY");
+                            Integer coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "COUPLE");
                             infoObj = JsonUtils.formIdEntity(appUserLady, 0);
                             if (infoObj != null) {
-                                GameUtils.lady(infoObj);
+                                GameUtils.lady(infoObj, jobLimit, financialLimit, luckLimit, clothesLimit, luxuryLimit, coupleLimit);
                             }
                         }
                     }
                     if (infoObj != null) {
+                        if(appUserJob!=null){
+                            infoObj.put("myJobId",myJobId);
+                        }
                         resultObj.put("userState", infoObj);
                     }
                     resultObj.put("result", 0);
@@ -137,13 +157,19 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                 throw new BizException(ex);
             }
         }
+    }
+
+    @Override
+    public String refresh(Long userId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        loadUserData(resultObj, userId);
         return resultObj.toString();
     }
 
     @Override
     public String start(Long userId) throws BizException {
         JSONObject resultObj = new JSONObject();
-        JSONObject infoObj = null;
         resultObj.put("result", -1);
         try {
             AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
@@ -152,9 +178,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    JSONArray attrArray = new JSONArray();
-                    GameUtils.attrList(attrArray, appUser.getUserGender(), 1);
-                    resultObj.put("attrList", attrArray);
                     if (appUser.getUserGender().intValue() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan == null) {
@@ -174,10 +197,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setUseYn("Y");
                             bind(appUserMan, userId);
                             appUserManStore.save(appUserMan, Persistent.SAVE);
-                        }
-                        infoObj = JsonUtils.formIdEntity(appUserMan, 0);
-                        if (infoObj != null) {
-                            GameUtils.man(infoObj);
                         }
                     } else if (appUser.getUserGender().intValue() == 0) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
@@ -199,16 +218,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             bind(appUserLady, userId);
                             appUserLadyStore.save(appUserLady, Persistent.SAVE);
                         }
-
-                        infoObj = JsonUtils.formIdEntity(appUserLady, 0);
-                        if (infoObj != null) {
-                            GameUtils.lady(infoObj);
-                        }
                     }
-                    if (infoObj != null) {
-                        resultObj.put("userState", infoObj);
-                    }
-                    resultObj.put("result", 0);
+                    loadUserData(resultObj, userId);
                 }
             }
         } catch (Exception ex) {
@@ -382,53 +393,48 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
             ResJobRequireStore resJobRequireStore = hsfServiceFactory.consumer(ResJobRequireStore.class);
             AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
             ResJobStore resJobStore = hsfServiceFactory.consumer(ResJobStore.class);
             if (appUserManStore != null && appUserLadyStore != null && appUserStore != null
-                    && resJobRequireStore != null && appUserJobStore != null && resJobStore != null) {
+                    && resJobRequireStore != null && appUserJobStore != null && resJobStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     List<ResJobRequire> requireList = resJobRequireStore.getListByJobId(jobId);
                     boolean pass = true;
+                    Integer jobLimit = 1;
+                    Integer day = -1;
                     AppUserMan appUserMan = null;
                     AppUserLady appUserLady = null;
+                    AppUserLimit appUserLimit = null;
                     if (appUser.getUserGender().intValue() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
+                            day = appUserMan.getDays();
+                            jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "JOB");
                             if (requireList != null && !requireList.isEmpty()) {
-                                for (ResJobRequire require : requireList) {
-                                    String requireKey = require.getAttrKey().toLowerCase();
-                                    if (StringUtils.isNotBlank(requireKey)) {
-                                        Integer requireValue = BeanUtils.getValue(appUserMan, requireKey, Integer.class);
-                                        if (requireValue != null) {
-                                            if (requireValue.intValue() < require.getValue().intValue()) {
-                                                pass = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
+                                pass = GameUtils.requirePass(requireList, appUserMan);
                             }
                         }
                     } else if (appUser.getUserGender().intValue() == 0) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
+                            day = appUserLady.getDays();
+                            jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "JOB");
                             if (requireList != null && !requireList.isEmpty()) {
-                                for (ResJobRequire require : requireList) {
-                                    String requireKey = require.getAttrKey().toLowerCase();
-                                    if (StringUtils.isNotBlank(requireKey)) {
-                                        Integer requireValue = BeanUtils.getValue(appUserLady, requireKey, Integer.class);
-                                        if (requireValue != null) {
-                                            if (requireValue.intValue() < require.getValue().intValue()) {
-                                                pass = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
+                                pass = GameUtils.requirePass(requireList, appUserLady);
                             }
                         }
                     }
-                    if (pass) {
+                    if (jobLimit == 0) {
+                        appUserLimit = new AppUserLimit();
+                        appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                        appUserLimit.setUserId(appUser);
+                        appUserLimit.setAction("JOB");
+                        appUserLimit.setDay(day);
+                        bind(appUserLimit, userId);
+                        appUserLimit.setUseYn("Y");
+                    }
+                    if (pass && jobLimit == 0) {
                         AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
                         ResJob resJob = resJobStore.getById(jobId);
                         if (resJob != null) {
@@ -445,30 +451,34 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             if (appUser.getUserGender().intValue() == 1) {
                                 if (appUserMan != null) {
                                     useHour(appUserMan);
-                                    appUserJobStore.save(appUserJob, persistent, appUserMan);
+                                    appUserJobStore.save(appUserJob, persistent, appUserMan, appUserLimit);
                                 }
                             } else if (appUser.getUserGender().intValue() == 0) {
                                 if (appUserLady != null) {
                                     useHour(appUserLady);
-                                    appUserJobStore.save(appUserJob, persistent, appUserLady);
+                                    appUserJobStore.save(appUserJob, persistent, appUserLady, appUserLimit);
                                 }
                             }
-                            resultObj.put("text", "恭喜，即可上班");
+                            resultObj.put("text", "恭喜你轻而易举的得到了面试官的认可，获得了工作。");
                             resultObj.put("result", 0);
                         }
                     } else {
                         if (appUser.getUserGender().intValue() == 1) {
                             if (appUserMan != null) {
                                 useHour(appUserMan);
-                                appUserManStore.save(appUserMan, Persistent.UPDATE);
+                                appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                             }
                         } else if (appUser.getUserGender().intValue() == 0) {
                             if (appUserLady != null) {
                                 useHour(appUserLady);
-                                appUserLadyStore.save(appUserLady, Persistent.UPDATE);
+                                appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
                             }
                         }
-                        resultObj.put("text", "抱歉，您当前的能力无法胜任这份工作");
+                        if (jobLimit == 1) {
+                            resultObj.put("text", "抱歉，每日只能应聘一次工作");
+                        } else {
+                            resultObj.put("text", "你卖力的表现了下自己，但是面试官觉得你的能力无法胜任这份工作");
+                        }
                         resultObj.put("result", 1);
                     }
                 }
@@ -485,7 +495,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
 
     @Override
-    public String callPlan(Long userId, Long planId) throws BizException {
+    public String applyPlan(Long userId, Long planId) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -496,55 +506,37 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             ResPlanEffectStore resPlanEffectStore = hsfServiceFactory.consumer(ResPlanEffectStore.class);
             ResPlanStore resPlanStore = hsfServiceFactory.consumer(ResPlanStore.class);
             if (appUserManStore != null && appUserLadyStore != null && appUserStore != null
-                    && appUserPlanStore != null && resPlanStore != null&&resPlanEffectStore!=null) {
+                    && appUserPlanStore != null && resPlanStore != null && resPlanEffectStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     List<ResPlanEffect> effectList = resPlanEffectStore.getListByPlanId(planId);
+                    List<ResPlanEffect> effectSubList = new ArrayList<>();
+                    if (effectList != null && !effectList.isEmpty()) {
+                        for (ResPlanEffect effect : effectList) {
+                            if (effect.getOperation().equals("SUB")) {
+                                effectSubList.add(effect);
+                            }
+                        }
+                    }
                     boolean pass = true;
                     AppUserMan appUserMan = null;
                     AppUserLady appUserLady = null;
-                    String resultEffect="";
+                    String resultEffect = "";
                     if (appUser.getUserGender().intValue() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
-                            if (effectList != null && !effectList.isEmpty()) {
-                                for (ResPlanEffect effect : effectList) {
-                                    String effectKey = effect.getAttrKey().toLowerCase();
-                                    if (StringUtils.isNotBlank(effectKey)&&effect.getOperation().equals("SUB")) {
-                                        Integer effectValue = BeanUtils.getValue(appUserMan, effectKey, Integer.class);
-                                        if (effectValue != null) {
-                                            if (effectValue.intValue() < effect.getValue().intValue()) {
-                                                pass = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            pass = GameUtils.requirePass(effectSubList, appUserMan);
                         }
                     } else if (appUser.getUserGender().intValue() == 0) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
-                            if (effectList != null && !effectList.isEmpty()) {
-                                for (ResPlanEffect effect : effectList) {
-                                    String effectKey = effect.getAttrKey().toLowerCase();
-                                    if (StringUtils.isNotBlank(effectKey)&&effect.getOperation().equals("SUB")) {
-                                        Integer effectValue = BeanUtils.getValue(appUserLady, effectKey, Integer.class);
-                                        if (effectValue != null) {
-                                            if (effectValue.intValue() < effect.getValue().intValue()) {
-                                                pass = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            pass = GameUtils.requirePass(effectSubList, appUserLady);
                         }
                     }
                     if (pass) {
                         ResPlan resPlan = resPlanStore.getById(planId);
                         if (resPlan != null) {
-                            AppUserPlan appUserPlan=new AppUserPlan();
+                            AppUserPlan appUserPlan = new AppUserPlan();
                             appUserPlan.setId(DrdsIDUtils.getID(DrdsTable.APP));
                             appUserPlan.setUserId(appUser);
                             appUserPlan.setPlanId(resPlan);
@@ -553,57 +545,29 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             if (appUser.getUserGender().intValue() == 1) {
                                 if (appUserMan != null) {
                                     if (effectList != null && !effectList.isEmpty()) {
-                                        for (ResPlanEffect effect : effectList) {
-                                            String effectKey = effect.getAttrKey().toLowerCase();
-                                            if (StringUtils.isNotBlank(effectKey)) {
-                                                Integer effectValue = BeanUtils.getValue(appUserMan, effectKey, Integer.class);
-                                                if (effectValue != null) {
-                                                    resultEffect+=GameUtils.getAttrNameMan(effectKey);
-                                                    if(effect.getOperation().equals("SUB")){
-                                                        effectValue=effectValue-effect.getValue();
-                                                        resultEffect+="-"+effect.getValue();
-                                                    }else  if(effect.getOperation().equals("ADD")){
-                                                        effectValue=effectValue+effect.getValue();
-                                                        resultEffect+="+"+effect.getValue();
-                                                    }
-                                                    BeanUtils.setValue(appUserMan, effectKey, effectValue);
-                                                }
-                                            }
-                                        }
+                                        AppUserMan oldMan = (AppUserMan) appUserMan.clone();
+                                        GameUtils.useEffect(effectList, appUserMan);
+                                        resultEffect = GameUtils.diffEffectMan(oldMan, appUserMan);
                                     }
                                     appUserPlan.setPlanOfDay(appUserMan.getDays());
                                     appUserPlan.setPlanOfHour(appUserMan.getHours());
                                     useHour(appUserMan);
-                                    appUserPlanStore.save(appUserPlan,Persistent.SAVE, appUserMan);
+                                    appUserPlanStore.save(appUserPlan, Persistent.SAVE, appUserMan);
                                 }
                             } else if (appUser.getUserGender().intValue() == 0) {
                                 if (appUserLady != null) {
                                     if (effectList != null && !effectList.isEmpty()) {
-                                        for (ResPlanEffect effect : effectList) {
-                                            String effectKey = effect.getAttrKey().toLowerCase();
-                                            if (StringUtils.isNotBlank(effectKey)) {
-                                                Integer effectValue = BeanUtils.getValue(appUserLady, effectKey, Integer.class);
-                                                if (effectValue != null) {
-                                                    resultEffect+=GameUtils.getAttrNameMan(effectKey);
-                                                    if(effect.getOperation().equals("SUB")){
-                                                        effectValue=effectValue-effect.getValue();
-                                                        resultEffect+="-"+effect.getValue();
-                                                    }else  if(effect.getOperation().equals("ADD")){
-                                                        effectValue=effectValue+effect.getValue();
-                                                        resultEffect+="+"+effect.getValue();
-                                                    }
-                                                    BeanUtils.setValue(appUserLady, effectKey, effectValue);
-                                                }
-                                            }
-                                        }
+                                        AppUserLady oldLady = (AppUserLady) appUserLady.clone();
+                                        GameUtils.useEffect(effectList, appUserLady);
+                                        resultEffect = GameUtils.diffEffectLady(oldLady, appUserLady);
                                     }
                                     appUserPlan.setPlanOfDay(appUserLady.getDays());
                                     appUserPlan.setPlanOfHour(appUserLady.getHours());
                                     useHour(appUserLady);
-                                    appUserPlanStore.save(appUserPlan,Persistent.SAVE, appUserLady);
+                                    appUserPlanStore.save(appUserPlan, Persistent.SAVE, appUserLady);
                                 }
                             }
-                            resultObj.put("text", "最终:"+resultEffect);
+                            resultObj.put("text", "最终:" + resultEffect);
                             resultObj.put("result", 0);
                         }
                     } else {
@@ -622,6 +586,155 @@ public class UserBizImp extends BaseBiz implements UserBiz {
         return resultObj.toString();
     }
 
+    @Override
+    public String nextDay(Long userId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
+            ResJobEffectStore resJobEffectStore = hsfServiceFactory.consumer(ResJobEffectStore.class);
+            AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
+            ResCarEffectStore resCarEffectStore = hsfServiceFactory.consumer(ResCarEffectStore.class);
+            AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+            ResHouseEffectStore resHouseEffectStore = hsfServiceFactory.consumer(ResHouseEffectStore.class);
+            AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
+            AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
+            if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserJobStore != null
+                    && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null && appUserLuxuryStore != null && resJobEffectStore != null
+                    && resCarEffectStore != null && resHouseEffectStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
+
+                    String resultText;
+
+                    if (appUser.getUserGender().intValue() == 1) {
+                        AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                        if (appUserMan != null) {
+                            Integer days = appUserMan.getDays();
+                            Integer hours = appUserMan.getHours();
+                            if (days > 0 && hours == 0) {
+                                appUserMan.setHours(8);
+                                appUserMan.setDays(days - 1);
+                                resultText = "第" + GameUtils.dayText(appUserMan.getDays()) + "天早上,";
+                                List<AppUserCar> appUserCarList = appUserCarStore.getByUserId(userId);
+                                List<AppUserHouse> appUserHouseList = appUserHouseStore.getByUserId(userId);
+                                if (appUserJob == null && appUserCarList.isEmpty() && appUserHouseList.isEmpty()) {
+                                    resultText += "你又没工作，又没车，又没房，哎，仅仅做了个梦！";
+                                } else {
+                                    if (appUserJob != null) {
+                                        List<ResJobEffect> jobEffectList = resJobEffectStore.getListByJobId(appUserJob.getJobId().getId());
+                                        if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                            resultText += "因为有一份工作,";
+                                            AppUserMan oldMan = (AppUserMan) appUserMan.clone();
+                                            GameUtils.useEffect(jobEffectList, appUserMan);
+                                            resultText += GameUtils.diffEffectMan(oldMan, appUserMan);
+                                        }
+                                    }
+                                    if (appUserCarList != null && !appUserCarList.isEmpty()) {
+                                        resultText += "因为有座驾的日常花费,";
+                                        AppUserMan oldMan = (AppUserMan) appUserMan.clone();
+                                        for (AppUserCar appUserCar : appUserCarList) {
+                                            List<ResCarEffect> carEffectList = resCarEffectStore.getListByCarId(appUserCar.getCarId().getId());
+                                            if (carEffectList != null && !carEffectList.isEmpty()) {
+                                                GameUtils.useEffect(carEffectList, appUserMan);
+                                            }
+                                        }
+                                        resultText += GameUtils.diffEffectMan(oldMan, appUserMan);
+                                    }
+                                    if (appUserHouseList != null && !appUserHouseList.isEmpty()) {
+                                        resultText += "因为有置业的日常花费,";
+                                        AppUserMan oldMan = (AppUserMan) appUserMan.clone();
+                                        for (AppUserHouse appUserHouse : appUserHouseList) {
+                                            List<ResHouseEffect> houseEffectList = resHouseEffectStore.getListByHouseId(appUserHouse.getHouseId().getId());
+                                            if (houseEffectList != null && !houseEffectList.isEmpty()) {
+                                                GameUtils.useEffect(houseEffectList, appUserMan);
+                                            }
+                                        }
+                                        resultText += GameUtils.diffEffectMan(oldMan, appUserMan);
+                                    }
+                                }
+                                appUserManStore.save(appUserMan, Persistent.UPDATE);
+                                resultObj.put("result", 0);
+                                resultObj.put("text", resultText);
+                            }
+                        }
+                    } else if (appUser.getUserGender().intValue() == 0) {
+                        AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
+                        if (appUserLady != null) {
+                            Integer days = appUserLady.getDays();
+                            Integer hours = appUserLady.getHours();
+                            if (days > 0 && hours == 0) {
+                                appUserLady.setHours(8);
+                                appUserLady.setDays(days - 1);
+                                resultText = "第" + GameUtils.dayText(appUserLady.getDays()) + "天早上,";
+                                appUserLadyStore.save(appUserLady, Persistent.UPDATE);
+                                resultObj.put("result", 0);
+                            }
+                        }
+                    }
+
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+
+    @Override
+    public String applyCouple(Long userId, Long coupleId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String buyHouse(Long userId, Long houseId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String sellHouse(Long userId, Long houseId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String buyCar(Long userId, Long carId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String sellCar(Long userId, Long carId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String buyClothes(Long userId, Long clothesId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String sellClothes(Long userId, Long clothesId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String buyLuxury(Long userId, Long luxuryId) throws BizException {
+        return null;
+    }
+
+    @Override
+    public String sellLuxury(Long userId, Long luxuryId) throws BizException {
+        return null;
+    }
+
     private void useHour(Object appUserObj) throws Exception {
         if (appUserObj != null) {
             Integer days = BeanUtils.getValue(appUserObj, "days", Integer.class);
@@ -630,11 +743,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                 if (hours > 0) {
                     hours = hours - 1;
                     BeanUtils.setValue(appUserObj, "hours", hours);
-                } else if (hours == 0 && days > 0) {
-                    hours = 8;
-                    days = days - 1;
-                    BeanUtils.setValue(appUserObj, "hours", hours);
-                    BeanUtils.setValue(appUserObj, "days", days);
                 }
             }
         }

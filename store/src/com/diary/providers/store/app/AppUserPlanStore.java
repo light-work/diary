@@ -3,6 +3,7 @@ package com.diary.providers.store.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import org.guiceside.commons.Page;

@@ -1,14 +1,61 @@
 package com.diary.entity.utils;
 
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserMan;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.lang.BeanUtils;
+import org.guiceside.commons.lang.StringUtils;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class GameUtils {
 
-    public static void man(JSONObject infoObj) throws Exception {
+    public static String dayText(Integer day) throws Exception {
+        String dayText = null;
+        int totalDays = 7;
+        int diffDays = totalDays - day;
+        switch (diffDays) {
+            case 1:
+                dayText = "一";
+                break;
+            case 2:
+                dayText = "二";
+                break;
+            case 3:
+                dayText = "三";
+                break;
+            case 4:
+                dayText = "四";
+                break;
+            case 5:
+                dayText = "五";
+                break;
+            case 6:
+                dayText = "六";
+                break;
+            case 7:
+                dayText = "七";
+                break;
+        }
+        return dayText;
+    }
+
+    public static void man(JSONObject infoObj, Integer jobLimit,
+                           Integer financialLimit,
+                           Integer luckLimit,
+                           Integer houseLimit,
+                           Integer carLimit, Integer coupleLimit) throws Exception {
         if (infoObj != null) {
+            infoObj.put("jobLimit", jobLimit);
+            infoObj.put("financialLimit", financialLimit);
+            infoObj.put("luckLimit", luckLimit);
+            infoObj.put("houseLimit", houseLimit);
+            infoObj.put("carLimit", carLimit);
+            infoObj.put("coupleLimit", coupleLimit);
+
+
             minish(infoObj);
             converInfoNumber(infoObj, "health");
             converInfoNumber(infoObj, "money");
@@ -23,8 +70,19 @@ public class GameUtils {
         }
     }
 
-    public static void lady(JSONObject infoObj) throws Exception {
+    public static void lady(JSONObject infoObj,
+                            Integer jobLimit,
+                            Integer financialLimit,
+                            Integer luckLimit,
+                            Integer clothesLimit,
+                            Integer luxuryLimit, Integer coupleLimit) throws Exception {
         if (infoObj != null) {
+            infoObj.put("jobLimit", jobLimit);
+            infoObj.put("financialLimit", financialLimit);
+            infoObj.put("luckLimit", luckLimit);
+            infoObj.put("clothesLimit", clothesLimit);
+            infoObj.put("luxuryLimit", luxuryLimit);
+            infoObj.put("coupleLimit", coupleLimit);
             minish(infoObj);
             converInfoNumber(infoObj, "health");
             converInfoNumber(infoObj, "money");
@@ -40,7 +98,7 @@ public class GameUtils {
     }
 
     public static void minish(JSONObject jsonObject) {
-        jsonObject.put("id",jsonObject.getLong("id")+"");
+        jsonObject.put("id", jsonObject.getLong("id") + "");
         jsonObject.remove("created");
         jsonObject.remove("createdBy");
         jsonObject.remove("updated");
@@ -49,58 +107,58 @@ public class GameUtils {
     }
 
     public static String getAttrNameMan(String attrKey) {
-        String attrName=null;
-        attrKey=attrKey.toUpperCase();
-       switch (attrKey){
-           case "HEALTH":
-               attrName="健康";
-               break;
-           case "MONEY":
-               attrName="金钱";
-               break;
-           case "ABILITY":
-               attrName="工作能力";
-               break;
-           case "EXPERIENCE":
-               attrName="社会经验";
-               break;
-           case "HAPPY":
-               attrName="快乐";
-               break;
-           case "POSITIVE":
-               attrName="正义";
-               break;
-           case "CONNECTIONS":
-               attrName="人脉";
-               break;
-       }
-       return attrName;
+        String attrName = null;
+        attrKey = attrKey.toUpperCase();
+        switch (attrKey) {
+            case "HEALTH":
+                attrName = "健康";
+                break;
+            case "MONEY":
+                attrName = "金钱";
+                break;
+            case "ABILITY":
+                attrName = "工作能力";
+                break;
+            case "EXPERIENCE":
+                attrName = "社会经验";
+                break;
+            case "HAPPY":
+                attrName = "快乐";
+                break;
+            case "POSITIVE":
+                attrName = "正义";
+                break;
+            case "CONNECTIONS":
+                attrName = "人脉";
+                break;
+        }
+        return attrName;
     }
 
     public static String getAttrNameLady(String attrKey) {
-        String attrName=null;
-        attrKey=attrKey.toUpperCase();
-        switch (attrKey){
+        String attrName = null;
+        attrKey = attrKey.toUpperCase();
+        switch (attrKey) {
             case "HEALTH":
-                attrName="健康";
+                attrName = "健康";
                 break;
             case "MONEY":
-                attrName="金钱";
+                attrName = "金钱";
                 break;
             case "ABILITY":
-                attrName="工作能力";
+                attrName = "工作能力";
                 break;
             case "WISDOM":
-                attrName="处世智慧";
+                attrName = "处世智慧";
                 break;
             case "HAPPY":
-                attrName="快乐";
+                attrName = "快乐";
                 break;
             case "BEAUTY":
-                attrName="美貌";
+                attrName = "美貌";
                 break;
             case "POPULARITY":
-                attrName="知名度";
+                attrName = "知名度";
                 break;
         }
         return attrName;
@@ -217,4 +275,128 @@ public class GameUtils {
         return str;
     }
 
+    public static boolean requirePass(List<?> requireList, Object userObj) throws Exception {
+        boolean pass = true;
+        for (Object require : requireList) {
+            String requireKey = BeanUtils.getValue(require, "attrKey").toString().toLowerCase();
+            if (StringUtils.isNotBlank(requireKey)) {
+                Integer userValue = BeanUtils.getValue(userObj, requireKey, Integer.class);
+                if (userValue != null) {
+                    Integer requireValue = BeanUtils.getValue(require, "value", Integer.class);
+                    if (requireValue != null) {
+                        if (userValue.intValue() < requireValue.intValue()) {
+                            pass = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return pass;
+    }
+
+    private static String diffValue(Integer value1,Integer value2,Integer gender,String key){
+        if(value1!=null&&value2!=null){
+            if(value1==value2){
+                return "";
+            }else if(value1>value2){
+                if(gender==1){
+                    return getAttrNameMan(key)+"-"+(value1-value2)+",";
+                }else{
+                    return getAttrNameLady(key)+"-"+(value1-value2)+",";
+                }
+            }else if(value1<value2){
+                if(gender==1){
+                    return getAttrNameMan(key)+"+"+(value2-value1)+",";
+                }else{
+                    return getAttrNameLady(key)+"+"+(value2-value1)+",";
+                }
+            }
+        }
+        return "";
+    }
+
+    public static String diffEffectMan(AppUserMan appUserManBefore, AppUserMan appUserManAfter) throws Exception {
+        String resultEffect = "";
+        if (appUserManBefore != null && appUserManAfter != null) {
+            Integer healthB=appUserManBefore.getHealth();
+            Integer moneyB=appUserManBefore.getMoney();
+            Integer abilityB=appUserManBefore.getAbility();
+            Integer experienceB=appUserManBefore.getExperience();
+            Integer happyB=appUserManBefore.getHappy();
+            Integer positiveB=appUserManBefore.getPositive();
+            Integer connectionsB=appUserManBefore.getConnections();
+
+            Integer healthA=appUserManAfter.getHealth();
+            Integer moneyA=appUserManAfter.getMoney();
+            Integer abilityA=appUserManAfter.getAbility();
+            Integer experienceA=appUserManAfter.getExperience();
+            Integer happyA=appUserManAfter.getHappy();
+            Integer positiveA=appUserManAfter.getPositive();
+            Integer connectionsA=appUserManAfter.getConnections();
+
+            resultEffect+=diffValue(healthB,healthA,1,"health");
+            resultEffect+=diffValue(moneyB,moneyA,1,"money");
+            resultEffect+=diffValue(abilityB,abilityA,1,"ability");
+            resultEffect+=diffValue(experienceB,experienceA,1,"experience");
+            resultEffect+=diffValue(happyB,happyA,1,"happy");
+            resultEffect+=diffValue(positiveB,positiveA,1,"positive");
+            resultEffect+=diffValue(connectionsB,connectionsA,1,"connections");
+
+        }
+        return resultEffect;
+    }
+
+    public static String diffEffectLady(AppUserLady appUserLadyBefore, AppUserLady appUserLadyAfter) throws Exception {
+        String resultEffect = "";
+        if (appUserLadyBefore != null && appUserLadyAfter != null) {
+            Integer healthB=appUserLadyBefore.getHealth();
+            Integer moneyB=appUserLadyBefore.getMoney();
+            Integer abilityB=appUserLadyBefore.getAbility();
+            Integer wisdomB=appUserLadyBefore.getWisdom();
+            Integer happyB=appUserLadyBefore.getHappy();
+            Integer beautyB=appUserLadyBefore.getBeauty();
+            Integer popularityB=appUserLadyBefore.getPopularity();
+
+            Integer healthA=appUserLadyAfter.getHealth();
+            Integer moneyA=appUserLadyAfter.getMoney();
+            Integer abilityA=appUserLadyAfter.getAbility();
+            Integer wisdomA=appUserLadyAfter.getWisdom();
+            Integer happyA=appUserLadyAfter.getHappy();
+            Integer beautyA=appUserLadyBefore.getBeauty();
+            Integer popularityA=appUserLadyBefore.getPopularity();
+
+
+            resultEffect+=diffValue(healthB,healthA,0,"health");
+            resultEffect+=diffValue(moneyB,moneyA,0,"money");
+            resultEffect+=diffValue(abilityB,abilityA,0,"ability");
+            resultEffect+=diffValue(wisdomB,wisdomA,0,"wisdom");
+            resultEffect+=diffValue(happyB,happyA,0,"happy");
+            resultEffect+=diffValue(beautyB,beautyA,0,"beauty");
+            resultEffect+=diffValue(popularityB,popularityA,0,"popularity");
+
+        }
+        return resultEffect;
+    }
+
+    public static void useEffect(List<?> effectList, Object userObj) throws Exception {
+        if (effectList != null && !effectList.isEmpty()) {
+            for (Object effect : effectList) {
+                String effectKey = BeanUtils.getValue(effect, "attrKey").toString().toLowerCase();
+                String operation = BeanUtils.getValue(effect, "operation").toString().toUpperCase();
+                Integer value = BeanUtils.getValue(effect, "value", Integer.class);
+                if (StringUtils.isNotBlank(effectKey) && value != null) {
+                    Integer effectValue = BeanUtils.getValue(userObj, effectKey, Integer.class);
+                    if (effectValue != null) {
+                        if (operation.equals("SUB")) {
+                            effectValue = effectValue - value;
+                        } else if (operation.equals("ADD")) {
+                            effectValue = effectValue + value;
+                        }
+                        BeanUtils.setValue(userObj, effectKey, effectValue);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package com.diary.service.app;
 
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserManStore;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
@@ -18,6 +20,9 @@ import java.util.List;
  */
 @Singleton
 public class AppUserManService extends HQuery implements AppUserManStore {
+
+    @Inject
+    private AppUserLimitService appUserLimitService;
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserMan getById(Long id, Selector... selectors) throws StoreException {
@@ -40,5 +45,14 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserMan appUserMan, Persistent persistent) throws StoreException {
         $(appUserMan).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserMan appUserMan, Persistent persistent, AppUserLimit appUserLimit) throws StoreException {
+        $(appUserMan).save(persistent);
+        if(appUserLimit!=null){
+            appUserLimitService.save(appUserLimit,Persistent.SAVE);
+        }
     }
 }

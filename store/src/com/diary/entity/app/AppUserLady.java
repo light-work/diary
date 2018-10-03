@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "APP_USER_LADY")
-public class AppUserLady extends IdEntity implements Tracker {
+public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -110,7 +110,6 @@ public class AppUserLady extends IdEntity implements Tracker {
     public void setAbility(Integer ability) {
         this.ability = ability;
     }
-
 
 
     @Column(name = "HAPPY")
@@ -211,4 +210,15 @@ public class AppUserLady extends IdEntity implements Tracker {
     public void setUseYn(String useYn) {
         this.useYn = useYn;
     }
+
+    public Object clone() {
+        AppUserLady sc = null;
+        try {
+            sc = (AppUserLady) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return sc;
+    }
+
 }

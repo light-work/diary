@@ -2,6 +2,7 @@ package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.providers.store.app.AppUserLadyStore;
 import com.diary.service.app.AppUserLadyService;
 import com.google.inject.Inject;
@@ -70,4 +71,14 @@ public class AppUserLadyStoreImpl implements AppUserLadyStore {
     }
 
 
+    @Override
+    @ConnectManager
+    public void save(AppUserLady appUserLady, Persistent persistent, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserLadyService.save(appUserLady, persistent,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

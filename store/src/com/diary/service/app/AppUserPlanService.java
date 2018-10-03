@@ -2,6 +2,7 @@ package com.diary.service.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import com.diary.providers.store.app.AppUserPlanStore;
@@ -27,6 +28,7 @@ public class AppUserPlanService extends HQuery implements AppUserPlanStore {
 
     @Inject
     private AppUserLadyService appUserLadyService;
+
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserPlan getById(Long id, Selector... selectors) throws StoreException {
@@ -56,6 +58,7 @@ public class AppUserPlanService extends HQuery implements AppUserPlanStore {
     public void save(AppUserPlan appUserPlan, Persistent persistent, AppUserMan appUserMan) throws StoreException {
         $(appUserPlan).save(persistent);
         appUserManService.save(appUserMan,Persistent.UPDATE);
+
     }
 
 
@@ -64,5 +67,6 @@ public class AppUserPlanService extends HQuery implements AppUserPlanStore {
     public void save(AppUserPlan appUserPlan, Persistent persistent, AppUserLady appUserLady) throws StoreException {
         $(appUserPlan).save(persistent);
         appUserLadyService.save(appUserLady,Persistent.UPDATE);
+
     }
 }

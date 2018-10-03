@@ -33,7 +33,7 @@ public class AppUserClothesService extends HQuery implements AppUserClothesStore
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public List<AppUserClothes> getByUserId(Long userId) throws StoreException {
-        return $($alias("userId", "userId"), $eq("userId.id", userId)).list(AppUserClothes.class);
+        return $($alias("userId", "userId"),$alias("clothesId", "clothesId"), $eq("userId.id", userId)).list(AppUserClothes.class);
     }
 
     @Override

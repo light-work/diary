@@ -52,6 +52,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserLimitStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserLimitStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="appUserStoreConsumer"
                   interface="com.diary.providers.store.app.AppUserStore"
                   version="for-dev" clientTimeout="5000">

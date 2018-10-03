@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "APP_USER_MAN")
-public class AppUserMan extends IdEntity implements Tracker {
+public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,6 @@ public class AppUserMan extends IdEntity implements Tracker {
     private Integer money;
 
     private Integer profit;
-
 
 
     private Integer ability;
@@ -132,8 +131,6 @@ public class AppUserMan extends IdEntity implements Tracker {
     }
 
 
-
-
     @Column(name = "POSITIVE")
     public Integer getPositive() {
         return positive;
@@ -213,5 +210,15 @@ public class AppUserMan extends IdEntity implements Tracker {
 
     public void setUseYn(String useYn) {
         this.useYn = useYn;
+    }
+
+    public Object clone() {
+        AppUserMan sc = null;
+        try {
+            sc = (AppUserMan) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return sc;
     }
 }

@@ -74,6 +74,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserLimitStore" class="com.diary.storeImpl.app.AppUserLimitStoreImpl"/>
+        <provider id="appUserLimitStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserLimitStore"
+                  ref="appUserLimitStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <service id="appUserStore" class="com.diary.storeImpl.app.AppUserStoreImpl"/>
         <provider id="appUserStoreProvider"
                   interface="com.diary.providers.store.app.AppUserStore"

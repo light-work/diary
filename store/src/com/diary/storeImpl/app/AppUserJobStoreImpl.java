@@ -3,6 +3,7 @@ package com.diary.storeImpl.app;
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserJob;
 import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserJobStore;
 import com.diary.service.app.AppUserJobService;
@@ -63,9 +64,9 @@ public class AppUserJobStoreImpl implements AppUserJobStore {
 
     @Override
     @ConnectManager
-    public void save(AppUserJob appUserJob, Persistent persistent,AppUserMan appUserMan) throws StoreException {
+    public void save(AppUserJob appUserJob, Persistent persistent,AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserJobService.save(appUserJob, persistent,appUserMan);
+            this.appUserJobService.save(appUserJob, persistent,appUserMan,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -74,9 +75,9 @@ public class AppUserJobStoreImpl implements AppUserJobStore {
 
     @Override
     @ConnectManager
-    public void save(AppUserJob appUserJob, Persistent persistent, AppUserLady appUserLady) throws StoreException {
+    public void save(AppUserJob appUserJob, Persistent persistent, AppUserLady appUserLady,AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserJobService.save(appUserJob, persistent,appUserLady);
+            this.appUserJobService.save(appUserJob, persistent,appUserLady,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
