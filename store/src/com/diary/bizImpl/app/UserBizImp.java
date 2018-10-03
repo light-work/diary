@@ -23,10 +23,7 @@ import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -99,20 +96,64 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
             AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
-            if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserLimitStore != null && appUserJobStore != null) {
+            AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
+            AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+            if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserLimitStore != null && appUserJobStore != null
+                    && appUserCarStore != null && appUserHouseStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray attrArray = new JSONArray();
                     GameUtils.attrList(attrArray, appUser.getUserGender(), 1);
                     resultObj.put("attrList", attrArray);
                     AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
-                    String myJobId="";
-                    if(appUserJob!=null){
-                        myJobId=appUserJob.getJobId().getId()+"";
+                    String myJobId = "";
+                    if (appUserJob != null) {
+                        myJobId = appUserJob.getJobId().getId() + "";
                     }
                     if (appUser.getUserGender().intValue() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
+                            JSONArray myCarArray = new JSONArray();
+                            JSONObject myCarNumber = new JSONObject();
+                            List<AppUserCar> appUserCarList = appUserCarStore.getByUserId(userId);
+                            if (appUserCarList != null && !appUserCarList.isEmpty()) {
+                                Set<Long> carSetIds = new HashSet<>();
+                                for (AppUserCar appUserCar : appUserCarList) {
+                                    ResCar resCar = appUserCar.getCarId();
+                                    if (resCar != null) {
+                                        if (!carSetIds.contains(resCar.getId())) {
+                                            myCarNumber.put(resCar.getId() + "", 1);
+                                            myCarArray.add(resCar.getId()+ "");
+                                            carSetIds.add(resCar.getId());
+                                        } else {
+                                            int carNumber = myCarNumber.getInt(resCar.getId() + "");
+                                            myCarNumber.put(resCar.getId() + "", carNumber + 1);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            JSONArray myHouseArray = new JSONArray();
+                            JSONObject myHouseNumber = new JSONObject();
+                            List<AppUserHouse> appUserHouseList = appUserHouseStore.getByUserId(userId);
+                            if (appUserHouseList != null && !appUserHouseList.isEmpty()) {
+                                Set<Long> houseSetIds = new HashSet<>();
+                                for (AppUserHouse appUserHouse : appUserHouseList) {
+                                    ResHouse resHouse = appUserHouse.getHouseId();
+                                    if (resHouse != null) {
+                                        if (!houseSetIds.contains(resHouse.getId())) {
+                                            myHouseNumber.put(resHouse.getId() + "", 1);
+                                            myHouseArray.add(resHouse.getId()+ "");
+                                            houseSetIds.add(resHouse.getId());
+                                        } else {
+                                            int houseNumber = myCarNumber.getInt(resHouse.getId() + "");
+                                            myHouseNumber.put(resHouse.getId() + "", houseNumber + 1);
+                                        }
+                                    }
+                                }
+                            }
+
                             Integer day = appUserMan.getDays();
                             Integer jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "JOB");
                             Integer financialLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FINANCIAL");
@@ -123,6 +164,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             infoObj = JsonUtils.formIdEntity(appUserMan, 0);
                             if (infoObj != null) {
                                 GameUtils.man(infoObj, jobLimit, financialLimit, luckLimit, houseLimit, carLimit, coupleLimit);
+                                infoObj.put("myCarArray", myCarArray);
+                                infoObj.put("myCarNumber", myCarNumber);
+                                infoObj.put("myHouseArray", myHouseArray);
+                                infoObj.put("myHouseNumber", myHouseNumber);
                             }
                         }
                     } else if (appUser.getUserGender().intValue() == 0) {
@@ -142,9 +187,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                     }
                     if (infoObj != null) {
-                        if(appUserJob!=null){
-                            infoObj.put("myJobId",myJobId);
-                        }
+                        infoObj.put("myJobId", myJobId);
                         resultObj.put("userState", infoObj);
                     }
                     resultObj.put("result", 0);
@@ -435,6 +478,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         appUserLimit.setUseYn("Y");
                     }
                     if (pass && jobLimit == 0) {
+
+
                         AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
                         ResJob resJob = resJobStore.getById(jobId);
                         if (resJob != null) {
@@ -697,22 +742,262 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
     @Override
     public String buyHouse(Long userId, Long houseId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+            ResHouseStore resHouseStore = hsfServiceFactory.consumer(ResHouseStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserManStore != null && resHouseStore != null && appUserHouseStore != null&&appUserLimitStore!=null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText=null;
+                    if (appUser.getUserGender().intValue() == 1) {
+                        AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                        ResHouse resHouse = resHouseStore.getById(houseId);
+                        if (appUserMan != null && resHouse != null) {
+                            Integer houseLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "HOUSE");
+                            if (houseLimit.intValue() == 0) {
+
+
+
+
+                                if (appUserMan.getMoney().intValue() >= resHouse.getBuyPrice().intValue()) {
+                                    AppUserLimit appUserLimit = new AppUserLimit();
+                                    appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserLimit.setUserId(appUser);
+                                    appUserLimit.setAction("HOUSE");
+                                    appUserLimit.setDay(appUserMan.getDays());
+                                    bind(appUserLimit, userId);
+                                    appUserLimit.setUseYn("Y");
+
+                                    AppUserHouse appUserHouse = new AppUserHouse();
+                                    appUserHouse.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserHouse.setUserId(appUser);
+                                    appUserHouse.setHouseId(resHouse);
+                                    appUserHouse.setUseYn("Y");
+                                    bind(appUserHouse, userId);
+
+                                    appUserMan.setMoney(appUserMan.getMoney() - resHouse.getBuyPrice());
+                                    useHour(appUserMan);
+                                    bind(appUserMan, userId);
+
+
+                                    appUserHouseStore.buy(appUserHouse, Persistent.SAVE, appUserMan,appUserLimit);
+                                    resultText = "恭喜你,豪掷金钱" + resHouse.getBuyPrice() + ",喜提:" + resHouse.getTitle();
+                                }else{
+                                    resultText = "有梦想是好的，但是现实也需要真金白银！";
+                                }
+                            }else {
+                                resultText = "抱歉，每日只能进行一次买卖房屋";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
     public String sellHouse(Long userId, Long houseId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserManStore != null && appUserHouseStore != null&&appUserLimitStore!=null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText="";
+                    if (appUser.getUserGender().intValue() == 1) {
+                        AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                        if(appUserMan!=null){
+                            Integer carLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "HOUSE");
+                            if (carLimit.intValue() == 0) {
+                                AppUserLimit appUserLimit = new AppUserLimit();
+                                appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                appUserLimit.setUserId(appUser);
+                                appUserLimit.setAction("HOUSE");
+                                appUserLimit.setDay(appUserMan.getDays());
+                                bind(appUserLimit, userId);
+                                appUserLimit.setUseYn("Y");
+
+                                List<AppUserHouse> appUserHouseList = appUserHouseStore.getByUserIdHouseId(userId, houseId);
+                                if (appUserHouseList != null && !appUserHouseList.isEmpty()) {
+                                    AppUserHouse appUserHouse = appUserHouseList.get(0);
+                                    if (appUserHouse != null) {
+                                        ResHouse resHouse = appUserHouse.getHouseId();
+                                        if (resHouse != null) {
+                                            appUserMan.setMoney(appUserMan.getMoney() + resHouse.getSellPrice());
+                                            useHour(appUserMan);
+                                            bind(appUserMan, userId);
+                                            appUserHouseStore.sell(appUserHouse, appUserMan,appUserLimit);
+                                            resultObj.put("result", 0);
+                                            resultText = "成功出售房屋:" + resHouse.getTitle() + ",获得金钱" + resHouse.getSellPrice();
+                                            resultObj.put("text", resultText);
+                                        }
+                                    }
+                                }
+                            }else {
+                                resultText = "抱歉，每日只能进行一次买卖房屋";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
     public String buyCar(Long userId, Long carId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
+            ResCarStore resCarStore = hsfServiceFactory.consumer(ResCarStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserManStore != null && resCarStore != null && appUserCarStore != null && appUserLimitStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText = null;
+                    if (appUser.getUserGender().intValue() == 1) {
+
+                        AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                        ResCar resCar = resCarStore.getById(carId);
+                        if (appUserMan != null && resCar != null) {
+                            Integer carLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "CAR");
+
+                            if (carLimit.intValue() == 0) {
+
+
+                                if (appUserMan.getMoney().intValue() >= resCar.getBuyPrice().intValue()) {
+
+                                    AppUserLimit appUserLimit = new AppUserLimit();
+                                    appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserLimit.setUserId(appUser);
+                                    appUserLimit.setAction("CAR");
+                                    appUserLimit.setDay(appUserMan.getDays());
+                                    bind(appUserLimit, userId);
+                                    appUserLimit.setUseYn("Y");
+
+                                    AppUserCar appUserCar = new AppUserCar();
+                                    appUserCar.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserCar.setUserId(appUser);
+                                    appUserCar.setCarId(resCar);
+                                    appUserCar.setUseYn("Y");
+                                    bind(appUserCar, userId);
+
+                                    appUserMan.setMoney(appUserMan.getMoney() - resCar.getBuyPrice());
+                                    useHour(appUserMan);
+                                    bind(appUserMan, userId);
+                                    appUserCarStore.buy(appUserCar, Persistent.SAVE, appUserMan, appUserLimit);
+                                    resultText = "恭喜你,花费金钱" + resCar.getBuyPrice() + ",喜提:" + resCar.getTitle();
+                                }else{
+                                    resultText = "有梦想是好的，但是现实也需要真金白银！";
+                                }
+                            } else {
+                                resultText = "抱歉，每日只能进行一次买卖车辆";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
     public String sellCar(Long userId, Long carId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserManStore != null && appUserCarStore != null && appUserLimitStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText=null;
+                    if (appUser.getUserGender().intValue() == 1) {
+                        AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                        if (appUserMan != null) {
+                            Integer carLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "CAR");
+                            if (carLimit.intValue() == 0) {
+                                AppUserLimit appUserLimit = new AppUserLimit();
+                                appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                appUserLimit.setUserId(appUser);
+                                appUserLimit.setAction("CAR");
+                                appUserLimit.setDay(appUserMan.getDays());
+                                bind(appUserLimit, userId);
+                                appUserLimit.setUseYn("Y");
+
+                                List<AppUserCar> appUserCarList = appUserCarStore.getByUserIdCarId(userId, carId);
+                                if (appUserCarList != null && !appUserCarList.isEmpty()) {
+                                    AppUserCar appUserCar = appUserCarList.get(0);
+                                    if (appUserCar != null) {
+                                        ResCar resCar = appUserCar.getCarId();
+                                        if (resCar != null) {
+                                            appUserMan.setMoney(appUserMan.getMoney() + resCar.getSellPrice());
+                                            useHour(appUserMan);
+                                            bind(appUserMan, userId);
+                                            appUserCarStore.sell(appUserCar, appUserMan,appUserLimit);
+                                            resultText = "成功出售车辆:" + resCar.getTitle() + ",获得金钱" + resCar.getSellPrice();
+                                        }
+                                    }
+                                }
+                            } else {
+                                resultText = "抱歉，每日只能进行一次买卖车辆";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+
+
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
