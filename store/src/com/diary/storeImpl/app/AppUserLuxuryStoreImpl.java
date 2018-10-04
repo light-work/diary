@@ -1,6 +1,8 @@
 package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserLuxury;
 import com.diary.providers.store.app.AppUserLuxuryStore;
 import com.diary.service.app.AppUserLuxuryService;
@@ -58,6 +60,16 @@ public class AppUserLuxuryStoreImpl implements AppUserLuxuryStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public List<AppUserLuxury> getByUserIdLuxuryId(Long userId, Long luxuryId) throws StoreException {
+        try {
+            return this.appUserLuxuryService.getByUserIdLuxuryId(userId, luxuryId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager
@@ -76,6 +88,28 @@ public class AppUserLuxuryStoreImpl implements AppUserLuxuryStore {
     public void delete(AppUserLuxury appUserLuxury) throws StoreException {
         try {
             this.appUserLuxuryService.delete(appUserLuxury);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void buy(AppUserLuxury appUserLuxury, Persistent persistent, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserLuxuryService.buy(appUserLuxury, persistent, appUserLady, appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void sell(AppUserLuxury appUserLuxury, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserLuxuryService.sell(appUserLuxury, appUserLady, appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

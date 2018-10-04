@@ -2,6 +2,8 @@ package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserClothes;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.providers.store.app.AppUserClothesStore;
 import com.diary.service.app.AppUserClothesService;
 import com.google.inject.Inject;
@@ -58,6 +60,16 @@ public class AppUserClothesStoreImpl implements AppUserClothesStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public List<AppUserClothes> getByUserIdClothesId(Long userId, Long clothesId) throws StoreException {
+        try {
+            return this.appUserClothesService.getByUserIdClothesId(userId,clothesId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager
@@ -76,6 +88,28 @@ public class AppUserClothesStoreImpl implements AppUserClothesStore {
     public void delete(AppUserClothes appUserClothes) throws StoreException {
         try {
             this.appUserClothesService.delete(appUserClothes);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void buy(AppUserClothes appUserClothes, Persistent persistent, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserClothesService.buy(appUserClothes, persistent, appUserLady, appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void sell(AppUserClothes appUserClothes, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserClothesService.sell(appUserClothes, appUserLady, appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
