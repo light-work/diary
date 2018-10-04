@@ -1002,22 +1002,260 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
     @Override
     public String buyClothes(Long userId, Long clothesId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
+            ResClothesStore resClothesStore = hsfServiceFactory.consumer(ResClothesStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserLadyStore != null && appUserClothesStore != null && resClothesStore != null && appUserLimitStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText = null;
+                    if (appUser.getUserGender().intValue() == 0) {
+
+                        AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
+                        ResClothes resClothes = resClothesStore.getById(clothesId);
+                        if (appUserLady != null && resClothes != null) {
+                            Integer clothesLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "CLOTHES");
+
+                            if (clothesLimit.intValue() == 0) {
+
+
+                                if (appUserLady.getMoney().intValue() >= resClothes.getBuyPrice().intValue()) {
+
+                                    AppUserLimit appUserLimit = new AppUserLimit();
+                                    appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserLimit.setUserId(appUser);
+                                    appUserLimit.setAction("CLOTHES");
+                                    appUserLimit.setDay(appUserLady.getDays());
+                                    bind(appUserLimit, userId);
+                                    appUserLimit.setUseYn("Y");
+
+                                    AppUserClothes appUserClothes = new AppUserClothes();
+                                    appUserClothes.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserClothes.setUserId(appUser);
+                                    appUserClothes.setClothesId(resClothes);
+                                    appUserClothes.setUseYn("Y");
+                                    bind(appUserClothes, userId);
+
+                                    appUserLady.setMoney(appUserLady.getMoney() - resClothes.getBuyPrice());
+                                    useHour(appUserLady);
+                                    bind(appUserLady, userId);
+                                    appUserClothesStore.buy(appUserClothes, Persistent.SAVE, appUserLady, appUserLimit);
+                                    resultText = "恭喜你,花费金钱" + resClothes.getBuyPrice() + ",喜提:" + resClothes.getTitle();
+                                }else{
+                                    resultText = "有梦想是好的，但是现实也需要真金白银！";
+                                }
+                            } else {
+                                resultText = "抱歉，每日只能进行一次买卖车辆";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
     public String sellClothes(Long userId, Long clothesId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserLadyStore != null && appUserClothesStore != null && appUserLimitStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText=null;
+                    if (appUser.getUserGender().intValue() == 0) {
+                        AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
+                        if (appUserLady != null) {
+                            Integer clothesLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "CLOTHES");
+                            if (clothesLimit.intValue() == 0) {
+                                AppUserLimit appUserLimit = new AppUserLimit();
+                                appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                appUserLimit.setUserId(appUser);
+                                appUserLimit.setAction("CLOTHES");
+                                appUserLimit.setDay(appUserLady.getDays());
+                                bind(appUserLimit, userId);
+                                appUserLimit.setUseYn("Y");
+
+                                List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserIdClothesId(userId, clothesId);
+                                if (appUserClothesList != null && !appUserClothesList.isEmpty()) {
+                                    AppUserClothes appUserClothes = appUserClothesList.get(0);
+                                    if (appUserClothes != null) {
+                                        ResClothes resClothes = appUserClothes.getClothesId();
+                                        if (resClothes != null) {
+                                            appUserLady.setMoney(appUserLady.getMoney() + resClothes.getSellPrice());
+                                            useHour(appUserLady);
+                                            bind(appUserLady, userId);
+                                            appUserClothesStore.sell(appUserClothes, appUserLady,appUserLimit);
+                                            resultText = "成功出售衣服:" + resClothes.getTitle() + ",获得金钱" + resClothes.getSellPrice();
+                                        }
+                                    }
+                                }
+                            } else {
+                                resultText = "抱歉，每日只能进行一次买卖衣服";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+
+
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
     public String buyLuxury(Long userId, Long luxuryId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
+            ResLuxuryStore resLuxuryStore = hsfServiceFactory.consumer(ResLuxuryStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserLadyStore != null && appUserLuxuryStore != null && resLuxuryStore != null && appUserLimitStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText = null;
+                    if (appUser.getUserGender().intValue() == 0) {
+
+                        AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
+                        ResLuxury resLuxury = resLuxuryStore.getById(luxuryId);
+                        if (appUserLady != null && resLuxury != null) {
+                            Integer luxuryLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "LUXURY");
+
+                            if (luxuryLimit.intValue() == 0) {
+
+
+                                if (appUserLady.getMoney().intValue() >= resLuxury.getBuyPrice().intValue()) {
+
+                                    AppUserLimit appUserLimit = new AppUserLimit();
+                                    appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserLimit.setUserId(appUser);
+                                    appUserLimit.setAction("LUXURY");
+                                    appUserLimit.setDay(appUserLady.getDays());
+                                    bind(appUserLimit, userId);
+                                    appUserLimit.setUseYn("Y");
+
+                                    AppUserLuxury appUserLuxury = new AppUserLuxury();
+                                    appUserLuxury.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserLuxury.setUserId(appUser);
+                                    appUserLuxury.setLuxuryId(resLuxury);
+                                    appUserLuxury.setUseYn("Y");
+                                    bind(appUserLuxury, userId);
+
+                                    appUserLady.setMoney(appUserLady.getMoney() - resLuxury.getBuyPrice());
+                                    useHour(appUserLady);
+                                    bind(appUserLady, userId);
+                                    appUserLuxuryStore.buy(appUserLuxury, Persistent.SAVE, appUserLady, appUserLimit);
+                                    resultText = "恭喜你,花费金钱" + resLuxury.getBuyPrice() + ",喜提:" + resLuxury.getTitle();
+                                }else{
+                                    resultText = "有梦想是好的，但是现实也需要真金白银！";
+                                }
+                            } else {
+                                resultText = "抱歉，每日只能进行一次买卖饰品";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
     public String sellLuxury(Long userId, Long luxuryId) throws BizException {
-        return null;
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            if (appUserStore != null && appUserLadyStore != null && appUserLuxuryStore != null && appUserLimitStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    String resultText=null;
+                    if (appUser.getUserGender().intValue() == 0) {
+                        AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
+                        if (appUserLady != null) {
+                            Integer luxuryLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "LUXURY");
+                            if (luxuryLimit.intValue() == 0) {
+                                AppUserLimit appUserLimit = new AppUserLimit();
+                                appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                appUserLimit.setUserId(appUser);
+                                appUserLimit.setAction("LUXURY");
+                                appUserLimit.setDay(appUserLady.getDays());
+                                bind(appUserLimit, userId);
+                                appUserLimit.setUseYn("Y");
+
+                                List<AppUserLuxury> appUserLuxuryList = appUserLuxuryStore.getByUserIdLuxuryId(userId, luxuryId);
+                                if (appUserLuxuryList != null && !appUserLuxuryList.isEmpty()) {
+                                    AppUserLuxury appUserLuxury = appUserLuxuryList.get(0);
+                                    if (appUserLuxury != null) {
+                                        ResLuxury resLuxury = appUserLuxury.getLuxuryId();
+                                        if (resLuxury != null) {
+                                            appUserLady.setMoney(appUserLady.getMoney() + resLuxury.getSellPrice());
+                                            useHour(appUserLady);
+                                            bind(appUserLady, userId);
+                                            appUserLuxuryStore.sell(appUserLuxury, appUserLady,appUserLimit);
+                                            resultText = "成功出售饰品:" + resLuxury.getTitle() + ",获得金钱" + resLuxury.getSellPrice();
+                                        }
+                                    }
+                                }
+                            } else {
+                                resultText = "抱歉，每日只能进行一次买卖饰品";
+                            }
+                            resultObj.put("result", 0);
+                            resultObj.put("text", resultText);
+                        }
+
+
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     private void useHour(Object appUserObj) throws Exception {

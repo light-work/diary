@@ -326,4 +326,122 @@ public class UserAPI extends BaseAPI {
         return Response.ok().entity(result.toString()).build();
     }
 
+
+    @Path("/buyClothes")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response buyClothes(@FormParam("userId") Long userId,
+                             @FormParam("clothesId") Long clothesId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (clothesId == null) {
+            errorBuilder.append("clothesId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.buyClothes(userId, clothesId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/sellClothes")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response sellClothes(@FormParam("userId") Long userId,
+                              @FormParam("clothesId") Long clothesId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (clothesId == null) {
+            errorBuilder.append("clothesId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.sellClothes(userId, clothesId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+    @Path("/buyLuxury")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response buyLuxury(@FormParam("userId") Long userId,
+                               @FormParam("clothesId") Long luxuryId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (luxuryId == null) {
+            errorBuilder.append("luxuryId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.buyLuxury(userId, luxuryId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/sellLuxury")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response sellLuxury(@FormParam("userId") Long userId,
+                                @FormParam("luxuryId") Long luxuryId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (luxuryId == null) {
+            errorBuilder.append("luxuryId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.sellLuxury(userId, luxuryId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
 }
