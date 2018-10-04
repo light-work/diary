@@ -62,6 +62,10 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserLuckStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserLuckStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
 
         <!--      res   -->
 

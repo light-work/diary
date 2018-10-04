@@ -391,7 +391,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response buyLuxury(@FormParam("userId") Long userId,
-                               @FormParam("clothesId") Long luxuryId) {
+                               @FormParam("luxuryId") Long luxuryId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -435,6 +435,35 @@ public class UserAPI extends BaseAPI {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
                     bizResult = userBiz.sellLuxury(userId, luxuryId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/applyLuck")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response applyLuck(@FormParam("userId") Long userId,
+                               @FormParam("luckId") Long luckId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (luckId == null) {
+            errorBuilder.append("luckId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.applyLuck(userId, luckId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

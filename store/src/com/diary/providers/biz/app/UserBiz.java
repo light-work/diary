@@ -22,6 +22,8 @@ public interface UserBiz {
 
     String applyPlan(Long userId,Long planId) throws BizException;
 
+    String applyLuck(Long userId,Long luckId) throws BizException;
+
     String applyCouple(Long userId,Long coupleId) throws BizException;
 
     String buyHouse(Long userId,Long houseId) throws BizException;

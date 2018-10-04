@@ -87,9 +87,14 @@
                   ref="appUserStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
-        
-        
-        
+
+
+        <service id="appUserLuckStore" class="com.diary.storeImpl.app.AppUserLuckStoreImpl"/>
+        <provider id="appUserLuckStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserLuckStore"
+                  ref="appUserLuckStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
         
         
         <!--      res   -->

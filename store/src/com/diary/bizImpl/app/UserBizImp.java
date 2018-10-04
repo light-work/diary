@@ -16,6 +16,7 @@ import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.OKHttpUtil;
 import org.guiceside.commons.lang.BeanUtils;
+import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -62,7 +63,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 if (appUser == null) {
                                     appUser = new AppUser();
                                     appUser.setId(DrdsIDUtils.getID(DrdsTable.APP));
-                                    appUser.setUserGender(1);
+                                    appUser.setUserGender(0);
                                     appUser.setOpenId(openid);
                                     appUser.setUseYn("Y");
                                     bind(appUser, 1l);
@@ -98,8 +99,11 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
             AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
             AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+
+            AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
+            AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserLimitStore != null && appUserJobStore != null
-                    && appUserCarStore != null && appUserHouseStore != null) {
+                    && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null && appUserLuxuryStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray attrArray = new JSONArray();
@@ -123,7 +127,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     if (resCar != null) {
                                         if (!carSetIds.contains(resCar.getId())) {
                                             myCarNumber.put(resCar.getId() + "", 1);
-                                            myCarArray.add(resCar.getId()+ "");
+                                            myCarArray.add(resCar.getId() + "");
                                             carSetIds.add(resCar.getId());
                                         } else {
                                             int carNumber = myCarNumber.getInt(resCar.getId() + "");
@@ -144,7 +148,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     if (resHouse != null) {
                                         if (!houseSetIds.contains(resHouse.getId())) {
                                             myHouseNumber.put(resHouse.getId() + "", 1);
-                                            myHouseArray.add(resHouse.getId()+ "");
+                                            myHouseArray.add(resHouse.getId() + "");
                                             houseSetIds.add(resHouse.getId());
                                         } else {
                                             int houseNumber = myCarNumber.getInt(resHouse.getId() + "");
@@ -173,6 +177,47 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     } else if (appUser.getUserGender().intValue() == 0) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
+                            JSONArray myClothesArray = new JSONArray();
+                            JSONObject myClothesNumber = new JSONObject();
+                            List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserId(userId);
+                            if (appUserClothesList != null && !appUserClothesList.isEmpty()) {
+                                Set<Long> clothesSetIds = new HashSet<>();
+                                for (AppUserClothes appUserClothes : appUserClothesList) {
+                                    ResClothes resClothes = appUserClothes.getClothesId();
+                                    if (resClothes != null) {
+                                        if (!clothesSetIds.contains(resClothes.getId())) {
+                                            myClothesNumber.put(resClothes.getId() + "", 1);
+                                            myClothesArray.add(resClothes.getId() + "");
+                                            clothesSetIds.add(resClothes.getId());
+                                        } else {
+                                            int carNumber = myClothesNumber.getInt(resClothes.getId() + "");
+                                            myClothesNumber.put(resClothes.getId() + "", carNumber + 1);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            JSONArray myLuxuryArray = new JSONArray();
+                            JSONObject myLuxuryNumber = new JSONObject();
+                            List<AppUserLuxury> appUserLuxuryList = appUserLuxuryStore.getByUserId(userId);
+                            if (appUserLuxuryList != null && !appUserLuxuryList.isEmpty()) {
+                                Set<Long> luxurySetIds = new HashSet<>();
+                                for (AppUserLuxury appUserLuxury : appUserLuxuryList) {
+                                    ResLuxury resLuxury = appUserLuxury.getLuxuryId();
+                                    if (resLuxury != null) {
+                                        if (!luxurySetIds.contains(resLuxury.getId())) {
+                                            myLuxuryNumber.put(resLuxury.getId() + "", 1);
+                                            myLuxuryArray.add(resLuxury.getId() + "");
+                                            luxurySetIds.add(resLuxury.getId());
+                                        } else {
+                                            int houseNumber = myLuxuryNumber.getInt(resLuxury.getId() + "");
+                                            myLuxuryNumber.put(resLuxury.getId() + "", houseNumber + 1);
+                                        }
+                                    }
+                                }
+                            }
+
                             Integer day = appUserLady.getDays();
                             Integer jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "JOB");
                             Integer financialLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FINANCIAL");
@@ -183,6 +228,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             infoObj = JsonUtils.formIdEntity(appUserLady, 0);
                             if (infoObj != null) {
                                 GameUtils.lady(infoObj, jobLimit, financialLimit, luckLimit, clothesLimit, luxuryLimit, coupleLimit);
+                                infoObj.put("myClothesArray", myClothesArray);
+                                infoObj.put("myClothesNumber", myClothesNumber);
+                                infoObj.put("myLuxuryArray", myLuxuryArray);
+                                infoObj.put("myLuxuryNumber", myLuxuryNumber);
                             }
                         }
                     }
@@ -235,7 +284,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setHappy(100);
                             appUserMan.setPositive(100);
                             appUserMan.setConnections(100);
-                            appUserMan.setDays(10);
+                            appUserMan.setDays(7);
                             appUserMan.setHours(8);
                             appUserMan.setUseYn("Y");
                             bind(appUserMan, userId);
@@ -255,7 +304,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserLady.setHappy(100);
                             appUserLady.setBeauty(100);
                             appUserLady.setPopularity(100);
-                            appUserLady.setDays(10);
+                            appUserLady.setDays(7);
                             appUserLady.setHours(8);
                             appUserLady.setUseYn("Y");
                             bind(appUserLady, userId);
@@ -293,8 +342,9 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             ResClothesStore resClothesStore = hsfServiceFactory.consumer(ResClothesStore.class);
             ResLuxuryStore resLuxuryStore = hsfServiceFactory.consumer(ResLuxuryStore.class);
             ResCoupleStore resCoupleStore = hsfServiceFactory.consumer(ResCoupleStore.class);
+            ResLuckStore resLuckStore = hsfServiceFactory.consumer(ResLuckStore.class);
             if (appUserStore != null && resJobStore != null && resPlanStore != null && resCarStore != null && resHouseStore != null && resClothesStore != null
-                    && resLuxuryStore != null && resCoupleStore != null) {
+                    && resLuxuryStore != null && resCoupleStore != null && resLuckStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray jobArray = new JSONArray();
@@ -304,6 +354,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     JSONArray houseArray = new JSONArray();
                     JSONArray clothesArray = new JSONArray();
                     JSONArray luxuryArray = new JSONArray();
+                    JSONArray luckArray = new JSONArray();
                     List<Selector> selectorList = new ArrayList<>();
                     selectorList.add(SelectorUtils.$eq("gender", appUser.getUserGender()));
                     selectorList.add(SelectorUtils.$eq("useYn", "Y"));
@@ -347,6 +398,21 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             }
                         }
                     }
+
+                    selectorList.clear();
+                    selectorList.add(SelectorUtils.$eq("useYn", "Y"));
+                    selectorList.add(SelectorUtils.$order("investPrice", true));
+                    List<ResLuck> luckList = resLuckStore.getList(selectorList);
+                    if (luckList != null && !luckList.isEmpty()) {
+                        for (ResLuck resLuck : luckList) {
+                            JSONObject planObj = JsonUtils.formIdEntity(resLuck, 0);
+                            if (planObj != null) {
+                                GameUtils.minish(planObj);
+                                luckArray.add(planObj);
+                            }
+                        }
+                    }
+
                     if (appUser.getUserGender().intValue() == 1) {
                         selectorList.clear();
                         selectorList.add(SelectorUtils.$eq("useYn", "Y"));
@@ -412,6 +478,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     resultObj.put("houseArray", houseArray);
                     resultObj.put("clothesArray", clothesArray);
                     resultObj.put("luxuryArray", luxuryArray);
+                    resultObj.put("luckArray", luckArray);
                     resultObj.put("result", 0);
                 }
             }
@@ -425,6 +492,127 @@ public class UserBizImp extends BaseBiz implements UserBiz {
         return resultObj.toString();
     }
 
+    @Override
+    public String applyLuck(Long userId, Long luckId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            ResLuckStore resLuckStore = hsfServiceFactory.consumer(ResLuckStore.class);
+            AppUserLuckStore appUserLuckStore = hsfServiceFactory.consumer(AppUserLuckStore.class);
+            if (appUserManStore != null && appUserLadyStore != null && appUserStore != null
+                    && resLuckStore != null && appUserLimitStore != null&&appUserLuckStore!=null) {
+                AppUser appUser = appUserStore.getById(userId);
+                ResLuck resLuck = resLuckStore.getById(luckId);
+                if (appUser != null && resLuck != null) {
+                    boolean pass = false;
+                    Integer luckLimit = 1;
+                    Integer day = -1;
+                    AppUserMan appUserMan = null;
+                    AppUserLady appUserLady = null;
+                    AppUserLimit appUserLimit = null;
+                    if (appUser.getUserGender().intValue() == 1) {
+                        appUserMan = appUserManStore.getByUserId(userId);
+                        if (appUserMan != null) {
+                            day = appUserMan.getDays();
+                            luckLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "LUCK");
+                            if (appUserMan.getMoney().intValue() >= resLuck.getInvestPrice().intValue()) {
+                                pass = true;
+                            }
+
+                        }
+                    } else if (appUser.getUserGender().intValue() == 0) {
+                        appUserLady = appUserLadyStore.getByUserId(userId);
+                        if (appUserLady != null) {
+                            day = appUserLady.getDays();
+                            luckLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "LUCK");
+                            if (appUserLady.getMoney().intValue() >= resLuck.getInvestPrice().intValue()) {
+                                pass = true;
+                            }
+                        }
+                    }
+                    if (luckLimit == 0) {
+                        appUserLimit = new AppUserLimit();
+                        appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                        appUserLimit.setUserId(appUser);
+                        appUserLimit.setAction("LUCK");
+                        appUserLimit.setDay(day);
+                        bind(appUserLimit, userId);
+                        appUserLimit.setUseYn("Y");
+                    }
+                    if (pass && luckLimit == 0) {
+                        AppUserLuck appUserLuck = new AppUserLuck();
+                        appUserLuck.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                        appUserLuck.setUserId(appUser);
+                        appUserLuck.setLuckId(resLuck);
+                        appUserLuck.setDay(day);
+                        appUserLuck.setUseYn("Y");
+                        bind(appUserLuck, userId);
+
+                        List<Double> doubleList=new ArrayList<>();
+                        doubleList.add(resLuck.getProbability());
+                        doubleList.add(NumberUtils.subtract(1,resLuck.getProbability(),2));
+                        int status=GameUtils.lottery(doubleList);
+                        appUserLuck.setStatus(status);
+                        if (appUser.getUserGender().intValue() == 1) {
+                            if (appUserMan != null) {
+                                appUserMan.setMoney(appUserMan.getMoney()-resLuck.getInvestPrice());
+                                if(status==0){
+                                    appUserMan.setMoney(appUserMan.getMoney()+resLuck.getGainPrice());
+                                }
+                                useHour(appUserMan);
+                                appUserLuckStore.save(appUserLuck, Persistent.SAVE, appUserMan, appUserLimit);
+                            }
+                        } else if (appUser.getUserGender().intValue() == 0) {
+                            if (appUserLady != null) {
+                                appUserLady.setMoney(appUserLady.getMoney()-resLuck.getInvestPrice());
+                                if(status==0){
+                                    appUserLady.setMoney(appUserLady.getMoney()+resLuck.getGainPrice());
+                                }
+                                useHour(appUserLady);
+                                appUserLuckStore.save(appUserLuck, Persistent.SAVE, appUserLady, appUserLimit);
+                            }
+                        }
+                        if(status==0){
+                            resultObj.put("text", "运气不错，平日行善积德的回报，金钱 "+resLuck.getGainPrice()+"。");
+                        }else{
+                            resultObj.put("text", "哎，运气太差，平日要扶老奶奶过马路，孝敬父母。");
+                        }
+
+                        resultObj.put("result", 0);
+                    } else {
+                        if (appUser.getUserGender().intValue() == 1) {
+                            if (appUserMan != null) {
+                                useHour(appUserMan);
+                                appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
+                            }
+                        } else if (appUser.getUserGender().intValue() == 0) {
+                            if (appUserLady != null) {
+                                useHour(appUserLady);
+                                appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
+                            }
+                        }
+                        if (luckLimit == 1) {
+                            resultObj.put("text", "抱歉，每日只能试一次手气");
+                        } else {
+                            resultObj.put("text", "凡事都需要有本钱都，哪怕想试试手气也不例外");
+                        }
+                        resultObj.put("result", 1);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
 
     @Override
     public String applyJob(Long userId, Long jobId) throws BizException {
@@ -646,10 +834,12 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
             ResHouseEffectStore resHouseEffectStore = hsfServiceFactory.consumer(ResHouseEffectStore.class);
             AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
+            ResClothesEffectStore resClothesEffectStore = hsfServiceFactory.consumer(ResClothesEffectStore.class);
             AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
+            ResLuxuryEffectStore resLuxuryEffectStore = hsfServiceFactory.consumer(ResLuxuryEffectStore.class);
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserJobStore != null
                     && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null && appUserLuxuryStore != null && resJobEffectStore != null
-                    && resCarEffectStore != null && resHouseEffectStore != null) {
+                    && resCarEffectStore != null && resHouseEffectStore != null && resClothesEffectStore != null && resLuxuryEffectStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
@@ -716,8 +906,46 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 appUserLady.setHours(8);
                                 appUserLady.setDays(days - 1);
                                 resultText = "第" + GameUtils.dayText(appUserLady.getDays()) + "天早上,";
+                                List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserId(userId);
+                                List<AppUserLuxury> appUserLuxuryList = appUserLuxuryStore.getByUserId(userId);
+                                if (appUserJob == null && appUserClothesList.isEmpty() && appUserLuxuryList.isEmpty()) {
+                                    resultText += "你又没工作，又没衣服，又没饰品，哎，仅仅做了个梦！";
+                                } else {
+                                    if (appUserJob != null) {
+                                        List<ResJobEffect> jobEffectList = resJobEffectStore.getListByJobId(appUserJob.getJobId().getId());
+                                        if (jobEffectList != null && !jobEffectList.isEmpty()) {
+                                            resultText += "因为有一份工作,";
+                                            AppUserLady oldLady = (AppUserLady) appUserLady.clone();
+                                            GameUtils.useEffect(jobEffectList, oldLady);
+                                            resultText += GameUtils.diffEffectLady(oldLady, appUserLady);
+                                        }
+                                    }
+                                    if (appUserClothesList != null && !appUserClothesList.isEmpty()) {
+                                        resultText += "因为有衣服的日常花费,";
+                                        AppUserLady oldLady = (AppUserLady) appUserLady.clone();
+                                        for (AppUserClothes appUserClothes : appUserClothesList) {
+                                            List<ResClothesEffect> clothesEffectList = resClothesEffectStore.getListByClothesId(appUserClothes.getClothesId().getId());
+                                            if (clothesEffectList != null && !clothesEffectList.isEmpty()) {
+                                                GameUtils.useEffect(clothesEffectList, appUserLady);
+                                            }
+                                        }
+                                        resultText += GameUtils.diffEffectLady(oldLady, appUserLady);
+                                    }
+                                    if (appUserLuxuryList != null && !appUserLuxuryList.isEmpty()) {
+                                        resultText += "因为有饰品的日常花费,";
+                                        AppUserLady oldLady = (AppUserLady) appUserLady.clone();
+                                        for (AppUserLuxury appUserLuxury : appUserLuxuryList) {
+                                            List<ResLuxuryEffect> luxuryEffectList = resLuxuryEffectStore.getListByLuxuryId(appUserLuxury.getLuxuryId().getId());
+                                            if (luxuryEffectList != null && !luxuryEffectList.isEmpty()) {
+                                                GameUtils.useEffect(luxuryEffectList, appUserLady);
+                                            }
+                                        }
+                                        resultText += GameUtils.diffEffectLady(oldLady, appUserLady);
+                                    }
+                                }
                                 appUserLadyStore.save(appUserLady, Persistent.UPDATE);
                                 resultObj.put("result", 0);
+                                resultObj.put("text", resultText);
                             }
                         }
                     }
@@ -750,18 +978,16 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
             ResHouseStore resHouseStore = hsfServiceFactory.consumer(ResHouseStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
-            if (appUserStore != null && appUserManStore != null && resHouseStore != null && appUserHouseStore != null&&appUserLimitStore!=null) {
+            if (appUserStore != null && appUserManStore != null && resHouseStore != null && appUserHouseStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    String resultText=null;
+                    String resultText = null;
                     if (appUser.getUserGender().intValue() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         ResHouse resHouse = resHouseStore.getById(houseId);
                         if (appUserMan != null && resHouse != null) {
                             Integer houseLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "HOUSE");
                             if (houseLimit.intValue() == 0) {
-
-
 
 
                                 if (appUserMan.getMoney().intValue() >= resHouse.getBuyPrice().intValue()) {
@@ -785,12 +1011,12 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     bind(appUserMan, userId);
 
 
-                                    appUserHouseStore.buy(appUserHouse, Persistent.SAVE, appUserMan,appUserLimit);
+                                    appUserHouseStore.buy(appUserHouse, Persistent.SAVE, appUserMan, appUserLimit);
                                     resultText = "恭喜你,豪掷金钱" + resHouse.getBuyPrice() + ",喜提:" + resHouse.getTitle();
-                                }else{
+                                } else {
                                     resultText = "有梦想是好的，但是现实也需要真金白银！";
                                 }
-                            }else {
+                            } else {
                                 resultText = "抱歉，每日只能进行一次买卖房屋";
                             }
                             resultObj.put("result", 0);
@@ -819,13 +1045,13 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
             AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
-            if (appUserStore != null && appUserManStore != null && appUserHouseStore != null&&appUserLimitStore!=null) {
+            if (appUserStore != null && appUserManStore != null && appUserHouseStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    String resultText="";
+                    String resultText = "";
                     if (appUser.getUserGender().intValue() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
-                        if(appUserMan!=null){
+                        if (appUserMan != null) {
                             Integer carLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "HOUSE");
                             if (carLimit.intValue() == 0) {
                                 AppUserLimit appUserLimit = new AppUserLimit();
@@ -845,14 +1071,14 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                             appUserMan.setMoney(appUserMan.getMoney() + resHouse.getSellPrice());
                                             useHour(appUserMan);
                                             bind(appUserMan, userId);
-                                            appUserHouseStore.sell(appUserHouse, appUserMan,appUserLimit);
+                                            appUserHouseStore.sell(appUserHouse, appUserMan, appUserLimit);
                                             resultObj.put("result", 0);
                                             resultText = "成功出售房屋:" + resHouse.getTitle() + ",获得金钱" + resHouse.getSellPrice();
                                             resultObj.put("text", resultText);
                                         }
                                     }
                                 }
-                            }else {
+                            } else {
                                 resultText = "抱歉，每日只能进行一次买卖房屋";
                             }
                             resultObj.put("result", 0);
@@ -917,7 +1143,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     bind(appUserMan, userId);
                                     appUserCarStore.buy(appUserCar, Persistent.SAVE, appUserMan, appUserLimit);
                                     resultText = "恭喜你,花费金钱" + resCar.getBuyPrice() + ",喜提:" + resCar.getTitle();
-                                }else{
+                                } else {
                                     resultText = "有梦想是好的，但是现实也需要真金白银！";
                                 }
                             } else {
@@ -951,7 +1177,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             if (appUserStore != null && appUserManStore != null && appUserCarStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    String resultText=null;
+                    String resultText = null;
                     if (appUser.getUserGender().intValue() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
@@ -974,7 +1200,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                             appUserMan.setMoney(appUserMan.getMoney() + resCar.getSellPrice());
                                             useHour(appUserMan);
                                             bind(appUserMan, userId);
-                                            appUserCarStore.sell(appUserCar, appUserMan,appUserLimit);
+                                            appUserCarStore.sell(appUserCar, appUserMan, appUserLimit);
                                             resultText = "成功出售车辆:" + resCar.getTitle() + ",获得金钱" + resCar.getSellPrice();
                                         }
                                     }
@@ -1046,7 +1272,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     bind(appUserLady, userId);
                                     appUserClothesStore.buy(appUserClothes, Persistent.SAVE, appUserLady, appUserLimit);
                                     resultText = "恭喜你,花费金钱" + resClothes.getBuyPrice() + ",喜提:" + resClothes.getTitle();
-                                }else{
+                                } else {
                                     resultText = "有梦想是好的，但是现实也需要真金白银！";
                                 }
                             } else {
@@ -1080,7 +1306,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             if (appUserStore != null && appUserLadyStore != null && appUserClothesStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    String resultText=null;
+                    String resultText = null;
                     if (appUser.getUserGender().intValue() == 0) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
@@ -1103,7 +1329,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                             appUserLady.setMoney(appUserLady.getMoney() + resClothes.getSellPrice());
                                             useHour(appUserLady);
                                             bind(appUserLady, userId);
-                                            appUserClothesStore.sell(appUserClothes, appUserLady,appUserLimit);
+                                            appUserClothesStore.sell(appUserClothes, appUserLady, appUserLimit);
                                             resultText = "成功出售衣服:" + resClothes.getTitle() + ",获得金钱" + resClothes.getSellPrice();
                                         }
                                     }
@@ -1175,7 +1401,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     bind(appUserLady, userId);
                                     appUserLuxuryStore.buy(appUserLuxury, Persistent.SAVE, appUserLady, appUserLimit);
                                     resultText = "恭喜你,花费金钱" + resLuxury.getBuyPrice() + ",喜提:" + resLuxury.getTitle();
-                                }else{
+                                } else {
                                     resultText = "有梦想是好的，但是现实也需要真金白银！";
                                 }
                             } else {
@@ -1209,7 +1435,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             if (appUserStore != null && appUserLadyStore != null && appUserLuxuryStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    String resultText=null;
+                    String resultText = null;
                     if (appUser.getUserGender().intValue() == 0) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
@@ -1232,7 +1458,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                             appUserLady.setMoney(appUserLady.getMoney() + resLuxury.getSellPrice());
                                             useHour(appUserLady);
                                             bind(appUserLady, userId);
-                                            appUserLuxuryStore.sell(appUserLuxury, appUserLady,appUserLimit);
+                                            appUserLuxuryStore.sell(appUserLuxury, appUserLady, appUserLimit);
                                             resultText = "成功出售饰品:" + resLuxury.getTitle() + ",获得金钱" + resLuxury.getSellPrice();
                                         }
                                     }
