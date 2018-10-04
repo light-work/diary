@@ -1,9 +1,11 @@
-package com.diary.storeImpl.res;
+package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResEvent;
-import com.diary.providers.store.res.ResEventStore;
-import com.diary.service.res.ResEventService;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserMan;
+import com.diary.entity.app.AppUserLimit;
+import com.diary.providers.store.app.AppUserLimitStore;
+import com.diary.service.app.AppUserLimitService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
@@ -18,17 +20,16 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResEventStoreImpl implements ResEventStore {
+public class AppUserLimitStoreImpl implements AppUserLimitStore {
 
     @Inject
-    private ResEventService resEventService;
-
+    private AppUserLimitService appUserLimitService;
 
     @Override
     @ConnectManager
-    public ResEvent getById(Long id, Selector... selectors) throws StoreException {
+    public List<AppUserLimit> getListByUserId(Long userId) throws StoreException {
         try {
-            return this.resEventService.getById(id, selectors);
+            return this.appUserLimitService.getListByUserId(userId);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -37,9 +38,9 @@ public class ResEventStoreImpl implements ResEventStore {
 
     @Override
     @ConnectManager
-    public Page<ResEvent> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+    public Integer getCountByUserIdDayAction(Long userId, Integer day, String action) throws StoreException {
         try {
-            return this.resEventService.getPageList(start, limit, selectorList);
+            return this.appUserLimitService.getCountByUserIdDayAction(userId,day,action);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -48,31 +49,21 @@ public class ResEventStoreImpl implements ResEventStore {
 
     @Override
     @ConnectManager
-    public List<ResEvent> getList(List<Selector> selectorList) throws StoreException {
+    public void save(AppUserLimit appUserLimit, Persistent persistent) throws StoreException {
         try {
-            return this.resEventService.getList( selectorList);
+            this.appUserLimitService.save(appUserLimit, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
 
-    @Override
-    @ConnectManager
-    public void delete(ResEvent resEvent) throws StoreException {
-        try {
-            this.resEventService.delete(resEvent);
-        } catch (HibernateException e) {
-            Throwable throwable = e.getCause() != null ? e.getCause() : e;
-            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
-        }
-    }
 
     @Override
     @ConnectManager
-    public void save(ResEvent resEvent, Persistent persistent) throws StoreException {
+    public void delete(AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.resEventService.save(resEvent, persistent);
+            this.appUserLimitService.delete(appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

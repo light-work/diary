@@ -1,6 +1,7 @@
 package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserManStore;
 import com.diary.service.app.AppUserManService;
@@ -70,4 +71,14 @@ public class AppUserManStoreImpl implements AppUserManStore {
     }
 
 
+    @Override
+    @ConnectManager
+    public void save(AppUserMan appUserMan, Persistent persistent, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserManService.save(appUserMan, persistent,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

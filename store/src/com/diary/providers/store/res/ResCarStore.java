@@ -18,6 +18,8 @@ public interface ResCarStore {
     Page<ResCar> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+    List<ResCar> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResCar resCar, Persistent persistent) throws StoreException;
 
     void delete(ResCar resCar) throws StoreException;

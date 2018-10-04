@@ -48,6 +48,17 @@ public class ResCarStoreImpl implements ResCarStore {
 
     @Override
     @ConnectManager
+    public List<ResCar> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resCarService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResCar resCar) throws StoreException {
         try {
             this.resCarService.delete(resCar);

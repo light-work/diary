@@ -1,8 +1,8 @@
 package com.diary.service.res;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResClothes;
-import com.diary.providers.store.res.ResClothesStore;
+import com.diary.entity.res.ResLuck;
+import com.diary.providers.store.res.ResLuckStore;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
@@ -17,36 +17,36 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResClothesService extends HQuery implements ResClothesStore {
+public class ResLuckService extends HQuery implements ResLuckStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
 
-    public ResClothes getById(Long id, Selector... selectors) throws StoreException {
-        return $(id, selectors).get(ResClothes.class);
+    public ResLuck getById(Long id, Selector... selectors) throws StoreException {
+        return $(id, selectors).get(ResLuck.class);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-    public Page<ResClothes> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
-        return $(selectorList).page(ResClothes.class, start, limit);
+    public Page<ResLuck> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+        return $(selectorList).page(ResLuck.class, start, limit);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-    public List<ResClothes> getList(List<Selector> selectorList) throws StoreException {
-        return $(selectorList).list(ResClothes.class);
+    public List<ResLuck> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResLuck.class);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void save(ResClothes resClothes, Persistent persistent) throws StoreException {
-        $(resClothes).save(persistent);
+    public void save(ResLuck resLuck, Persistent persistent) throws StoreException {
+        $(resLuck).save(persistent);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void delete(ResClothes resClothes) throws StoreException {
-        $(resClothes).delete();
+    public void delete(ResLuck resLuck) throws StoreException {
+        $(resLuck).delete();
     }
 }

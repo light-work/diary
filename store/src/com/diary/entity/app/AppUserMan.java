@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "APP_USER_MAN")
-public class AppUserMan extends IdEntity implements Tracker {
+public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,22 +23,24 @@ public class AppUserMan extends IdEntity implements Tracker {
 
     private AppUser userId;
 
-    private Long health;
+    private Integer health;
 
-    private Long money;
+    private Integer money;
 
-
-    private Long ability;
-
-
-    private Long experience;
-
-    private Long happly;
+    private Integer profit;
 
 
-    private Long positive;
+    private Integer ability;
 
-    private Long connections;
+
+    private Integer experience;
+
+    private Integer happy;
+
+
+    private Integer positive;
+
+    private Integer connections;
 
     private Integer days;
 
@@ -75,65 +77,75 @@ public class AppUserMan extends IdEntity implements Tracker {
     }
 
     @Column(name = "HEALTH")
-    public Long getHealth() {
+    public Integer getHealth() {
         return health;
     }
 
-    public void setHealth(Long health) {
+    public void setHealth(Integer health) {
         this.health = health;
     }
 
     @Column(name = "MONEY")
-    public Long getMoney() {
+    public Integer getMoney() {
         return money;
     }
 
-    public void setMoney(Long money) {
+    public void setMoney(Integer money) {
         this.money = money;
     }
 
+    @Column(name = "PROFIT")
+    public Integer getProfit() {
+        return profit;
+    }
+
+    public void setProfit(Integer profit) {
+        this.profit = profit;
+    }
+
     @Column(name = "ABILITY")
-    public Long getAbility() {
+    public Integer getAbility() {
         return ability;
     }
 
-    public void setAbility(Long ability) {
+    public void setAbility(Integer ability) {
         this.ability = ability;
     }
 
     @Column(name = "EXPERIENCE")
-    public Long getExperience() {
+    public Integer getExperience() {
         return experience;
     }
 
-    public void setExperience(Long experience) {
+    public void setExperience(Integer experience) {
         this.experience = experience;
     }
 
-    @Column(name = "HAPPLY")
-    public Long getHapply() {
-        return happly;
+    @Column(name = "HAPPY")
+    public Integer getHappy() {
+        return happy;
     }
 
-    public void setHapply(Long happly) {
-        this.happly = happly;
+    public void setHappy(Integer happy) {
+        this.happy = happy;
     }
+
 
     @Column(name = "POSITIVE")
-    public Long getPositive() {
+    public Integer getPositive() {
         return positive;
     }
 
-    public void setPositive(Long positive) {
+    public void setPositive(Integer positive) {
         this.positive = positive;
     }
 
     @Column(name = "CONNECTIONS")
-    public Long getConnections() {
+    public Integer getConnections() {
         return connections;
     }
 
-    public void setConnections(Long connections) {
+    public void setConnections(Integer connections) {
         this.connections = connections;
     }
 
@@ -198,5 +210,15 @@ public class AppUserMan extends IdEntity implements Tracker {
 
     public void setUseYn(String useYn) {
         this.useYn = useYn;
+    }
+
+    public Object clone() {
+        AppUserMan sc = null;
+        try {
+            sc = (AppUserMan) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return sc;
     }
 }

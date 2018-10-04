@@ -33,6 +33,12 @@ public class ResCoupleService extends HQuery implements ResCoupleStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResCouple> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResCouple.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResCouple resCouple, Persistent persistent) throws StoreException {
         $(resCouple).save(persistent);

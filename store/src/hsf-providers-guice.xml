@@ -74,6 +74,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserLimitStore" class="com.diary.storeImpl.app.AppUserLimitStoreImpl"/>
+        <provider id="appUserLimitStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserLimitStore"
+                  ref="appUserLimitStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <service id="appUserStore" class="com.diary.storeImpl.app.AppUserStoreImpl"/>
         <provider id="appUserStoreProvider"
                   interface="com.diary.providers.store.app.AppUserStore"
@@ -282,6 +289,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="resLuckStore" class="com.diary.storeImpl.res.ResLuckStoreImpl"/>
+        <provider id="resLuckStoreProvider"
+                  interface="com.diary.providers.store.res.ResLuckStore"
+                  ref="resLuckStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
 
 
@@ -347,6 +361,20 @@
         <provider id="eventBizProvider"
                   interface="com.diary.providers.biz.res.EventBiz"
                   ref="eventBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userBiz" class="com.diary.bizImpl.app.UserBizImp"/>
+        <provider id="userBizProvider"
+                  interface="com.diary.providers.biz.app.UserBiz"
+                  ref="userBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="luckBiz" class="com.diary.bizImpl.res.LuckBizImp"/>
+        <provider id="luckBizProvider"
+                  interface="com.diary.providers.biz.res.LuckBiz"
+                  ref="luckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>

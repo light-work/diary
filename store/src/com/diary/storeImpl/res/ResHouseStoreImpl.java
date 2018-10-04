@@ -48,6 +48,17 @@ public class ResHouseStoreImpl implements ResHouseStore {
 
     @Override
     @ConnectManager
+    public List<ResHouse> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resHouseService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResHouse resHouse) throws StoreException {
         try {
             this.resHouseService.delete(resHouse);

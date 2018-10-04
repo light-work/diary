@@ -19,6 +19,8 @@ import java.util.List;
 @Singleton
 public class AppUserLuxuryService extends HQuery implements AppUserLuxuryStore {
 
+
+
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserLuxury getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserLuxury.class);
@@ -33,7 +35,7 @@ public class AppUserLuxuryService extends HQuery implements AppUserLuxuryStore {
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public List<AppUserLuxury> getByUserId(Long userId) throws StoreException {
-        return $($alias("userId", "userId"), $eq("userId.id", userId)).list(AppUserLuxury.class);
+        return $($alias("userId", "userId"),$alias("luxuryId", "luxuryId"), $eq("userId.id", userId)).list(AppUserLuxury.class);
     }
 
     @Override

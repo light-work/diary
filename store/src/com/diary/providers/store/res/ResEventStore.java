@@ -18,6 +18,8 @@ public interface ResEventStore {
     Page<ResEvent> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+    List<ResEvent> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResEvent resEvent, Persistent persistent) throws StoreException;
 
     void delete(ResEvent resEvent) throws StoreException;

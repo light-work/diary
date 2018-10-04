@@ -18,6 +18,9 @@ public interface ResCoupleStore {
     Page<ResCouple> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+
+    List<ResCouple> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResCouple resCouple, Persistent persistent) throws StoreException;
 
     void delete(ResCouple resCouple) throws StoreException;

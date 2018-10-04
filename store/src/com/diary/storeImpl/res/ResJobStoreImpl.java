@@ -48,6 +48,17 @@ public class ResJobStoreImpl implements ResJobStore {
 
     @Override
     @ConnectManager
+    public List<ResJob> getList(List<Selector> selectorList) throws StoreException {
+        try {
+            return this.resJobService.getList( selectorList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void delete(ResJob resJob) throws StoreException {
         try {
             this.resJobService.delete(resJob);

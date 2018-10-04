@@ -1,7 +1,5 @@
 package com.diary.entity.app;
 
-import com.diary.entity.res.ResClothes;
-import com.diary.entity.res.ResLuxury;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
@@ -16,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_LUXURY")
-public class AppUserLuxury extends IdEntity implements Tracker {
+@Table(name = "APP_USER_LIMIT")
+public class AppUserLimit extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,7 +23,9 @@ public class AppUserLuxury extends IdEntity implements Tracker {
 
     private AppUser userId;
 
-    private ResLuxury luxuryId;
+    private Integer day;
+
+    private String action;
 
     private Date created;
 
@@ -46,6 +46,7 @@ public class AppUserLuxury extends IdEntity implements Tracker {
         this.id = id;
     }
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     public AppUser getUserId() {
@@ -56,14 +57,22 @@ public class AppUserLuxury extends IdEntity implements Tracker {
         this.userId = userId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LUXURY_ID")
-    public ResLuxury getLuxuryId() {
-        return luxuryId;
+    @Column(name = "DAY")
+    public Integer getDay() {
+        return day;
     }
 
-    public void setLuxuryId(ResLuxury luxuryId) {
-        this.luxuryId = luxuryId;
+    public void setDay(Integer day) {
+        this.day = day;
+    }
+
+    @Column(name = "ACTION")
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
     @Column(name = "CREATED", updatable = false)

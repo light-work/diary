@@ -2,6 +2,9 @@ package com.diary.providers.store.app;
 
 
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
+import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -21,7 +24,9 @@ public interface AppUserPlanStore {
 
     List<AppUserPlan> getByUserId(Long userId) throws StoreException;
 
-    void save(AppUserPlan appUserPlan, Persistent persistent) throws StoreException;
+    void save(AppUserPlan appUserPlan, Persistent persistent,AppUserMan appUserMan) throws StoreException;
+
+    void save(AppUserPlan appUserPlan, Persistent persistent,AppUserLady appUserLady) throws StoreException;
 
     void delete(AppUserPlan appUserPlan) throws StoreException;
 

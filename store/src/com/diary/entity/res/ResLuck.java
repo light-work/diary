@@ -1,11 +1,12 @@
-package com.diary.entity.app;
+package com.diary.entity.res;
 
-import com.diary.entity.res.ResClothes;
-import com.diary.entity.res.ResLuxury;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -16,16 +17,22 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_LUXURY")
-public class AppUserLuxury extends IdEntity implements Tracker {
+@Table(name = "RES_LUCK")
+public class ResLuck extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private AppUser userId;
+    private String title;
 
-    private ResLuxury luxuryId;
+    private Integer investPrice;
+
+    private Integer gainPrice;
+
+    private Double probability;
+
+    private String remarks;
 
     private Date created;
 
@@ -46,26 +53,50 @@ public class AppUserLuxury extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    public AppUser getUserId() {
-        return userId;
+    @Column(name = "TITLE")
+    public String getTitle() {
+        return title;
     }
 
-    public void setUserId(AppUser userId) {
-        this.userId = userId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LUXURY_ID")
-    public ResLuxury getLuxuryId() {
-        return luxuryId;
+    @Column(name = "INVEST_PRICE")
+    public Integer getInvestPrice() {
+        return investPrice;
     }
 
-    public void setLuxuryId(ResLuxury luxuryId) {
-        this.luxuryId = luxuryId;
+    public void setInvestPrice(Integer investPrice) {
+        this.investPrice = investPrice;
     }
 
+    @Column(name = "GAIN_PRICE")
+    public Integer getGainPrice() {
+        return gainPrice;
+    }
+
+    public void setGainPrice(Integer gainPrice) {
+        this.gainPrice = gainPrice;
+    }
+
+    @Column(name = "PROBABILITY")
+    public Double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Double probability) {
+        this.probability = probability;
+    }
+
+    @Column(name = "REMARKS")
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {
         return created;

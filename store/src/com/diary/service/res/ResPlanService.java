@@ -47,6 +47,12 @@ public class ResPlanService extends HQuery implements ResPlanStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResPlan> getList(List<Selector> selectorList) throws StoreException {
+        return $(selectorList).list(ResPlan.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(ResPlan resPlan, Persistent persistent) throws StoreException {
         $(resPlan).save(persistent);

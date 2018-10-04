@@ -3,6 +3,7 @@ package com.diary.providers.store.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
@@ -22,5 +23,8 @@ public interface AppUserLadyStore {
     AppUserLady getByUserId(Long userId) throws StoreException;
 
     void save(AppUserLady appUserLady, Persistent persistent) throws StoreException;
+
+    void save(AppUserLady appUserLady, Persistent persistent, AppUserLimit appUserLimit) throws StoreException;
+
 
 }

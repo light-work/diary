@@ -52,6 +52,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserLimitStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserLimitStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="appUserStoreConsumer"
                   interface="com.diary.providers.store.app.AppUserStore"
                   version="for-dev" clientTimeout="5000">
@@ -193,6 +198,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resLuckStoreConsumer"
+                  interface="com.diary.providers.store.res.ResLuckStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
 
         <consumer id="commonBizConsumer"
                   interface="com.diary.providers.biz.res.CommonBiz"
@@ -240,6 +250,16 @@
 
         <consumer id="eventBizConsumer"
                   interface="com.diary.providers.biz.res.EventBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userBizConsumer"
+                  interface="com.diary.providers.biz.app.UserBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="luckBizConsumer"
+                  interface="com.diary.providers.biz.res.LuckBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
     </group>

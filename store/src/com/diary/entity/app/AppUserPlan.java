@@ -15,7 +15,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_LUXURY_PLAN")
+@Table(name = "APP_USER_PLAN")
 public class AppUserPlan extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;

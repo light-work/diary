@@ -23,6 +23,8 @@ public interface ResPlanStore {
     Page<ResPlan> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 
+    List<ResPlan> getList(List<Selector> selectorList) throws StoreException;
+
     void save(ResPlan resPlan, Persistent persistent) throws StoreException;
 
     void saveOrder(ResPlan resPlan, Persistent persistent,ResPlan resPlanOrder) throws StoreException;

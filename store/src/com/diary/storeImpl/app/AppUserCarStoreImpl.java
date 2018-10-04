@@ -2,6 +2,8 @@ package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserCar;
+import com.diary.entity.app.AppUserLimit;
+import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserCarStore;
 import com.diary.service.app.AppUserCarService;
 import com.google.inject.Inject;
@@ -58,6 +60,16 @@ public class AppUserCarStoreImpl implements AppUserCarStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public List<AppUserCar> getByUserIdCarId(Long userId, Long carId) throws StoreException {
+        try {
+            return this.appUserCarService.getByUserIdCarId(userId, carId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager
@@ -76,6 +88,29 @@ public class AppUserCarStoreImpl implements AppUserCarStore {
     public void delete(AppUserCar appUserCar) throws StoreException {
         try {
             this.appUserCarService.delete(appUserCar);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+
+    @Override
+    @ConnectManager
+    public void buy(AppUserCar appUserCar, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCarService.buy(appUserCar,persistent,appUserMan,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void sell(AppUserCar appUserCar, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCarService.sell(appUserCar,appUserMan,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

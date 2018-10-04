@@ -7,7 +7,7 @@ public interface CarBiz {
 
     String list(Integer start, Integer limit, String keyword) throws BizException;
 
-    String add(String title, Integer price, Integer gender, String remarks) throws BizException;
+    String add(String title, Integer price, Integer sellPrice, String remarks) throws BizException;
 
     String edit(Long id, String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException;
 
