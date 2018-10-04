@@ -289,6 +289,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="resLuckStore" class="com.diary.storeImpl.res.ResLuckStoreImpl"/>
+        <provider id="resLuckStoreProvider"
+                  interface="com.diary.providers.store.res.ResLuckStore"
+                  ref="resLuckStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
 
 
@@ -361,6 +368,13 @@
         <provider id="userBizProvider"
                   interface="com.diary.providers.biz.app.UserBiz"
                   ref="userBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="luckBiz" class="com.diary.bizImpl.res.LuckBizImp"/>
+        <provider id="luckBizProvider"
+                  interface="com.diary.providers.biz.res.LuckBiz"
+                  ref="luckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>
