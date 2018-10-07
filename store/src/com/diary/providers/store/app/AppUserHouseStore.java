@@ -17,6 +17,7 @@ public interface AppUserHouseStore {
 
     AppUserHouse getById(Long id, Selector... selectors) throws StoreException;
 
+    Integer getCountByUserId(Long userId) throws StoreException;
 
     Page<AppUserHouse> getPageList(int start,
                                  int limit, List<Selector> selectorList) throws StoreException;

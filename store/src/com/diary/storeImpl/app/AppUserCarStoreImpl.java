@@ -51,6 +51,17 @@ public class AppUserCarStoreImpl implements AppUserCarStore {
 
     @Override
     @ConnectManager
+    public Integer getCountByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserCarService.getCountByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<AppUserCar> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.appUserCarService.getPageList(start, limit, selectorList);

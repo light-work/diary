@@ -79,7 +79,8 @@ public class PlanAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
             @FormParam("title") String title,
-            @FormParam("gender") Integer gender, @FormParam("remarks") String remarks) {
+            @FormParam("gender") Integer gender, @FormParam("remarks") String remarks,
+            @FormParam("result") String resultText) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -93,12 +94,15 @@ public class PlanAPI extends BaseAPI {
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
         }
+        if (StringUtils.isBlank(resultText)) {
+            errorBuilder.append("result was null.");
+        }
 
         if (errorBuilder.length() == 0) {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.add(title,  gender, remarks);
+                    bizResult = planBiz.add(title,  gender, remarks,resultText);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -116,7 +120,8 @@ public class PlanAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
                          @FormParam("title") String title,
-                         @FormParam("gender") Integer gender, @FormParam("remarks") String remarks) {
+                         @FormParam("gender") Integer gender, @FormParam("remarks") String remarks,
+                         @FormParam("result") String resultText) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -133,12 +138,15 @@ public class PlanAPI extends BaseAPI {
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
         }
+        if (StringUtils.isBlank(resultText)) {
+            errorBuilder.append("result was null.");
+        }
 
         if (errorBuilder.length() == 0) {
             try {
                 PlanBiz planBiz = hsfServiceFactory.consumer(PlanBiz.class);
                 if (planBiz != null) {
-                    bizResult = planBiz.edit(id, title,  gender, remarks);
+                    bizResult = planBiz.edit(id, title,  gender, remarks,resultText);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

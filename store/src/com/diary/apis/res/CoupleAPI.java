@@ -432,4 +432,29 @@ public class CoupleAPI extends BaseAPI {
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }
+
+    @Path("/state")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response state(@QueryParam("gender") Integer gender) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (gender == null) {
+            errorBuilder.append("gender was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                CoupleBiz coupleBiz = hsfServiceFactory.consumer(CoupleBiz.class);
+                if (coupleBiz != null) {
+                    bizResult = coupleBiz.state(gender);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
 }

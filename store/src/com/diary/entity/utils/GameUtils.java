@@ -42,11 +42,15 @@ public class GameUtils {
 
         return sortOrignalRates.indexOf(nextDouble);
     }
-    public static void main(String[] args) throws Exception{
-        List<Double> doubleList=new ArrayList<>();
-        doubleList.add(0.01);
-        doubleList.add(0.79);
-        for(int i=1;i<=200;i++){
+
+    public static void main(String[] args) throws Exception {
+        JSONObject a = new JSONObject();
+        a.put("id", "6453477704225898442");
+        System.out.println(a.getLong("id") + "");
+        List<Double> doubleList = new ArrayList<>();
+        doubleList.add(0.50);
+        doubleList.add(0.50);
+        for (int i = 1; i <= 2; i++) {
             System.out.println(lottery(doubleList));
         }
 
@@ -171,6 +175,12 @@ public class GameUtils {
             case "CONNECTIONS":
                 attrName = "人脉";
                 break;
+            case "CAR":
+                attrName = "座驾";
+                break;
+            case "HOUSE":
+                attrName = "房产";
+                break;
         }
         return attrName;
     }
@@ -207,7 +217,7 @@ public class GameUtils {
     public static void attrList(JSONArray jsonArray, Integer gender, Integer isManage) {
 
 
-        if (gender.intValue() == 1) {
+        if (gender == 1) {
             JSONObject operationHEALTH = new JSONObject();
             operationHEALTH.put("text", "健康");
             operationHEALTH.put("value", isManage == 0 ? "HEALTH" : "HEALTH".toLowerCase());
@@ -251,7 +261,7 @@ public class GameUtils {
             operationCONNECTIONS.put("value", isManage == 0 ? "CONNECTIONS" : "CONNECTIONS".toLowerCase());
 
             jsonArray.add(operationCONNECTIONS);
-        } else if (gender.intValue() == 0) {
+        } else if (gender == 0) {
             JSONObject operationHEALTH = new JSONObject();
             operationHEALTH.put("text", "健康");
             operationHEALTH.put("value", isManage == 0 ? "HEALTH" : "HEALTH".toLowerCase());
@@ -315,6 +325,34 @@ public class GameUtils {
         return str;
     }
 
+    public static JSONArray failAttrNames(List<?> requireList, Object userObj, Integer gender) throws Exception {
+        JSONArray failArray = new JSONArray();
+        for (Object require : requireList) {
+            String requireKey = BeanUtils.getValue(require, "attrKey").toString().toLowerCase();
+            if (StringUtils.isNotBlank(requireKey)) {
+                Integer userValue = BeanUtils.getValue(userObj, requireKey, Integer.class);
+                if (userValue != null) {
+                    Integer requireValue = BeanUtils.getValue(require, "value", Integer.class);
+                    if (requireValue != null) {
+                        if (userValue < requireValue) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("op", "sub");
+                            if (gender == 1) {
+                                jsonObject.put("attrName", getAttrNameMan(requireKey));
+                            } else {
+                                jsonObject.put("attrName", getAttrNameLady(requireKey));
+                            }
+                            jsonObject.put("value", "-?");
+                            failArray.add(jsonObject);
+                        }
+                    }
+                }
+            }
+        }
+
+        return failArray;
+    }
+
     public static boolean requirePass(List<?> requireList, Object userObj) throws Exception {
         boolean pass = true;
         for (Object require : requireList) {
@@ -324,7 +362,7 @@ public class GameUtils {
                 if (userValue != null) {
                     Integer requireValue = BeanUtils.getValue(require, "value", Integer.class);
                     if (requireValue != null) {
-                        if (userValue.intValue() < requireValue.intValue()) {
+                        if (userValue < requireValue) {
                             pass = false;
                             break;
                         }
@@ -335,85 +373,93 @@ public class GameUtils {
         return pass;
     }
 
-    private static String diffValue(Integer value1,Integer value2,Integer gender,String key){
-        if(value1!=null&&value2!=null){
-            if(value1==value2){
-                return "";
-            }else if(value1>value2){
-                if(gender==1){
-                    return getAttrNameMan(key)+"-"+(value1-value2)+",";
-                }else{
-                    return getAttrNameLady(key)+"-"+(value1-value2)+",";
+    private static void diffValue(JSONArray resultEffect, Integer value1, Integer value2, Integer gender, String key) {
+        JSONObject jsonObject = null;
+        if (value1 != null && value2 != null) {
+            if (value1 == value2) {
+                return;
+            } else if (value1 > value2) {
+                jsonObject = new JSONObject();
+                jsonObject.put("op", "sub");
+                if (gender == 1) {
+                    jsonObject.put("attrName", getAttrNameMan(key));
+                } else {
+                    jsonObject.put("attrName", getAttrNameLady(key));
                 }
-            }else if(value1<value2){
-                if(gender==1){
-                    return getAttrNameMan(key)+"+"+(value2-value1)+",";
-                }else{
-                    return getAttrNameLady(key)+"+"+(value2-value1)+",";
+                jsonObject.put("value", "-" + (value1 - value2));
+                resultEffect.add(jsonObject);
+            } else if (value1 < value2) {
+                jsonObject = new JSONObject();
+                jsonObject.put("op", "add");
+                if (gender == 1) {
+                    jsonObject.put("attrName", getAttrNameMan(key));
+                } else {
+                    jsonObject.put("attrName", getAttrNameLady(key));
                 }
+                jsonObject.put("value", "+" + (value2 - value1));
+                resultEffect.add(jsonObject);
             }
         }
-        return "";
     }
 
-    public static String diffEffectMan(AppUserMan appUserManBefore, AppUserMan appUserManAfter) throws Exception {
-        String resultEffect = "";
+    public static JSONArray diffEffectMan(AppUserMan appUserManBefore, AppUserMan appUserManAfter) throws Exception {
+        JSONArray resultEffect = new JSONArray();
         if (appUserManBefore != null && appUserManAfter != null) {
-            Integer healthB=appUserManBefore.getHealth();
-            Integer moneyB=appUserManBefore.getMoney();
-            Integer abilityB=appUserManBefore.getAbility();
-            Integer experienceB=appUserManBefore.getExperience();
-            Integer happyB=appUserManBefore.getHappy();
-            Integer positiveB=appUserManBefore.getPositive();
-            Integer connectionsB=appUserManBefore.getConnections();
+            Integer healthB = appUserManBefore.getHealth();
+            Integer moneyB = appUserManBefore.getMoney();
+            Integer abilityB = appUserManBefore.getAbility();
+            Integer experienceB = appUserManBefore.getExperience();
+            Integer happyB = appUserManBefore.getHappy();
+            Integer positiveB = appUserManBefore.getPositive();
+            Integer connectionsB = appUserManBefore.getConnections();
 
-            Integer healthA=appUserManAfter.getHealth();
-            Integer moneyA=appUserManAfter.getMoney();
-            Integer abilityA=appUserManAfter.getAbility();
-            Integer experienceA=appUserManAfter.getExperience();
-            Integer happyA=appUserManAfter.getHappy();
-            Integer positiveA=appUserManAfter.getPositive();
-            Integer connectionsA=appUserManAfter.getConnections();
+            Integer healthA = appUserManAfter.getHealth();
+            Integer moneyA = appUserManAfter.getMoney();
+            Integer abilityA = appUserManAfter.getAbility();
+            Integer experienceA = appUserManAfter.getExperience();
+            Integer happyA = appUserManAfter.getHappy();
+            Integer positiveA = appUserManAfter.getPositive();
+            Integer connectionsA = appUserManAfter.getConnections();
 
-            resultEffect+=diffValue(healthB,healthA,1,"health");
-            resultEffect+=diffValue(moneyB,moneyA,1,"money");
-            resultEffect+=diffValue(abilityB,abilityA,1,"ability");
-            resultEffect+=diffValue(experienceB,experienceA,1,"experience");
-            resultEffect+=diffValue(happyB,happyA,1,"happy");
-            resultEffect+=diffValue(positiveB,positiveA,1,"positive");
-            resultEffect+=diffValue(connectionsB,connectionsA,1,"connections");
+            diffValue(resultEffect, healthB, healthA, 1, "health");
+            diffValue(resultEffect, moneyB, moneyA, 1, "money");
+            diffValue(resultEffect, abilityB, abilityA, 1, "ability");
+            diffValue(resultEffect, experienceB, experienceA, 1, "experience");
+            diffValue(resultEffect, happyB, happyA, 1, "happy");
+            diffValue(resultEffect, positiveB, positiveA, 1, "positive");
+            diffValue(resultEffect, connectionsB, connectionsA, 1, "connections");
 
         }
         return resultEffect;
     }
 
-    public static String diffEffectLady(AppUserLady appUserLadyBefore, AppUserLady appUserLadyAfter) throws Exception {
-        String resultEffect = "";
+    public static JSONArray diffEffectLady(AppUserLady appUserLadyBefore, AppUserLady appUserLadyAfter) throws Exception {
+        JSONArray resultEffect = new JSONArray();
         if (appUserLadyBefore != null && appUserLadyAfter != null) {
-            Integer healthB=appUserLadyBefore.getHealth();
-            Integer moneyB=appUserLadyBefore.getMoney();
-            Integer abilityB=appUserLadyBefore.getAbility();
-            Integer wisdomB=appUserLadyBefore.getWisdom();
-            Integer happyB=appUserLadyBefore.getHappy();
-            Integer beautyB=appUserLadyBefore.getBeauty();
-            Integer popularityB=appUserLadyBefore.getPopularity();
+            Integer healthB = appUserLadyBefore.getHealth();
+            Integer moneyB = appUserLadyBefore.getMoney();
+            Integer abilityB = appUserLadyBefore.getAbility();
+            Integer wisdomB = appUserLadyBefore.getWisdom();
+            Integer happyB = appUserLadyBefore.getHappy();
+            Integer beautyB = appUserLadyBefore.getBeauty();
+            Integer popularityB = appUserLadyBefore.getPopularity();
 
-            Integer healthA=appUserLadyAfter.getHealth();
-            Integer moneyA=appUserLadyAfter.getMoney();
-            Integer abilityA=appUserLadyAfter.getAbility();
-            Integer wisdomA=appUserLadyAfter.getWisdom();
-            Integer happyA=appUserLadyAfter.getHappy();
-            Integer beautyA=appUserLadyBefore.getBeauty();
-            Integer popularityA=appUserLadyBefore.getPopularity();
+            Integer healthA = appUserLadyAfter.getHealth();
+            Integer moneyA = appUserLadyAfter.getMoney();
+            Integer abilityA = appUserLadyAfter.getAbility();
+            Integer wisdomA = appUserLadyAfter.getWisdom();
+            Integer happyA = appUserLadyAfter.getHappy();
+            Integer beautyA = appUserLadyAfter.getBeauty();
+            Integer popularityA = appUserLadyAfter.getPopularity();
 
 
-            resultEffect+=diffValue(healthB,healthA,0,"health");
-            resultEffect+=diffValue(moneyB,moneyA,0,"money");
-            resultEffect+=diffValue(abilityB,abilityA,0,"ability");
-            resultEffect+=diffValue(wisdomB,wisdomA,0,"wisdom");
-            resultEffect+=diffValue(happyB,happyA,0,"happy");
-            resultEffect+=diffValue(beautyB,beautyA,0,"beauty");
-            resultEffect+=diffValue(popularityB,popularityA,0,"popularity");
+            diffValue(resultEffect, healthB, healthA, 0, "health");
+            diffValue(resultEffect, moneyB, moneyA, 0, "money");
+            diffValue(resultEffect, abilityB, abilityA, 0, "ability");
+            diffValue(resultEffect, wisdomB, wisdomA, 0, "wisdom");
+            diffValue(resultEffect, happyB, happyA, 0, "happy");
+            diffValue(resultEffect, beautyB, beautyA, 0, "beauty");
+            diffValue(resultEffect, popularityB, popularityA, 0, "popularity");
 
         }
         return resultEffect;
@@ -435,6 +481,35 @@ public class GameUtils {
                         }
                         BeanUtils.setValue(userObj, effectKey, effectValue);
                     }
+                }
+            }
+        }
+    }
+
+
+    public static void addResultArray(JSONArray resultArray, String resultText, JSONArray effectArray) throws Exception {
+        if (resultArray != null && StringUtils.isNotBlank(resultText)) {
+            JSONObject resultItem = new JSONObject();
+            resultItem.put("text", resultText);
+            if (effectArray != null && !effectArray.isEmpty()) {
+                resultItem.put("effectArray", effectArray);
+            }
+            resultArray.add(resultItem);
+        }
+    }
+
+    public static String callName(Integer gender) throws Exception {
+        return gender == 0 ? "小姑娘" : "小伙子";
+    }
+
+    public static void useHour(Object appUserObj) throws Exception {
+        if (appUserObj != null) {
+            Integer days = BeanUtils.getValue(appUserObj, "days", Integer.class);
+            Integer hours = BeanUtils.getValue(appUserObj, "hours", Integer.class);
+            if (days != null && hours != null) {
+                if (hours > 0) {
+                    hours = hours - 1;
+                    BeanUtils.setValue(appUserObj, "hours", hours);
                 }
             }
         }

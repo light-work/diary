@@ -51,6 +51,17 @@ public class AppUserHouseStoreImpl implements AppUserHouseStore {
 
     @Override
     @ConnectManager
+    public Integer getCountByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserHouseService.getCountByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public List<AppUserHouse> getByUserIdHouseId(Long userId, Long houseId) throws StoreException {
         try {
             return this.appUserHouseService.getByUserIdHouseId(userId,houseId);

@@ -1,7 +1,7 @@
 package com.diary.apis.app;
 
 import com.diary.common.BaseAPI;
-import com.diary.providers.biz.app.UserBiz;
+import com.diary.providers.biz.app.*;
 import net.sf.json.JSONObject;
 import org.guiceside.commons.lang.StringUtils;
 
@@ -20,7 +20,8 @@ public class UserAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response login(@FormParam("code") String code) {
+    public Response login(@FormParam("code") String code,
+                          @FormParam("userId") Long userId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -33,7 +34,7 @@ public class UserAPI extends BaseAPI {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
-                    bizResult = userBiz.login(code);
+                    bizResult = userBiz.login(code,userId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -139,9 +140,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.applyJob(userId, jobId);
+                UserJobBiz userJobBiz = hsfServiceFactory.consumer(UserJobBiz.class);
+                if (userJobBiz != null) {
+                    bizResult = userJobBiz.applyJob(userId, jobId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -169,9 +170,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.applyPlan(userId, planId);
+                UserPlanBiz userPlanBiz = hsfServiceFactory.consumer(UserPlanBiz.class);
+                if (userPlanBiz != null) {
+                    bizResult = userPlanBiz.applyPlan(userId, planId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -226,9 +227,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.buyCar(userId, carId);
+                UserCarBiz userCarBiz = hsfServiceFactory.consumer(UserCarBiz.class);
+                if (userCarBiz != null) {
+                    bizResult = userCarBiz.buyCar(userId, carId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -255,9 +256,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.sellCar(userId, carId);
+                UserCarBiz userCarBiz = hsfServiceFactory.consumer(UserCarBiz.class);
+                if (userCarBiz != null) {
+                    bizResult = userCarBiz.sellCar(userId, carId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -285,9 +286,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.buyHouse(userId, houseId);
+                UserHouseBiz userHouseBiz = hsfServiceFactory.consumer(UserHouseBiz.class);
+                if (userHouseBiz != null) {
+                    bizResult = userHouseBiz.buyHouse(userId, houseId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -314,9 +315,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.sellHouse(userId, houseId);
+                UserHouseBiz userHouseBiz = hsfServiceFactory.consumer(UserHouseBiz.class);
+                if (userHouseBiz != null) {
+                    bizResult = userHouseBiz.sellHouse(userId, houseId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -344,9 +345,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.buyClothes(userId, clothesId);
+                UserClothesBiz userClothesBiz = hsfServiceFactory.consumer(UserClothesBiz.class);
+                if (userClothesBiz != null) {
+                    bizResult = userClothesBiz.buyClothes(userId, clothesId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -373,9 +374,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.sellClothes(userId, clothesId);
+                UserClothesBiz userClothesBiz = hsfServiceFactory.consumer(UserClothesBiz.class);
+                if (userClothesBiz != null) {
+                    bizResult = userClothesBiz.sellClothes(userId, clothesId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -403,9 +404,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.buyLuxury(userId, luxuryId);
+                UserLuxuryBiz userLuxuryBiz = hsfServiceFactory.consumer(UserLuxuryBiz.class);
+                if (userLuxuryBiz != null) {
+                    bizResult = userLuxuryBiz.buyLuxury(userId, luxuryId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -432,9 +433,9 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.sellLuxury(userId, luxuryId);
+                UserLuxuryBiz userLuxuryBiz = hsfServiceFactory.consumer(UserLuxuryBiz.class);
+                if (userLuxuryBiz != null) {
+                    bizResult = userLuxuryBiz.sellLuxury(userId, luxuryId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -461,9 +462,67 @@ public class UserAPI extends BaseAPI {
         }
         if (errorBuilder.length() == 0) {
             try {
-                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
-                if (userBiz != null) {
-                    bizResult = userBiz.applyLuck(userId, luckId);
+                UserLuckBiz userLuckBiz = hsfServiceFactory.consumer(UserLuckBiz.class);
+                if (userLuckBiz != null) {
+                    bizResult = userLuckBiz.applyLuck(userId, luckId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/relationship")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response relationship(@FormParam("userId") Long userId,
+                              @FormParam("coupleId") Long coupleId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (coupleId == null) {
+            errorBuilder.append("coupleId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserCoupleBiz userCoupleBiz = hsfServiceFactory.consumer(UserCoupleBiz.class);
+                if (userCoupleBiz != null) {
+                    bizResult = userCoupleBiz.relationship(userId, coupleId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/breakUp")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response breakUp(@FormParam("userId") Long userId,
+                                 @FormParam("coupleId") Long coupleId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (coupleId == null) {
+            errorBuilder.append("coupleId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserCoupleBiz userCoupleBiz = hsfServiceFactory.consumer(UserCoupleBiz.class);
+                if (userCoupleBiz != null) {
+                    bizResult = userCoupleBiz.breakUp(userId, coupleId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

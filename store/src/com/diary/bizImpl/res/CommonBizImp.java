@@ -104,7 +104,7 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
         resultObj.put("result", -1);
         try {
             JSONArray jsonArray = new JSONArray();
-            if(gender.intValue()==1){
+            if(gender==1){
                 JSONObject carObj = new JSONObject();
                 carObj.put("text", "汽车类事件");
                 carObj.put("value", "CAR");
@@ -114,7 +114,7 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
                 houseObj.put("text", "房屋类事件");
                 houseObj.put("value", "HOUSE");
                 jsonArray.add(houseObj);
-            }else if(gender.intValue()==0){
+            }else if(gender==0){
                 JSONObject clothesObj = new JSONObject();
                 clothesObj.put("text", "服装类事件");
                 clothesObj.put("value", "CLOTHES");

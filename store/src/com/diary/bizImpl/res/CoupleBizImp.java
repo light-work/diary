@@ -2,10 +2,14 @@ package com.diary.bizImpl.res;
 
 import com.diary.common.BizException;
 import com.diary.common.StoreException;
+import com.diary.entity.app.AppUser;
+import com.diary.entity.app.AppUserCouple;
 import com.diary.entity.res.*;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
+import com.diary.entity.utils.GameUtils;
 import com.diary.providers.biz.res.CoupleBiz;
+import com.diary.providers.store.app.AppUserCoupleStore;
 import com.diary.providers.store.res.ResCoupleEffectStore;
 import com.diary.providers.store.res.ResCoupleRequireStore;
 import com.diary.providers.store.res.ResCoupleStore;
@@ -34,6 +38,49 @@ public class CoupleBizImp extends BaseBiz implements CoupleBiz {
 
     @Inject
     private HSFServiceFactory hsfServiceFactory;
+
+    @Override
+    public String state(Integer gender) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResCoupleStore resCoupleStore = hsfServiceFactory.consumer(ResCoupleStore.class);
+            AppUserCoupleStore appUserCoupleStore = hsfServiceFactory.consumer(AppUserCoupleStore.class);
+            if (resCoupleStore != null&&appUserCoupleStore!=null) {
+                List<Selector> selectorList = new ArrayList<>();
+                if(gender!=null){
+                    selectorList.add(SelectorUtils.$eq("gender", gender));
+                }
+                selectorList.add(SelectorUtils.$eq("useYn","Y"));
+                List<ResCouple> coupleList= resCoupleStore.getList(selectorList);
+                JSONObject stateObj = new JSONObject();
+                if (coupleList != null && !coupleList.isEmpty()) {
+                    for (ResCouple resCouple : coupleList) {
+                       AppUserCouple appUserCouple= appUserCoupleStore.getByCoupleId(resCouple.getId());
+                       if(appUserCouple!=null){
+                           AppUser appUser=appUserCouple.getUserId();
+                           if(appUser!=null){
+                               JSONObject userObj = JsonUtils.formIdEntity(appUser, 0);
+                               if(userObj!=null){
+                                   GameUtils.minish(userObj);
+                                   stateObj.put(resCouple.getId()+"",userObj);
+                               }
+                           }
+                       }
+                    }
+                }
+                resultObj.put("state", stateObj);
+                resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
 
     @Override
     public String list(Integer start, Integer limit,Integer gender, String keyword) throws BizException {
