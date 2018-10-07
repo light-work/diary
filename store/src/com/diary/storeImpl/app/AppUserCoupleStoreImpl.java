@@ -2,6 +2,9 @@ package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserCouple;
+import com.diary.entity.app.AppUserLady;
+import com.diary.entity.app.AppUserLimit;
+import com.diary.entity.app.AppUserMan;
 import com.diary.providers.store.app.AppUserCoupleStore;
 import com.diary.service.app.AppUserCoupleService;
 import com.google.inject.Inject;
@@ -38,9 +41,20 @@ public class AppUserCoupleStoreImpl implements AppUserCoupleStore {
 
     @Override
     @ConnectManager
-    public List<AppUserCouple> getByUserId(Long userId) throws StoreException {
+    public AppUserCouple getByUserId(Long userId) throws StoreException {
         try {
             return this.appUserCoupleService.getByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public AppUserCouple getByCoupleId(Long coupleId) throws StoreException {
+        try {
+            return this.appUserCoupleService.getByCoupleId(coupleId);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -61,15 +75,47 @@ public class AppUserCoupleStoreImpl implements AppUserCoupleStore {
 
     @Override
     @ConnectManager
-    public void save(AppUserCouple appUserCouple, Persistent persistent) throws StoreException {
+    public void save(AppUserCouple appUserCouple, Persistent persistent, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserCoupleService.save(appUserCouple, persistent);
+            this.appUserCoupleService.save(appUserCouple, persistent,appUserMan,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
 
+    @Override
+    @ConnectManager
+    public void save(AppUserCouple appUserCouple, Persistent persistent, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCoupleService.save(appUserCouple, persistent,appUserLady,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void delete(AppUserCouple appUserCouple, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCoupleService.delete(appUserCouple,appUserMan,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void delete(AppUserCouple appUserCouple, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCoupleService.delete(appUserCouple,appUserLady,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager

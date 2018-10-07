@@ -5,6 +5,8 @@ import com.diary.common.BizException;
 
 public interface CoupleBiz {
 
+    String state(Integer gender) throws BizException;
+
     String list(Integer start, Integer limit,Integer gender, String keyword) throws BizException;
 
     String add(String title,  Integer gender, String remarks) throws BizException;

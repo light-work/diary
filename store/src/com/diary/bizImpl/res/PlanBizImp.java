@@ -88,7 +88,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String add(String title, Integer gender, String remarks) throws BizException {
+    public String add(String title, Integer gender, String remarks,String result) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -104,6 +104,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                 resPlan.setGender(gender);
                 resPlan.setDisplayOrder(currentOrder + 1);
                 resPlan.setRemarks(remarks);
+                resPlan.setResult(result);
                 bind(resPlan, 1l);
                 resPlan.setUseYn("Y");
                 resPlanStore.save(resPlan, Persistent.SAVE);
@@ -120,7 +121,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Integer gender, String remarks) throws BizException {
+    public String edit(Long id, String title, Integer gender, String remarks,String result) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -131,6 +132,7 @@ public class PlanBizImp extends BaseBiz implements PlanBiz {
                     resPlan.setTitle(title);
                     resPlan.setGender(gender);
                     resPlan.setRemarks(remarks);
+                    resPlan.setResult(result);
                     bind(resPlan, 1l);
                     resPlanStore.save(resPlan, Persistent.UPDATE);
                     resultObj.put("result", 0);

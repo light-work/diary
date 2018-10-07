@@ -17,6 +17,8 @@ public interface AppUserCarStore {
 
     AppUserCar getById(Long id, Selector... selectors) throws StoreException;
 
+    Integer getCountByUserId(Long userId) throws StoreException;
+
 
     Page<AppUserCar> getPageList(int start,
                                  int limit, List<Selector> selectorList) throws StoreException;

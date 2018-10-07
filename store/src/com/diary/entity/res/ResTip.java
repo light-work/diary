@@ -17,8 +17,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_PLAN")
-public class ResPlan extends IdEntity implements Tracker {
+@Table(name = "RES_TIP")
+public class ResTip extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,13 +26,7 @@ public class ResPlan extends IdEntity implements Tracker {
 
     private String title;
 
-    private Integer gender;
-
     private String remarks;
-
-    private Integer displayOrder;
-
-    private String result;
 
     private Date created;
 
@@ -62,32 +56,6 @@ public class ResPlan extends IdEntity implements Tracker {
         this.title = title;
     }
 
-    @Column(name = "GENDER")
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
-
-    @Column(name = "DISPLAY_ORDER")
-    public Integer getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Integer displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-
-    @Column(name = "RESULT")
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
 
     @Column(name = "REMARKS")
     public String getRemarks() {
@@ -97,7 +65,6 @@ public class ResPlan extends IdEntity implements Tracker {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {
         return created;

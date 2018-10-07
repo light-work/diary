@@ -46,6 +46,10 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private Integer hours;
 
+    private Integer house;
+
+    private Integer car;
+
     private Date created;
 
     private String createdBy;
@@ -65,6 +69,23 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
         this.id = id;
     }
 
+    @Transient
+    public Integer getHouse() {
+        return house;
+    }
+
+    public void setHouse(Integer house) {
+        this.house = house;
+    }
+
+    @Transient
+    public Integer getCar() {
+        return car;
+    }
+
+    public void setCar(Integer car) {
+        this.car = car;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")

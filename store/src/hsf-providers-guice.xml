@@ -302,6 +302,12 @@
         </provider>
 
 
+        <service id="resTipStore" class="com.diary.storeImpl.res.ResTipStoreImpl"/>
+        <provider id="resTipStoreProvider"
+                  interface="com.diary.providers.store.res.ResTipStore"
+                  ref="resTipStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
 
 
 
@@ -369,6 +375,15 @@
                   enableTXC="true">
         </provider>
 
+        
+
+        <service id="luckBiz" class="com.diary.bizImpl.res.LuckBizImp"/>
+        <provider id="luckBizProvider"
+                  interface="com.diary.providers.biz.res.LuckBiz"
+                  ref="luckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <service id="userBiz" class="com.diary.bizImpl.app.UserBizImp"/>
         <provider id="userBizProvider"
                   interface="com.diary.providers.biz.app.UserBiz"
@@ -376,10 +391,59 @@
                   enableTXC="true">
         </provider>
 
-        <service id="luckBiz" class="com.diary.bizImpl.res.LuckBizImp"/>
-        <provider id="luckBizProvider"
-                  interface="com.diary.providers.biz.res.LuckBiz"
-                  ref="luckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+        <service id="userCarBiz" class="com.diary.bizImpl.app.UserCarBizImp"/>
+        <provider id="userCarBizProvider"
+                  interface="com.diary.providers.biz.app.UserCarBiz"
+                  ref="userCarBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userHouseBiz" class="com.diary.bizImpl.app.UserHouseBizImp"/>
+        <provider id="userHouseBizProvider"
+                  interface="com.diary.providers.biz.app.UserHouseBiz"
+                  ref="userHouseBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userClothesBiz" class="com.diary.bizImpl.app.UserClothesBizImp"/>
+        <provider id="userClothesBizProvider"
+                  interface="com.diary.providers.biz.app.UserClothesBiz"
+                  ref="userClothesBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userLuxuryBiz" class="com.diary.bizImpl.app.UserLuxuryBizImp"/>
+        <provider id="userLuxuryBizProvider"
+                  interface="com.diary.providers.biz.app.UserLuxuryBiz"
+                  ref="userLuxuryBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userJobBiz" class="com.diary.bizImpl.app.UserJobBizImp"/>
+        <provider id="userJobBizProvider"
+                  interface="com.diary.providers.biz.app.UserJobBiz"
+                  ref="userJobBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userPlanBiz" class="com.diary.bizImpl.app.UserPlanBizImp"/>
+        <provider id="userPlanBizProvider"
+                  interface="com.diary.providers.biz.app.UserPlanBiz"
+                  ref="userPlanBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userLuckBiz" class="com.diary.bizImpl.app.UserLuckBizImp"/>
+        <provider id="userLuckBizProvider"
+                  interface="com.diary.providers.biz.app.UserLuckBiz"
+                  ref="userLuckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userCoupleBiz" class="com.diary.bizImpl.app.UserCoupleBizImp"/>
+        <provider id="userCoupleBizProvider"
+                  interface="com.diary.providers.biz.app.UserCoupleBiz"
+                  ref="userCoupleBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>

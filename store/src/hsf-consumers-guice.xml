@@ -207,6 +207,12 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resTipStoreConsumer"
+                  interface="com.diary.providers.store.res.ResTipStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
 
         <consumer id="commonBizConsumer"
                   interface="com.diary.providers.biz.res.CommonBiz"
@@ -257,13 +263,55 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+       
+        <consumer id="luckBizConsumer"
+                  interface="com.diary.providers.biz.res.LuckBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
         <consumer id="userBizConsumer"
                   interface="com.diary.providers.biz.app.UserBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
-        <consumer id="luckBizConsumer"
-                  interface="com.diary.providers.biz.res.LuckBiz"
+        <consumer id="userCarBizConsumer"
+                  interface="com.diary.providers.biz.app.UserCarBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userHouseBizConsumer"
+                  interface="com.diary.providers.biz.app.UserHouseBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userClothesBizConsumer"
+                  interface="com.diary.providers.biz.app.UserClothesBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userLuxuryBizConsumer"
+                  interface="com.diary.providers.biz.app.UserLuxuryBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userJobBizConsumer"
+                  interface="com.diary.providers.biz.app.UserJobBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userPlanBizConsumer"
+                  interface="com.diary.providers.biz.app.UserPlanBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userLuckBizConsumer"
+                  interface="com.diary.providers.biz.app.UserLuckBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userCoupleBizConsumer"
+                  interface="com.diary.providers.biz.app.UserCoupleBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
     </group>
