@@ -58,6 +58,16 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
             operationSub.put("value", "sub".toUpperCase());
             jsonArray.add(operationSub);
 
+            JSONObject operationPlusPerc = new JSONObject();
+            operationPlus.put("text", "百分比增加");
+            operationPlus.put("value", "addperc".toUpperCase());
+            jsonArray.add(operationPlusPerc);
+
+            JSONObject operationPerc = new JSONObject();
+            operationSub.put("text", "百分比减少");
+            operationSub.put("value", "subperc".toUpperCase());
+            jsonArray.add(operationPerc);
+
             resultObj.put("result", 0);
             resultObj.put("list", jsonArray);
         } catch (Exception ex) {

@@ -17,6 +17,8 @@ public interface ResEventResultStore {
     ResEventResult getByOrder(Integer displayOrder) throws StoreException;
 
 
+    List<ResEventResult> getListByEventId(Long eventId) throws StoreException;
+
     Integer getMaxOrder() throws StoreException;
 
     List<ResEventResult> getList(List<Selector> selectorList) throws StoreException;

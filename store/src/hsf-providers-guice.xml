@@ -446,5 +446,12 @@
                   ref="userCoupleBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
+
+        <service id="userEventBiz" class="com.diary.bizImpl.app.UserEventBizImp"/>
+        <provider id="userEventBizProvider"
+                  interface="com.diary.providers.biz.app.UserEventBiz"
+                  ref="userEventBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
     </group>
 </hsf>

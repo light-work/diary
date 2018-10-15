@@ -36,6 +36,17 @@ public class ResEventResultEffectStoreImpl implements ResEventResultEffectStore 
 
     @Override
     @ConnectManager
+    public List<ResEventResultEffect> getListByResultId(Long resultId) throws StoreException {
+        try {
+            return this.resEventResultEffectService.getListByResultId(resultId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public List<ResEventResultEffect> getList(List<Selector> selectorList) throws StoreException {
         try {
             return this.resEventResultEffectService.getList(selectorList);

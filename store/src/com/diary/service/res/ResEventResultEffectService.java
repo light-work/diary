@@ -24,6 +24,11 @@ public class ResEventResultEffectService extends HQuery implements ResEventResul
         return $(id, selectors).get(ResEventResultEffect.class);
     }
 
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResEventResultEffect> getListByResultId(Long resultId) throws StoreException {
+        return $($eq("resultId.id",resultId)).list(ResEventResultEffect.class);
+    }
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)

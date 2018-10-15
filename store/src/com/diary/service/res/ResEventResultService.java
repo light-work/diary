@@ -24,12 +24,21 @@ public class ResEventResultService extends HQuery implements ResEventResultStore
         return $(id, selectors).get(ResEventResult.class);
     }
 
+
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<ResEventResult> getListByEventId(Long eventId) throws StoreException {
+        return $($eq("eventId.id", eventId),$order("displayOrder")).list(ResEventResult.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
     public ResEventResult getByOrder(Integer displayOrder) throws StoreException {
         return $($eq("displayOrder", displayOrder)).get(ResEventResult.class);
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
     public Integer getMaxOrder() throws StoreException {
         return $($max("displayOrder")).value(ResEventResult.class, Integer.class);
     }

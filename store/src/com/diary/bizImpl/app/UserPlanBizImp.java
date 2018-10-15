@@ -8,6 +8,7 @@ import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import com.diary.entity.res.ResPlan;
 import com.diary.entity.res.ResPlanEffect;
+import com.diary.entity.res.ResPlanEvent;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
@@ -17,11 +18,15 @@ import com.diary.providers.store.app.AppUserManStore;
 import com.diary.providers.store.app.AppUserPlanStore;
 import com.diary.providers.store.app.AppUserStore;
 import com.diary.providers.store.res.ResPlanEffectStore;
+import com.diary.providers.store.res.ResPlanEventStore;
 import com.diary.providers.store.res.ResPlanStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.Page;
+import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
 
@@ -141,4 +146,28 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
         return resultObj.toString();
     }
 
+    @Override
+    public String findEvent(Long userId, Long planId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        ResPlanEventStore resPlanEventStore = hsfServiceFactory.consumer(ResPlanEventStore.class);
+        if (resPlanEventStore != null) {
+            List<Selector> selectorList = new ArrayList<>();
+            selectorList.add(SelectorUtils.$eq("planId.id", planId));
+            GameUtils.randSelector(selectorList);
+            Page<ResPlanEvent> resPlanEventPage = resPlanEventStore.getPageList(0, 20, selectorList);
+            if(resPlanEventPage!=null){
+                List<ResPlanEvent> resPlanEventList=resPlanEventPage.getResultList();
+                if(resPlanEventList!=null&&!resPlanEventList.isEmpty()){
+                   int index=GameUtils.randGetIndex(resPlanEventList.size());
+                   ResPlanEvent resPlanEvent=resPlanEventList.get(index);
+                   if(resPlanEvent!=null){
+                       resultObj.put("eventId", resPlanEvent.getEventId().getId()+"");
+                       resultObj.put("result", 0);
+                   }
+                }
+            }
+        }
+        return resultObj.toString();
+    }
 }
