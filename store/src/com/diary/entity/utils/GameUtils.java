@@ -78,29 +78,38 @@ public class GameUtils {
 
     public static String dayText(Integer day) throws Exception {
         String dayText = null;
-        int totalDays = 7;
+        int totalDays = 10;
         int diffDays = totalDays - day;
         switch (diffDays) {
-            case 1:
+            case 0:
                 dayText = "一";
                 break;
-            case 2:
+            case 1:
                 dayText = "二";
                 break;
-            case 3:
+            case 2:
                 dayText = "三";
                 break;
-            case 4:
+            case 3:
                 dayText = "四";
                 break;
-            case 5:
+            case 4:
                 dayText = "五";
                 break;
-            case 6:
+            case 5:
                 dayText = "六";
                 break;
-            case 7:
+            case 6:
                 dayText = "七";
+                break;
+            case 7:
+                dayText = "八";
+                break;
+            case 8:
+                dayText = "九";
+                break;
+            case 9:
+                dayText = "十";
                 break;
         }
         return dayText;
@@ -281,7 +290,7 @@ public class GameUtils {
             operationCONNECTIONS.put("value", isManage == 0 ? "CONNECTIONS" : "CONNECTIONS".toLowerCase());
 
             jsonArray.add(operationCONNECTIONS);
-        } else if (gender == 0) {
+        } else if (gender == 2) {
             JSONObject operationHEALTH = new JSONObject();
             operationHEALTH.put("text", "健康");
             operationHEALTH.put("value", isManage == 0 ? "HEALTH" : "HEALTH".toLowerCase());
@@ -554,7 +563,7 @@ public class GameUtils {
     }
 
     public static String callName(Integer gender) throws Exception {
-        return gender == 0 ? "小姑娘" : "小伙子";
+        return gender == 2 ? "小姑娘" : "小伙子";
     }
 
     public static void useHour(Object appUserObj) throws Exception {

@@ -21,7 +21,11 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response login(@FormParam("code") String code,
-                          @FormParam("userId") Long userId) {
+                          @FormParam("userId") Long userId,
+                          @FormParam("nickName")String nickName, @FormParam("avatarUrl")String avatarUrl,
+                          @FormParam("gender")Integer gender,
+                          @FormParam("city")String city, @FormParam("province")String province,
+                          @FormParam("country")String country) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -34,7 +38,7 @@ public class UserAPI extends BaseAPI {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
-                    bizResult = userBiz.login(code,userId);
+                    bizResult = userBiz.login(code,userId,nickName,avatarUrl,gender,city,province,country);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

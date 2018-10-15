@@ -75,12 +75,12 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                     AppUserLady appUserLady = null;
                     JSONArray resultArray = new JSONArray();
                     JSONArray effectArray = null;
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             pass = GameUtils.requirePass(effectSubList, appUserMan);
                         }
-                    } else if (appUser.getUserGender() == 0) {
+                    } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             pass = GameUtils.requirePass(effectSubList, appUserLady);
@@ -97,7 +97,7 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                             bind(appUserPlan, userId);
                             String resultText = resPlan.getResult();
 
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
                                     if (effectList != null && !effectList.isEmpty()) {
                                         AppUserMan oldMan = (AppUserMan) appUserMan.clone();
@@ -109,7 +109,7 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                                     GameUtils.useHour(appUserMan);
                                     appUserPlanStore.save(appUserPlan, Persistent.SAVE, appUserMan);
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
                                     if (effectList != null && !effectList.isEmpty()) {
                                         AppUserLady oldLady = (AppUserLady) appUserLady.clone();
@@ -131,7 +131,7 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                         }
                     } else {
                         GameUtils.addResultArray(resultArray, "", null);
-                        resultObj.put("text", GameUtils.callName(appUser.getUserGender()) + "，钱包那么瘪，如果不想付出劳动获得金钱，就好好宅着吧！");
+                        resultObj.put("text", GameUtils.callName(appUser.getGender()) + "，钱包那么瘪，如果不想付出劳动获得金钱，就好好宅着吧！");
                         resultObj.put("result", 1);
                     }
                 }

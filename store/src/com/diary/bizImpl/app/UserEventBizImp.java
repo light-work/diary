@@ -50,7 +50,7 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
             AppUser appUser = appUserStore.getById(userId);
             if (appUser != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$eq("gender", appUser.getUserGender()));
+                selectorList.add(SelectorUtils.$eq("gender", appUser.getGender()));
                 GameUtils.randSelector(selectorList);
                 Page<ResEvent> resEventPage = resEventStore.getPageList(0, 20, selectorList);
                 if (resEventPage != null) {
@@ -87,12 +87,12 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                     List<ResEventResult> eventResultList = resEventResultStore.getListByEventId(resEvent.getId());
                     JSONArray eventResultArray = null;
                     if (eventResultList != null && !eventResultList.isEmpty()) {
-                        if (appUser.getUserGender() == 1) {
+                        if (appUser.getGender() == 1) {
                             AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                             if (appUserMan != null) {
                                 eventResultArray = GameUtils.requireCompare(eventResultList, appUserMan);
                             }
-                        } else if (appUser.getUserGender() == 0) {
+                        } else if (appUser.getGender() == 2) {
                             AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                             if (appUserLady != null) {
                                 eventResultArray = GameUtils.requireCompare(eventResultList, appUserLady);
@@ -132,7 +132,7 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                         JSONArray effectArray = null;
                         List<ResEventResultEffect> eventResultEffectList = resEventResultEffectStore.getListByResultId(resultId);
                         if (eventResultEffectList != null && !eventResultEffectList.isEmpty()) {
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                                 if (appUserMan != null) {
                                     AppUserMan oldMan = (AppUserMan) appUserMan.clone();
@@ -143,7 +143,7 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                                     GameUtils.addResultArray(resultArray, resEventResult.getResultText(), null);
                                     GameUtils.addResultArray(resultArray, "最终", effectArray);
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                                 if (appUserLady != null) {
                                     AppUserLady oldLady = (AppUserLady) appUserLady.clone();

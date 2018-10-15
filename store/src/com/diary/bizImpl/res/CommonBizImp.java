@@ -124,7 +124,7 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
                 houseObj.put("text", "房屋类事件");
                 houseObj.put("value", "HOUSE");
                 jsonArray.add(houseObj);
-            }else if(gender==0){
+            }else if(gender==2){
                 JSONObject clothesObj = new JSONObject();
                 clothesObj.put("text", "服装类事件");
                 clothesObj.put("value", "CLOTHES");

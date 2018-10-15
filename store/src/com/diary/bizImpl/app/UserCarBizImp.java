@@ -53,7 +53,7 @@ public class UserCarBizImp extends BaseBiz implements UserCarBiz {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
 
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         ResCar resCar = resCarStore.getById(carId);
@@ -127,7 +127,7 @@ public class UserCarBizImp extends BaseBiz implements UserCarBiz {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
-                    if (appUser.getUserGender()== 1) {
+                    if (appUser.getGender()== 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             int result = -1;

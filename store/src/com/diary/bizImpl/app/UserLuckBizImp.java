@@ -65,7 +65,7 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                     JSONArray resultArray = new JSONArray();
                     JSONArray effectArray = null;
 
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             day = appUserMan.getDays();
@@ -75,7 +75,7 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                             }
 
                         }
-                    } else if (appUser.getUserGender() == 0) {
+                    } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             day = appUserLady.getDays();
@@ -108,7 +108,7 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                         doubleList.add(NumberUtils.subtract(1, resLuck.getProbability(), 2));
                         int status = GameUtils.lottery(doubleList);
                         appUserLuck.setStatus(status);
-                        if (appUser.getUserGender() == 1) {
+                        if (appUser.getGender() == 1) {
                             if (appUserMan != null) {
                                 AppUserMan oldMan = (AppUserMan) appUserMan.clone();
                                 appUserMan.setMoney(appUserMan.getMoney() - resLuck.getInvestPrice());
@@ -119,7 +119,7 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                                 GameUtils.useHour(appUserMan);
                                 appUserLuckStore.save(appUserLuck, Persistent.SAVE, appUserMan, appUserLimit);
                             }
-                        } else if (appUser.getUserGender() == 0) {
+                        } else if (appUser.getGender() == 2) {
                             if (appUserLady != null) {
                                 AppUserLady oldLady = (AppUserLady) appUserLady.clone();
                                 appUserLady.setMoney(appUserLady.getMoney() - resLuck.getInvestPrice());
@@ -133,16 +133,16 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                         }
                         if (status == 0) {
                             GameUtils.addResultArray(resultArray,
-                                    "哎哟喂！" + GameUtils.callName(appUser.getUserGender()) + "，运气不错，这可是平日行善积德的回报。", null);
+                                    "哎哟喂！" + GameUtils.callName(appUser.getGender()) + "，运气不错，这可是平日行善积德的回报。", null);
                             GameUtils.addResultArray(resultArray,
                                     "最终", effectArray);
                         } else {
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 GameUtils.addResultArray(resultArray,
-                                        "哎！" + GameUtils.callName(appUser.getUserGender()) + "，运气太差，平日要扶老奶奶过马路，听女朋友的话，孝敬父母。", null);
-                            } else if (appUser.getUserGender() == 0) {
+                                        "哎！" + GameUtils.callName(appUser.getGender()) + "，运气太差，平日要扶老奶奶过马路，听女朋友的话，孝敬父母。", null);
+                            } else if (appUser.getGender() == 2) {
                                 GameUtils.addResultArray(resultArray,
-                                        "哎！" + GameUtils.callName(appUser.getUserGender()) + "，运气太差，平日要给老爷爷让座，爱护小动物，孝敬父母。", null);
+                                        "哎！" + GameUtils.callName(appUser.getGender()) + "，运气太差，平日要给老爷爷让座，爱护小动物，孝敬父母。", null);
                             }
                             GameUtils.addResultArray(resultArray,
                                     "最终", effectArray);
@@ -151,12 +151,12 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                         resultObj.put("resultArray", resultArray);
                     } else {
                         if (luckLimit == 0) {
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
                                     GameUtils.useHour(appUserMan);
                                     appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
                                     GameUtils. useHour(appUserLady);
                                     appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);

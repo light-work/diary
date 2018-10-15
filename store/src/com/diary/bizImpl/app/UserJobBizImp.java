@@ -57,7 +57,7 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                     AppUserLady appUserLady = null;
                     AppUserLimit appUserLimit = null;
                     JSONArray resultArray = new JSONArray();
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             day = appUserMan.getDays();
@@ -66,7 +66,7 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                                 pass = GameUtils.requirePass(requireList, appUserMan);
                             }
                         }
-                    } else if (appUser.getUserGender() == 0) {
+                    } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             day = appUserLady.getDays();
@@ -101,12 +101,12 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                             appUserJob.setJobId(resJob);
                             appUserJob.setUseYn("Y");
                             bind(appUserJob, userId);
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
                                     GameUtils.useHour(appUserMan);
                                     appUserJobStore.save(appUserJob, persistent, appUserMan, appUserLimit);
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
                                     GameUtils.useHour(appUserLady);
                                     appUserJobStore.save(appUserJob, persistent, appUserLady, appUserLimit);
@@ -118,12 +118,12 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                         }
                     } else {
                         if (jobLimit == 0) {
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
                                     GameUtils.useHour(appUserMan);
                                     appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
                                     GameUtils.useHour(appUserLady);
                                     appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
@@ -135,13 +135,13 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                             GameUtils.addResultArray(resultArray, "抱歉，每日只能应聘一次工作！", null);
                         } else {
                             JSONArray failAttrName = null;
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
-                                    failAttrName = GameUtils.failAttrNames(requireList, appUserMan, appUser.getUserGender());
+                                    failAttrName = GameUtils.failAttrNames(requireList, appUserMan, appUser.getGender());
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
-                                    failAttrName = GameUtils.failAttrNames(requireList, appUserLady, appUser.getUserGender());
+                                    failAttrName = GameUtils.failAttrNames(requireList, appUserLady, appUser.getGender());
                                 }
                             }
                             GameUtils.addResultArray(resultArray, "你卖力的表现了下自己，但是面试官觉得你的能力无法胜任这份工作！", null);

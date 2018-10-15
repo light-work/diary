@@ -51,7 +51,7 @@ public class UserHouseBizImp extends BaseBiz implements UserHouseBiz {
             if (appUserStore != null && appUserManStore != null && resHouseStore != null && appUserHouseStore != null && appUserLimitStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         ResHouse resHouse = resHouseStore.getById(houseId);
                         if (appUserMan != null && resHouse != null) {
@@ -126,7 +126,7 @@ public class UserHouseBizImp extends BaseBiz implements UserHouseBiz {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = "";
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             int result = -1;

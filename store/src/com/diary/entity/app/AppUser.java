@@ -26,17 +26,17 @@ public class AppUser extends IdEntity implements Tracker {
 
     private String openId;
 
-    private String userNickName;
+    private String nickName;
 
-    private String userAvatarUrl;
+    private String avatarUrl;
 
-    private Integer userGender;
+    private Integer gender;
 
-    private String userCity;
+    private String city;
 
-    private String userProvince;
+    private String province;
 
-    private String userCountry;
+    private String country;
 
     private Date created;
 
@@ -57,60 +57,58 @@ public class AppUser extends IdEntity implements Tracker {
         this.id = id;
     }
 
-
-    @Column(name = "USER_NICK_NAME")
-    public String getUserNickName() {
-        return userNickName;
+    @Column(name = "NICK_NAME")
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    @Column(name = "USER_AVATAR_URL")
-    public String getUserAvatarUrl() {
-        return userAvatarUrl;
+    @Column(name = "AVATAR_URL")
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setUserAvatarUrl(String userAvatarUrl) {
-        this.userAvatarUrl = userAvatarUrl;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
-    @Column(name = "USER_GENDER")
-    public Integer getUserGender() {
-        return userGender;
+    @Column(name = "GENDER")
+    public Integer getGender() {
+        return gender;
     }
 
-    public void setUserGender(Integer userGender) {
-        this.userGender = userGender;
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
-    @Column(name = "USER_CITY")
-    public String getUserCity() {
-        return userCity;
+    @Column(name = "CITY")
+    public String getCity() {
+        return city;
     }
 
-    public void setUserCity(String userCity) {
-        this.userCity = userCity;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-
-    @Column(name = "USER_PROVINCE")
-    public String getUserProvince() {
-        return userProvince;
+    @Column(name = "PROVINCE")
+    public String getProvince() {
+        return province;
     }
 
-    public void setUserProvince(String userProvince) {
-        this.userProvince = userProvince;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
-    @Column(name = "USER_COUNTRY")
-    public String getUserCountry() {
-        return userCountry;
+    @Column(name = "COUNTRY")
+    public String getCountry() {
+        return country;
     }
 
-    public void setUserCountry(String userCountry) {
-        this.userCountry = userCountry;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Column(name = "OPEN_ID")
