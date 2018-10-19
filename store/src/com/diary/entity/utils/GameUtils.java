@@ -2,10 +2,14 @@ package com.diary.entity.utils;
 
 import com.diary.entity.app.AppUserLady;
 import com.diary.entity.app.AppUserMan;
+import com.diary.entity.res.ResEventResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.StringUtils;
+import org.guiceside.persistence.entity.search.SelectorUtils;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,6 +17,22 @@ import java.util.Collections;
 import java.util.List;
 
 public class GameUtils {
+
+    public static int randGetIndex(int size){
+        int b=(int)(Math.random()*size-1);
+        return b;
+    }
+    public static void randSelector(List<Selector> selectorList) {
+        List<Double> orignalRates=new ArrayList<>();
+        orignalRates.add(0.49);
+        orignalRates.add(0.51);
+        int flag=lottery(orignalRates);
+        if(flag==0){
+            selectorList.add(SelectorUtils.$order("id",true));
+        }else{
+            selectorList.add(SelectorUtils.$order("id",false));
+        }
+    }
 
     public static int lottery(List<Double> orignalRates) {
         if (orignalRates == null || orignalRates.isEmpty()) {
@@ -58,29 +78,38 @@ public class GameUtils {
 
     public static String dayText(Integer day) throws Exception {
         String dayText = null;
-        int totalDays = 7;
+        int totalDays = 10;
         int diffDays = totalDays - day;
         switch (diffDays) {
-            case 1:
+            case 0:
                 dayText = "一";
                 break;
-            case 2:
+            case 1:
                 dayText = "二";
                 break;
-            case 3:
+            case 2:
                 dayText = "三";
                 break;
-            case 4:
+            case 3:
                 dayText = "四";
                 break;
-            case 5:
+            case 4:
                 dayText = "五";
                 break;
-            case 6:
+            case 5:
                 dayText = "六";
                 break;
-            case 7:
+            case 6:
                 dayText = "七";
+                break;
+            case 7:
+                dayText = "八";
+                break;
+            case 8:
+                dayText = "九";
+                break;
+            case 9:
+                dayText = "十";
                 break;
         }
         return dayText;
@@ -261,7 +290,7 @@ public class GameUtils {
             operationCONNECTIONS.put("value", isManage == 0 ? "CONNECTIONS" : "CONNECTIONS".toLowerCase());
 
             jsonArray.add(operationCONNECTIONS);
-        } else if (gender == 0) {
+        } else if (gender == 2) {
             JSONObject operationHEALTH = new JSONObject();
             operationHEALTH.put("text", "健康");
             operationHEALTH.put("value", isManage == 0 ? "HEALTH" : "HEALTH".toLowerCase());
@@ -351,6 +380,41 @@ public class GameUtils {
         }
 
         return failArray;
+    }
+
+    public static JSONArray requireCompare(List<ResEventResult> eventResults, Object userObj) throws Exception {
+       JSONArray eventResultArray=new JSONArray();
+        for (ResEventResult eventResult : eventResults) {
+            String compare = eventResult.getCompare();
+            if(StringUtils.isNotBlank(compare)){
+                String requireKey = eventResult.getAttrKey().toLowerCase();
+                Integer value = eventResult.getValue();
+                if (StringUtils.isNotBlank(requireKey)&&value!=null) {
+                    Integer userValue = BeanUtils.getValue(userObj, requireKey, Integer.class);
+                    if (userValue != null) {
+                        if(compare.equals(">")){
+                            if (userValue <= value) {
+                               continue;
+                            }
+                        }else if(compare.equals("<")){
+                            if (userValue >= value) {
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+            JSONObject eventObj = JsonUtils.formIdEntity(eventResult, 0);
+            if(eventObj!=null){
+                GameUtils.minish(eventObj);
+                eventObj.remove("compare");
+                eventObj.remove("attrKey");
+                eventObj.remove("value");
+                eventObj.remove("displayOrder");
+                eventResultArray.add(eventObj);
+            }
+        }
+        return eventResultArray;
     }
 
     public static boolean requirePass(List<?> requireList, Object userObj) throws Exception {
@@ -499,7 +563,7 @@ public class GameUtils {
     }
 
     public static String callName(Integer gender) throws Exception {
-        return gender == 0 ? "小姑娘" : "小伙子";
+        return gender == 2 ? "小姑娘" : "小伙子";
     }
 
     public static void useHour(Object appUserObj) throws Exception {

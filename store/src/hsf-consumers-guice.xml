@@ -314,6 +314,11 @@
                   interface="com.diary.providers.biz.app.UserCoupleBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
+
+        <consumer id="userEventBizConsumer"
+                  interface="com.diary.providers.biz.app.UserEventBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
     </group>
 
 </hsf>

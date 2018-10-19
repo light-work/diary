@@ -8,6 +8,7 @@ import com.diary.entity.app.AppUserMan;
 import com.diary.entity.app.AppUserPlan;
 import com.diary.entity.res.ResPlan;
 import com.diary.entity.res.ResPlanEffect;
+import com.diary.entity.res.ResPlanEvent;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
@@ -17,11 +18,15 @@ import com.diary.providers.store.app.AppUserManStore;
 import com.diary.providers.store.app.AppUserPlanStore;
 import com.diary.providers.store.app.AppUserStore;
 import com.diary.providers.store.res.ResPlanEffectStore;
+import com.diary.providers.store.res.ResPlanEventStore;
 import com.diary.providers.store.res.ResPlanStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.Page;
+import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
 
@@ -70,12 +75,12 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                     AppUserLady appUserLady = null;
                     JSONArray resultArray = new JSONArray();
                     JSONArray effectArray = null;
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             pass = GameUtils.requirePass(effectSubList, appUserMan);
                         }
-                    } else if (appUser.getUserGender() == 0) {
+                    } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             pass = GameUtils.requirePass(effectSubList, appUserLady);
@@ -92,7 +97,7 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                             bind(appUserPlan, userId);
                             String resultText = resPlan.getResult();
 
-                            if (appUser.getUserGender() == 1) {
+                            if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
                                     if (effectList != null && !effectList.isEmpty()) {
                                         AppUserMan oldMan = (AppUserMan) appUserMan.clone();
@@ -104,7 +109,7 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                                     GameUtils.useHour(appUserMan);
                                     appUserPlanStore.save(appUserPlan, Persistent.SAVE, appUserMan);
                                 }
-                            } else if (appUser.getUserGender() == 0) {
+                            } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
                                     if (effectList != null && !effectList.isEmpty()) {
                                         AppUserLady oldLady = (AppUserLady) appUserLady.clone();
@@ -126,7 +131,7 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
                         }
                     } else {
                         GameUtils.addResultArray(resultArray, "", null);
-                        resultObj.put("text", GameUtils.callName(appUser.getUserGender()) + "，钱包那么瘪，如果不想付出劳动获得金钱，就好好宅着吧！");
+                        resultObj.put("text", GameUtils.callName(appUser.getGender()) + "，钱包那么瘪，如果不想付出劳动获得金钱，就好好宅着吧！");
                         resultObj.put("result", 1);
                     }
                 }
@@ -141,4 +146,28 @@ public class UserPlanBizImp extends BaseBiz implements UserPlanBiz {
         return resultObj.toString();
     }
 
+    @Override
+    public String findEvent(Long userId, Long planId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        ResPlanEventStore resPlanEventStore = hsfServiceFactory.consumer(ResPlanEventStore.class);
+        if (resPlanEventStore != null) {
+            List<Selector> selectorList = new ArrayList<>();
+            selectorList.add(SelectorUtils.$eq("planId.id", planId));
+            GameUtils.randSelector(selectorList);
+            Page<ResPlanEvent> resPlanEventPage = resPlanEventStore.getPageList(0, 20, selectorList);
+            if(resPlanEventPage!=null){
+                List<ResPlanEvent> resPlanEventList=resPlanEventPage.getResultList();
+                if(resPlanEventList!=null&&!resPlanEventList.isEmpty()){
+                   int index=GameUtils.randGetIndex(resPlanEventList.size());
+                   ResPlanEvent resPlanEvent=resPlanEventList.get(index);
+                   if(resPlanEvent!=null){
+                       resultObj.put("eventId", resPlanEvent.getEventId().getId()+"");
+                       resultObj.put("result", 0);
+                   }
+                }
+            }
+        }
+        return resultObj.toString();
+    }
 }

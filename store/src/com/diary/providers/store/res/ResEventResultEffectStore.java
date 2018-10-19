@@ -17,6 +17,8 @@ public interface ResEventResultEffectStore {
 
     List<ResEventResultEffect> getList(List<Selector> selectorList) throws StoreException;
 
+    List<ResEventResultEffect> getListByResultId(Long resultId) throws StoreException;
+
     void save(ResEventResultEffect resEventResultEffect, Persistent persistent) throws StoreException;
 
     void delete(ResEventResultEffect resEventResultEffect) throws StoreException;

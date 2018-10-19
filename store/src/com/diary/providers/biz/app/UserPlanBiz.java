@@ -8,4 +8,6 @@ public interface UserPlanBiz {
 
     String applyPlan(Long userId,Long planId) throws BizException;
 
+    String findEvent(Long userId,Long findEventId) throws BizException;
+
 }

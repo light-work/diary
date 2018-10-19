@@ -52,7 +52,7 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
-                    if (appUser.getUserGender() == 0) {
+                    if (appUser.getGender() == 2) {
 
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         ResClothes resClothes = resClothesStore.getById(clothesId);
@@ -128,7 +128,7 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
-                    if (appUser.getUserGender() == 0) {
+                    if (appUser.getGender() == 2) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             int result = -1;

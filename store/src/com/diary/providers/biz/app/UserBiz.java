@@ -6,7 +6,9 @@ import com.diary.common.BizException;
 public interface UserBiz {
 
 
-    String login(String code,Long userId) throws BizException;
+    String login(String code,Long userId,String nickName, String avatarUrl,
+                 Integer gender,
+                 String city, String province, String country) throws BizException;
 
     String start(Long userId) throws BizException;
 

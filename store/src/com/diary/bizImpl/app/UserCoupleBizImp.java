@@ -63,7 +63,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                     AppUserLady appUserLady = null;
                     AppUserLimit appUserLimit = null;
                     JSONArray resultArray = new JSONArray();
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             Integer carCount = appUserCarStore.getCountByUserId(userId);
@@ -84,7 +84,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                 pass = GameUtils.requirePass(requireList, appUserMan);
                             }
                         }
-                    } else if (appUser.getUserGender() == 0) {
+                    } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             day = appUserLady.getDays();
@@ -105,7 +105,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                     }
                     AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
                     if (appUserCouple != null) {
-                        if (appUser.getUserGender() == 1) {
+                        if (appUser.getGender() == 1) {
                             AppUserMan oldMan = (AppUserMan) appUserMan.clone();
                             appUserMan.setMoney(appUserMan.getMoney() - 5000);
                             appUserMan.setPositive(appUserMan.getPositive() - 30);
@@ -113,10 +113,10 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             GameUtils.useHour(appUserMan);
                             appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                             GameUtils.addResultArray(resultArray,
-                                    "啧啧啧！" + GameUtils.callName(appUser.getUserGender()) + "，到处沾花惹草，吃着碗里的看着锅里的可不好。", null);
+                                    "啧啧啧！" + GameUtils.callName(appUser.getGender()) + "，到处沾花惹草，吃着碗里的看着锅里的可不好。", null);
                             GameUtils.addResultArray(resultArray,
                                     "最终", effectArray);
-                        } else if (appUser.getUserGender() == 0) {
+                        } else if (appUser.getGender() == 2) {
                             AppUserLady oldLady = (AppUserLady) appUserLady.clone();
                             appUserLady.setHappy(appUserLady.getHappy() - 30);
                             appUserLady.setPopularity(appUserLady.getPopularity() - 30);
@@ -124,7 +124,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             GameUtils.useHour(appUserLady);
                             appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
                             GameUtils.addResultArray(resultArray,
-                                    "啧啧啧！" + GameUtils.callName(appUser.getUserGender()) + "，红杏出墙会毁掉名声，不作死就不会死。", null);
+                                    "啧啧啧！" + GameUtils.callName(appUser.getGender()) + "，红杏出墙会毁掉名声，不作死就不会死。", null);
                             GameUtils.addResultArray(resultArray,
                                     "最终", effectArray);
                         }
@@ -141,12 +141,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                     appUserCouple.setCoupleId(resCouple);
                                     appUserCouple.setUseYn("Y");
                                     bind(appUserCouple, userId);
-                                    if (appUser.getUserGender() == 1) {
+                                    if (appUser.getGender() == 1) {
                                         if (appUserMan != null) {
                                             GameUtils.useHour(appUserMan);
                                             appUserCoupleStore.save(appUserCouple, Persistent.SAVE, appUserMan, appUserLimit);
                                         }
-                                    } else if (appUser.getUserGender() == 0) {
+                                    } else if (appUser.getGender() == 2) {
                                         if (appUserLady != null) {
                                             GameUtils.useHour(appUserLady);
                                             appUserCoupleStore.save(appUserCouple, Persistent.SAVE, appUserLady, appUserLimit);
@@ -159,12 +159,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             }
                         } else {
                             if (coupleLimit == 0) {
-                                if (appUser.getUserGender() == 1) {
+                                if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
                                         GameUtils.useHour(appUserMan);
                                         appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                                     }
-                                } else if (appUser.getUserGender() == 0) {
+                                } else if (appUser.getGender() == 2) {
                                     if (appUserLady != null) {
                                         GameUtils.useHour(appUserLady);
                                         appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
@@ -175,13 +175,13 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                 GameUtils.addResultArray(resultArray, "先努力成为更好的自己，死缠烂打只会招人烦！", null);
                             } else {
                                 JSONArray failAttrName = null;
-                                if (appUser.getUserGender() == 1) {
+                                if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
-                                        failAttrName = GameUtils.failAttrNames(requireList, appUserMan, appUser.getUserGender());
+                                        failAttrName = GameUtils.failAttrNames(requireList, appUserMan, appUser.getGender());
                                     }
-                                } else if (appUser.getUserGender() == 0) {
+                                } else if (appUser.getGender() == 2) {
                                     if (appUserLady != null) {
-                                        failAttrName = GameUtils.failAttrNames(requireList, appUserLady, appUser.getUserGender());
+                                        failAttrName = GameUtils.failAttrNames(requireList, appUserLady, appUser.getGender());
                                     }
                                 }
                                 GameUtils.addResultArray(resultArray, "你激动地介绍自己，可对方并没看上你，还是先成为更好的自己吧！", null);
@@ -225,14 +225,14 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                     AppUserLady appUserLady = null;
                     AppUserLimit appUserLimit = null;
                     JSONArray resultArray = new JSONArray();
-                    if (appUser.getUserGender() == 1) {
+                    if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             day = appUserMan.getDays();
                             coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "COUPLE");
 
                         }
-                    } else if (appUser.getUserGender() == 0) {
+                    } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             day = appUserLady.getDays();
@@ -254,12 +254,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                         if (resCouple != null) {
                             AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
                             if (appUserCouple != null) {
-                                if (appUser.getUserGender() == 1) {
+                                if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
                                         GameUtils.useHour(appUserMan);
                                         appUserCoupleStore.delete(appUserCouple, appUserMan, appUserLimit);
                                     }
-                                } else if (appUser.getUserGender() == 0) {
+                                } else if (appUser.getGender() == 2) {
                                     if (appUserLady != null) {
                                         GameUtils.useHour(appUserLady);
                                         appUserCoupleStore.delete(appUserCouple, appUserLady, appUserLimit);

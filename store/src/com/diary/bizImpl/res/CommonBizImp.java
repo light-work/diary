@@ -58,6 +58,16 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
             operationSub.put("value", "sub".toUpperCase());
             jsonArray.add(operationSub);
 
+            JSONObject operationPlusPerc = new JSONObject();
+            operationPlus.put("text", "百分比增加");
+            operationPlus.put("value", "addperc".toUpperCase());
+            jsonArray.add(operationPlusPerc);
+
+            JSONObject operationPerc = new JSONObject();
+            operationSub.put("text", "百分比减少");
+            operationSub.put("value", "subperc".toUpperCase());
+            jsonArray.add(operationPerc);
+
             resultObj.put("result", 0);
             resultObj.put("list", jsonArray);
         } catch (Exception ex) {
@@ -114,7 +124,7 @@ public class CommonBizImp extends BaseBiz implements CommonBiz {
                 houseObj.put("text", "房屋类事件");
                 houseObj.put("value", "HOUSE");
                 jsonArray.add(houseObj);
-            }else if(gender==0){
+            }else if(gender==2){
                 JSONObject clothesObj = new JSONObject();
                 clothesObj.put("text", "服装类事件");
                 clothesObj.put("value", "CLOTHES");
