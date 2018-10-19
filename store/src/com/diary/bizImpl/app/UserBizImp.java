@@ -59,8 +59,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     bind(appUser, 1l);
                     appUserStore.save(appUser, Persistent.UPDATE);
                 }else{
-                    String appId = "wxca42881e5a26343e";
-                    String secret = "8ee520a070022faf864512d8a60d72f0";
+                    String appId = "wxadc0c22656d6c116";
+                    String secret = "890342da41f48c2dbbd1b4038060b056";
                     if (StringUtils.isNotBlank(secret)) {
                         Map<String, String> paramMap = new HashMap<>();
                         paramMap.put("appid", appId);
