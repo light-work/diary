@@ -19,8 +19,10 @@ import com.diary.providers.store.res.ResEventStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.entity.search.SelectorUtils;
+import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
@@ -51,6 +53,8 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
             if (appUser != null) {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$eq("gender", appUser.getGender()));
+                selectorList.add(SelectorUtils.$eq("source", "RANDOM"));
+
                 GameUtils.randSelector(selectorList);
                 Page<ResEvent> resEventPage = resEventStore.getPageList(0, 20, selectorList);
                 if (resEventPage != null) {
@@ -98,10 +102,17 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                                 eventResultArray = GameUtils.requireCompare(eventResultList, appUserLady);
                             }
                         }
+                        JSONObject resEventObj = JsonUtils.formIdEntity(resEvent);
+                        if (resEventObj != null) {
+                            GameUtils.minish(resEventObj);
+                            resultObj.put("event", resEventObj);
+                        }
+
                     }
                     resultObj.put("result", 0);
                     resultObj.put("eventResultArray", eventResultArray);
                 }
+                System.out.println(resultObj.toString());
             }
         } catch (Exception ex) {
             if (ex instanceof StoreException) {
@@ -140,8 +151,9 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                                         GameUtils.useEffect(eventResultEffectList, appUserMan);
                                     }
                                     effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                                    GameUtils.addResultArray(resultArray, resEventResult.getResultText(), null);
+                                    GameUtils.addResultArray(resultArray, resEventResult.getContent(), null);
                                     GameUtils.addResultArray(resultArray, "最终", effectArray);
+                                    appUserManStore.save(appUserMan, Persistent.UPDATE);
                                 }
                             } else if (appUser.getGender() == 2) {
                                 AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
@@ -151,13 +163,15 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                                         GameUtils.useEffect(eventResultEffectList, appUserLady);
                                     }
                                     effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                    GameUtils.addResultArray(resultArray, resEventResult.getResultText(), null);
+                                    GameUtils.addResultArray(resultArray, resEventResult.getContent(), null);
                                     GameUtils.addResultArray(resultArray, "最终", effectArray);
+                                    appUserLadyStore.save(appUserLady, Persistent.UPDATE);
                                 }
                             }
                         }
                         resultObj.put("result", 0);
                         resultObj.put("resultArray", resultArray);
+                        System.out.println(resultObj.toString());
                     }
                 }
             }

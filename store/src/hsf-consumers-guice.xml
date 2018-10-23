@@ -207,6 +207,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resFundStoreConsumer"
+                  interface="com.diary.providers.store.res.ResFundStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="resTipStoreConsumer"
                   interface="com.diary.providers.store.res.ResTipStore"
                   version="for-dev" clientTimeout="5000">
@@ -266,6 +271,12 @@
        
         <consumer id="luckBizConsumer"
                   interface="com.diary.providers.biz.res.LuckBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
+        <consumer id="fundBizConsumer"
+                  interface="com.diary.providers.biz.res.FundBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
