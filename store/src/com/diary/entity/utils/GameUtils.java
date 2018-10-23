@@ -68,8 +68,8 @@ public class GameUtils {
         a.put("id", "6453477704225898442");
         System.out.println(a.getLong("id") + "");
         List<Double> doubleList = new ArrayList<>();
-        doubleList.add(0.50);
-        doubleList.add(0.50);
+        doubleList.add(1.00);
+        doubleList.add(0.00);
         for (int i = 1; i <= 2; i++) {
             System.out.println(lottery(doubleList));
         }

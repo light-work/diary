@@ -301,6 +301,14 @@
                   enableTXC="true">
         </provider>
 
+        <service id="resFundStore" class="com.diary.storeImpl.res.ResFundStoreImpl"/>
+        <provider id="resFundStoreProvider"
+                  interface="com.diary.providers.store.res.ResFundStore"
+                  ref="resFundStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
 
         <service id="resTipStore" class="com.diary.storeImpl.res.ResTipStoreImpl"/>
         <provider id="resTipStoreProvider"
@@ -381,6 +389,13 @@
         <provider id="luckBizProvider"
                   interface="com.diary.providers.biz.res.LuckBiz"
                   ref="luckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="fundBiz" class="com.diary.bizImpl.res.FundBizImp"/>
+        <provider id="fundBizProvider"
+                  interface="com.diary.providers.biz.res.FundBiz"
+                  ref="fundBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
 
