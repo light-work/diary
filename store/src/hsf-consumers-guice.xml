@@ -67,6 +67,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserFundMarketStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserFundMarketStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <!--      res   -->
 
         <consumer id="resCarStoreConsumer"
@@ -276,7 +281,7 @@
 
 
         <consumer id="fundBizConsumer"
-                  interface="com.diary.providers.biz.res.FundBiz"
+                  interface="com.diary.providers.biz.res.q"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
@@ -318,6 +323,11 @@
 
         <consumer id="userLuckBizConsumer"
                   interface="com.diary.providers.biz.app.UserLuckBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userFundBizConsumer"
+                  interface="com.diary.providers.biz.app.UserFundBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 

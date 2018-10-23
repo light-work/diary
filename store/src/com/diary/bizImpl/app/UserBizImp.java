@@ -315,7 +315,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setHappy(100);
                             appUserMan.setPositive(100);
                             appUserMan.setConnections(100);
-                            appUserMan.setDays(10);
+                            appUserMan.setDays(GameUtils.intDays);
                             appUserMan.setHours(8);
                             appUserMan.setUseYn("Y");
                             bind(appUserMan, userId);
@@ -337,7 +337,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserLady.setHappy(100);
                             appUserLady.setBeauty(100);
                             appUserLady.setPopularity(100);
-                            appUserLady.setDays(10);
+                            appUserLady.setDays(GameUtils.intDays);
                             appUserLady.setHours(8);
                             appUserLady.setUseYn("Y");
                             bind(appUserLady, userId);
@@ -385,9 +385,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             ResLuxuryStore resLuxuryStore = hsfServiceFactory.consumer(ResLuxuryStore.class);
             ResCoupleStore resCoupleStore = hsfServiceFactory.consumer(ResCoupleStore.class);
             ResLuckStore resLuckStore = hsfServiceFactory.consumer(ResLuckStore.class);
+            ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
             ResTipStore resTipStore = hsfServiceFactory.consumer(ResTipStore.class);
             if (appUserStore != null && resJobStore != null && resPlanStore != null && resCarStore != null && resHouseStore != null && resClothesStore != null
-                    && resLuxuryStore != null && resCoupleStore != null && resLuckStore != null&&resTipStore!=null) {
+                    && resLuxuryStore != null && resCoupleStore != null && resLuckStore != null&&resTipStore!=null&&resFundStore!=null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray jobArray = new JSONArray();
@@ -398,6 +399,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     JSONArray clothesArray = new JSONArray();
                     JSONArray luxuryArray = new JSONArray();
                     JSONArray luckArray = new JSONArray();
+                    JSONArray fundArray = new JSONArray();
                     JSONArray tipArray = new JSONArray();
                     List<Selector> selectorList = new ArrayList<>();
                     selectorList.add(SelectorUtils.$eq("gender", appUser.getGender()));
@@ -453,6 +455,20 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             if (luckObj != null) {
                                 GameUtils.minish(luckObj);
                                 luckArray.add(luckObj);
+                            }
+                        }
+                    }
+
+                    selectorList.clear();
+                    selectorList.add(SelectorUtils.$eq("useYn", "Y"));
+                    selectorList.add(SelectorUtils.$order("probability", true));
+                    List<ResFund> fundList = resFundStore.getList(selectorList);
+                    if (fundList != null && !fundList.isEmpty()) {
+                        for (ResFund resFund : fundList) {
+                            JSONObject fundObj = JsonUtils.formIdEntity(resFund, 0);
+                            if (fundObj != null) {
+                                GameUtils.minish(fundObj);
+                                fundArray.add(fundObj);
                             }
                         }
                     }
@@ -537,6 +553,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     resultObj.put("clothesArray", clothesArray);
                     resultObj.put("luxuryArray", luxuryArray);
                     resultObj.put("luckArray", luckArray);
+                    resultObj.put("fundArray", fundArray);
                     resultObj.put("result", 0);
                 }
             }

@@ -15,8 +15,26 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class GameUtils {
+
+    public  static final   int gameDays=10;
+
+    public  static final   int intDays=9;
+
+    public static double fundMarket(List<Double> doubleList,Double minNum,Double maxNum){
+        Random r= new Random();
+        Double market=null;
+        int point=r.nextInt(99-10)+10;
+        int flagInt=  GameUtils.lottery(doubleList);
+        int temp=r.nextInt(maxNum.intValue()-minNum.intValue())+minNum.intValue();
+        if(flagInt==1){
+            temp=temp*-1;
+        }
+        market=new Double(temp+"."+point);
+        return market;
+    }
 
     public static int randGetIndex(int size){
         int b=(int)(Math.random()*size-1);
@@ -68,47 +86,48 @@ public class GameUtils {
         a.put("id", "6453477704225898442");
         System.out.println(a.getLong("id") + "");
         List<Double> doubleList = new ArrayList<>();
-        doubleList.add(1.00);
-        doubleList.add(0.00);
-        for (int i = 1; i <= 2; i++) {
-            System.out.println(lottery(doubleList));
+        doubleList.add(0.55);
+        doubleList.add(0.45);
+         JSONArray sa=new JSONArray();
+        for (int i = 1; i <= 10; i++) {
+            sa.add(String.valueOf(fundMarket(doubleList,2.48d,4.22)));
         }
+        System.out.println(sa.toString());
 
     }
 
     public static String dayText(Integer day) throws Exception {
         String dayText = null;
-        int totalDays = 10;
-        int diffDays = totalDays - day;
+        int diffDays = gameDays - day;
         switch (diffDays) {
-            case 0:
+            case 1:
                 dayText = "一";
                 break;
-            case 1:
+            case 2:
                 dayText = "二";
                 break;
-            case 2:
+            case 3:
                 dayText = "三";
                 break;
-            case 3:
+            case 4:
                 dayText = "四";
                 break;
-            case 4:
+            case 5:
                 dayText = "五";
                 break;
-            case 5:
+            case 6:
                 dayText = "六";
                 break;
-            case 6:
+            case 7:
                 dayText = "七";
                 break;
-            case 7:
+            case 8:
                 dayText = "八";
                 break;
-            case 8:
+            case 9:
                 dayText = "九";
                 break;
-            case 9:
+            case 10:
                 dayText = "十";
                 break;
         }
