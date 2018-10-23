@@ -41,7 +41,7 @@ public class FundBizImp extends BaseBiz implements FundBiz {
             ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
             if (resFundStore != null) {
                 List<Selector> selectorList = new ArrayList<>();
-                selectorList.add(SelectorUtils.$order("investPrice", true));
+                selectorList.add(SelectorUtils.$order("probability", true));
                 Page<ResFund> resFundPage = resFundStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
                 if (resFundPage != null) {

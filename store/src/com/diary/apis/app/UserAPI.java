@@ -22,10 +22,10 @@ public class UserAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response login(@FormParam("code") String code,
                           @FormParam("userId") Long userId,
-                          @FormParam("nickName")String nickName, @FormParam("avatarUrl")String avatarUrl,
-                          @FormParam("gender")Integer gender,
-                          @FormParam("city")String city, @FormParam("province")String province,
-                          @FormParam("country")String country) {
+                          @FormParam("nickName") String nickName, @FormParam("avatarUrl") String avatarUrl,
+                          @FormParam("gender") Integer gender,
+                          @FormParam("city") String city, @FormParam("province") String province,
+                          @FormParam("country") String country) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -38,7 +38,7 @@ public class UserAPI extends BaseAPI {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
-                    bizResult = userBiz.login(code,userId,nickName,avatarUrl,gender,city,province,country);
+                    bizResult = userBiz.login(code, userId, nickName, avatarUrl, gender, city, province, country);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -278,7 +278,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response buyHouse(@FormParam("userId") Long userId,
-                           @FormParam("houseId") Long houseId) {
+                             @FormParam("houseId") Long houseId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -307,7 +307,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response sellHouse(@FormParam("userId") Long userId,
-                            @FormParam("houseId") Long houseId) {
+                              @FormParam("houseId") Long houseId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -337,7 +337,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response buyClothes(@FormParam("userId") Long userId,
-                             @FormParam("clothesId") Long clothesId) {
+                               @FormParam("clothesId") Long clothesId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -366,7 +366,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response sellClothes(@FormParam("userId") Long userId,
-                              @FormParam("clothesId") Long clothesId) {
+                                @FormParam("clothesId") Long clothesId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -396,7 +396,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response buyLuxury(@FormParam("userId") Long userId,
-                               @FormParam("luxuryId") Long luxuryId) {
+                              @FormParam("luxuryId") Long luxuryId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -425,7 +425,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response sellLuxury(@FormParam("userId") Long userId,
-                                @FormParam("luxuryId") Long luxuryId) {
+                               @FormParam("luxuryId") Long luxuryId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -454,7 +454,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response applyLuck(@FormParam("userId") Long userId,
-                               @FormParam("luckId") Long luckId) {
+                              @FormParam("luckId") Long luckId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -483,7 +483,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response relationship(@FormParam("userId") Long userId,
-                              @FormParam("coupleId") Long coupleId) {
+                                 @FormParam("coupleId") Long coupleId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -512,7 +512,7 @@ public class UserAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response breakUp(@FormParam("userId") Long userId,
-                                 @FormParam("coupleId") Long coupleId) {
+                            @FormParam("coupleId") Long coupleId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -537,16 +537,11 @@ public class UserAPI extends BaseAPI {
     }
 
 
-
-
-
-
-
     @Path("/plan/findEvent")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findEventPlan(@QueryParam("userId") Long userId,
-                              @QueryParam("findEventId") Long findEventId) {
+                                  @QueryParam("findEventId") Long findEventId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -567,6 +562,35 @@ public class UserAPI extends BaseAPI {
             }
         }
 
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+    @Path("/fund/market")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response market(@QueryParam("userId") Long userId,
+                           @QueryParam("fundId") Long fundId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (fundId == null) {
+            errorBuilder.append("fundId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserFundBiz userFundBiz = hsfServiceFactory.consumer(UserFundBiz.class);
+                if (userFundBiz != null) {
+                    bizResult = userFundBiz.market(userId, fundId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }

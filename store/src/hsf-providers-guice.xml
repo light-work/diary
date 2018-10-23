@@ -95,6 +95,13 @@
                   ref="appUserLuckStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
+
+        <service id="appUserFundMarketStore" class="com.diary.storeImpl.app.AppUserLuckFundMarketStoreImpl"/>
+        <provider id="appUserFundMarketStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFundMarketStore"
+                  ref="appUserFundMarketStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
         
         
         <!--      res   -->
@@ -454,6 +461,15 @@
                   ref="userLuckBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
+
+
+        <service id="userFundBiz" class="com.diary.bizImpl.app.UserFundBizImp"/>
+        <provider id="userFundBizProvider"
+                  interface="com.diary.providers.biz.app.UserFundBiz"
+                  ref="userFundBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
         <service id="userCoupleBiz" class="com.diary.bizImpl.app.UserCoupleBizImp"/>
         <provider id="userCoupleBizProvider"
