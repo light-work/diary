@@ -25,8 +25,8 @@ public class AppUserFundMarketService extends HQuery implements AppUserFundMarke
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-    public AppUserFundMarket getByUserId(Long userId) throws StoreException {
-        return $($eq("userId.id", userId)).get(AppUserFundMarket.class);
+    public AppUserFundMarket getByUserFundId(Long userId,Long fundId) throws StoreException {
+        return $($eq("userId.id", userId),$eq("fundId.id", fundId)).get(AppUserFundMarket.class);
     }
 
     @Override

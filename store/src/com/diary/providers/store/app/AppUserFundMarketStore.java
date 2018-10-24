@@ -11,7 +11,7 @@ public interface AppUserFundMarketStore {
 
     AppUserFundMarket getById(Long id, Selector... selectors) throws StoreException;
 
-    AppUserFundMarket getByUserId(Long userId) throws StoreException;
+    AppUserFundMarket getByUserFundId(Long userId,Long fundId) throws StoreException;
 
     void save(AppUserFundMarket appUserFundMarket, Persistent persistent) throws StoreException;
 
