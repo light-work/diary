@@ -10,6 +10,8 @@ public interface UserFundBiz {
 
     String sellFund(Long userId, Long fundId,Integer money) throws BizException;
 
-    String market(Long userId,Long fundId) throws BizException;
+    String market(Long userId) throws BizException;
+
+    String trade(Long userId,Long fundId) throws BizException;
 
 }
