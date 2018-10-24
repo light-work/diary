@@ -2,8 +2,7 @@ package com.diary.providers.store.app;
 
 
 import com.diary.common.StoreException;
-import com.diary.entity.app.AppUserLimit;
-import com.diary.entity.app.AppUserMan;
+import com.diary.entity.app.*;
 import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
@@ -23,6 +22,8 @@ public interface AppUserManStore {
     AppUserMan getByUserId(Long userId) throws StoreException;
 
     void save(AppUserMan appUserMan, Persistent persistent) throws StoreException;
+
+    void nextDay(AppUserMan appUserMan, Persistent persistent, List<AppUserFund> appUserFunds, List<AppUserFundDetail> appUserFundDetails, List<AppUserFundMarket> appUserFundMarkets) throws StoreException;
 
     void save(AppUserMan appUserMan, Persistent persistent, AppUserLimit appUserLimit) throws StoreException;
 }

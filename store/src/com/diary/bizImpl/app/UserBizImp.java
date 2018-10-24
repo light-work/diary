@@ -15,6 +15,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.OKHttpUtil;
+import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -194,14 +195,14 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
                             Integer day = appUserMan.getDays();
                             Integer jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "JOB");
-                            Integer financialLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FINANCIAL");
                             Integer luckLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "LUCK");
                             Integer houseLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "HOUSE");
                             Integer carLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "CAR");
                             Integer coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "COUPLE");
+                            Integer fundLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FUND");
                             infoObj = JsonUtils.formIdEntity(appUserMan, 0);
                             if (infoObj != null) {
-                                GameUtils.man(infoObj, jobLimit, financialLimit, luckLimit, houseLimit, carLimit, coupleLimit);
+                                GameUtils.man(infoObj, jobLimit, fundLimit, luckLimit, houseLimit, carLimit, coupleLimit);
                                 infoObj.put("myCarArray", myCarArray);
                                 infoObj.put("myCarNumber", myCarNumber);
                                 infoObj.put("myHouseArray", myHouseArray);
@@ -254,14 +255,14 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
                             Integer day = appUserLady.getDays();
                             Integer jobLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "JOB");
-                            Integer financialLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FINANCIAL");
                             Integer luckLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "LUCK");
                             Integer clothesLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "CLOTHES");
                             Integer luxuryLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "LUXURY");
                             Integer coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "COUPLE");
+                            Integer fundLimit = appUserLimitStore.getCountByUserIdDayAction(userId, day, "FUND");
                             infoObj = JsonUtils.formIdEntity(appUserLady, 0);
                             if (infoObj != null) {
-                                GameUtils.lady(infoObj, jobLimit, financialLimit, luckLimit, clothesLimit, luxuryLimit, coupleLimit);
+                                GameUtils.lady(infoObj, jobLimit, fundLimit, luckLimit, clothesLimit, luxuryLimit, coupleLimit);
                                 infoObj.put("myClothesArray", myClothesArray);
                                 infoObj.put("myClothesNumber", myClothesNumber);
                                 infoObj.put("myLuxuryArray", myLuxuryArray);
@@ -591,20 +592,89 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             ResClothesEffectStore resClothesEffectStore = hsfServiceFactory.consumer(ResClothesEffectStore.class);
             AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
             ResLuxuryEffectStore resLuxuryEffectStore = hsfServiceFactory.consumer(ResLuxuryEffectStore.class);
+            ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
+            AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserJobStore != null
                     && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null && appUserLuxuryStore != null && resJobEffectStore != null
-                    && resCarEffectStore != null && resHouseEffectStore != null && resClothesEffectStore != null && resLuxuryEffectStore != null) {
+                    && resCarEffectStore != null && resHouseEffectStore != null && resClothesEffectStore != null && resLuxuryEffectStore != null
+                    && resFundStore != null && appUserFundStore != null && appUserFundMarketStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
 
                     JSONArray resultArray = new JSONArray();
                     JSONArray effectArray = null;
+                    AppUserMan appUserMan = null;
+                    AppUserLady appUserLady = null;
+                    Integer days = 0;
+                    Integer hours = 0;
                     if (appUser.getGender() == 1) {
-                        AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                        appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
-                            Integer days = appUserMan.getDays();
-                            Integer hours = appUserMan.getHours();
+                            days = appUserMan.getDays();
+                            hours = appUserMan.getHours();
+                        }
+                    } else if (appUser.getGender() == 2) {
+                        appUserLady = appUserLadyStore.getByUserId(userId);
+                        if (appUserLady != null) {
+                            days = appUserLady.getDays();
+                            hours = appUserLady.getHours();
+                        }
+                    }
+                    List<AppUserFundDetail> appUserFundDetails = new ArrayList<>();
+                    List<AppUserFundMarket> appUserFundMarkets = new ArrayList<>();
+                    List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
+                    if (appUserFundList != null && !appUserFundList.isEmpty()) {
+                        int marketDay = days - 1;
+                        for (AppUserFund appUserFund : appUserFundList) {
+                            ResFund resFund = appUserFund.getFundId();
+                            if (resFund != null) {
+                                List<Double> doubleList = new ArrayList<>();
+                                doubleList.add(resFund.getProbability());
+                                doubleList.add(NumberUtils.subtract(1.00, resFund.getProbability()));
+
+                                AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserFundId(userId, resFund.getId());
+                                if (appUserFundMarket != null) {
+                                    String market = appUserFundMarket.getMarket();
+                                    if (StringUtils.isNotBlank(market)) {
+                                        JSONArray marketArray = JSONArray.fromObject(market);
+                                        int d = GameUtils.gameDays - marketDay;
+                                        int sum = 7 + d;
+                                        if (marketArray.size() < sum) {
+                                            int diff = sum - marketArray.size();
+                                            for (int i = 1; i <= diff; i++) {
+                                                marketArray.add(String.valueOf(GameUtils.fundMarket(doubleList, resFund.getMinNum(), resFund.getMaxNum())));
+                                            }
+                                            appUserFundMarket.setMarket(marketArray.toString());
+                                            appUserFundMarket.setUseYn("Y");
+                                            bind(appUserFundMarket, userId);
+                                        }
+
+                                        Double newMarket = marketArray.getDouble(marketArray.size() - 1);
+                                        Integer beforeMoney = appUserFund.getMoney();
+                                        Integer afterMoney = Double.valueOf(NumberUtils.multiply(appUserFund.getMoney(), NumberUtils.divide(newMarket, 100, 2), 0)).intValue();
+                                        appUserFund.setMarket(newMarket);
+                                        appUserFund.setMoney(afterMoney);
+                                        bind(appUserFund, userId);
+                                        AppUserFundDetail appUserFundDetail = new AppUserFundDetail();
+                                        appUserFundDetail.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                        appUserFundDetail.setUserFundId(appUserFund);
+                                        appUserFundDetail.setBeforeMoney(beforeMoney);
+                                        appUserFundDetail.setAfterMoney(afterMoney);
+                                        appUserFundDetail.setMarket(newMarket);
+                                        bind(appUserFundDetail, userId);
+                                        appUserFundDetail.setUseYn("Y");
+
+                                        appUserFundDetails.add(appUserFundDetail);
+                                        appUserFundMarkets.add(appUserFundMarket);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (appUser.getGender() == 1) {
+                        if (appUserMan != null) {
                             if (days > 0 && hours == 0) {
                                 appUserMan.setHours(8);
                                 appUserMan.setDays(days - 1);
@@ -646,16 +716,13 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     GameUtils.addResultArray(resultArray, resultText, null);
                                     GameUtils.addResultArray(resultArray, "最终", effectArray);
                                 }
-                                appUserManStore.save(appUserMan, Persistent.UPDATE);
+                                appUserManStore.nextDay(appUserMan, Persistent.UPDATE,appUserFundList,appUserFundDetails,appUserFundMarkets);
                                 resultObj.put("result", 0);
                                 resultObj.put("resultArray", resultArray);
                             }
                         }
                     } else if (appUser.getGender() == 2) {
-                        AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
-                            Integer days = appUserLady.getDays();
-                            Integer hours = appUserLady.getHours();
                             if (days > 0 && hours == 0) {
                                 appUserLady.setHours(8);
                                 appUserLady.setDays(days - 1);
@@ -698,7 +765,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     GameUtils.addResultArray(resultArray, resultText, null);
                                     GameUtils.addResultArray(resultArray, "最终", effectArray);
                                 }
-                                appUserLadyStore.save(appUserLady, Persistent.UPDATE);
+                                appUserLadyStore.nextDay(appUserLady, Persistent.UPDATE,appUserFundList,appUserFundDetails,appUserFundMarkets);
                                 resultObj.put("result", 0);
                                 resultObj.put("resultArray", resultArray);
                             }

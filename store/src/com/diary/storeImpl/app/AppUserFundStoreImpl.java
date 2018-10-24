@@ -36,6 +36,17 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
+    public List<AppUserFund> getByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserFundService.getByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Integer getSumByUserId(Long userId) throws StoreException {
         try {
             return this.appUserFundService.getSumByUserId(userId);
@@ -71,6 +82,17 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
+    public void save(List<AppUserFund> appUserFunds, Persistent persistent) throws StoreException {
+        try {
+            this.appUserFundService.save(appUserFunds, persistent);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void save(AppUserFund appUserFund, Persistent persistent, AppUserFundDetail appUserFundDetail) throws StoreException {
         try {
             this.appUserFundService.save(appUserFund, persistent,appUserFundDetail);
@@ -82,9 +104,9 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
-    public void saveMan(AppUserFund appUserFund, Persistent persistent, AppUserMan appUserMan) throws StoreException {
+    public void saveMan(AppUserFund appUserFund, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserFundService.saveMan(appUserFund, persistent,appUserMan);
+            this.appUserFundService.saveMan(appUserFund, persistent,appUserMan,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -93,9 +115,9 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
-    public void saveLady(AppUserFund appUserFund, Persistent persistent, AppUserLady appUserLady) throws StoreException {
+    public void saveLady(AppUserFund appUserFund, Persistent persistent, AppUserLady appUserLady,AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserFundService.saveLady(appUserFund, persistent,appUserLady);
+            this.appUserFundService.saveLady(appUserFund, persistent,appUserLady,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -105,9 +127,10 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
-    public void deleteMan(AppUserFund appUserFund, AppUserMan appUserMan, AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails) throws StoreException {
+    public void deleteMan(AppUserFund appUserFund, AppUserMan appUserMan, AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
+                          AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserFundService.deleteMan(appUserFund, appUserMan, appUserFundMarket,appUserFundDetails);
+            this.appUserFundService.deleteMan(appUserFund, appUserMan, appUserFundMarket,appUserFundDetails,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -116,9 +139,10 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
-    public void deleteLady(AppUserFund appUserFund, AppUserLady appUserLady,AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails) throws StoreException {
+    public void deleteLady(AppUserFund appUserFund, AppUserLady appUserLady,AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
+                           AppUserLimit appUserLimit) throws StoreException {
         try {
-            this.appUserFundService.deleteLady(appUserFund, appUserLady,appUserFundMarket, appUserFundDetails);
+            this.appUserFundService.deleteLady(appUserFund, appUserLady,appUserFundMarket, appUserFundDetails,appUserLimit);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

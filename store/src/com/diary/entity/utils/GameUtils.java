@@ -135,13 +135,13 @@ public class GameUtils {
     }
 
     public static void man(JSONObject infoObj, Integer jobLimit,
-                           Integer financialLimit,
+                           Integer fundLimit,
                            Integer luckLimit,
                            Integer houseLimit,
                            Integer carLimit, Integer coupleLimit) throws Exception {
         if (infoObj != null) {
             infoObj.put("jobLimit", jobLimit);
-            infoObj.put("financialLimit", financialLimit);
+            infoObj.put("fundLimit", fundLimit);
             infoObj.put("luckLimit", luckLimit);
             infoObj.put("houseLimit", houseLimit);
             infoObj.put("carLimit", carLimit);
@@ -163,13 +163,13 @@ public class GameUtils {
 
     public static void lady(JSONObject infoObj,
                             Integer jobLimit,
-                            Integer financialLimit,
+                            Integer fundLimit,
                             Integer luckLimit,
                             Integer clothesLimit,
                             Integer luxuryLimit, Integer coupleLimit) throws Exception {
         if (infoObj != null) {
             infoObj.put("jobLimit", jobLimit);
-            infoObj.put("financialLimit", financialLimit);
+            infoObj.put("fundLimit", fundLimit);
             infoObj.put("luckLimit", luckLimit);
             infoObj.put("clothesLimit", clothesLimit);
             infoObj.put("luxuryLimit", luxuryLimit);

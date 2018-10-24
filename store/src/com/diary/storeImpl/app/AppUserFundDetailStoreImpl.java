@@ -57,6 +57,16 @@ public class AppUserFundDetailStoreImpl implements AppUserFundDetailStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public void save(List<AppUserFundDetail> appUserFundDetails, Persistent persistent) throws StoreException {
+        try {
+            this.appUserFundDetailService.save(appUserFundDetails, persistent);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager

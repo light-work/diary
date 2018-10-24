@@ -10,6 +10,8 @@ import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.HQuery;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 
+import java.util.List;
+
 /**
  * Created by Lara Croft on 2016/12/21.
  */
@@ -42,4 +44,9 @@ public class AppUserFundMarketService extends HQuery implements AppUserFundMarke
 
     }
 
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(List<AppUserFundMarket> appUserFundMarkets, Persistent persistent) throws StoreException {
+        $(appUserFundMarkets).save(persistent);
+    }
 }

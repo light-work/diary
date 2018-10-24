@@ -1,8 +1,7 @@
 package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
-import com.diary.entity.app.AppUserLimit;
-import com.diary.entity.app.AppUserMan;
+import com.diary.entity.app.*;
 import com.diary.providers.store.app.AppUserManStore;
 import com.diary.service.app.AppUserManService;
 import com.google.inject.Inject;
@@ -76,6 +75,17 @@ public class AppUserManStoreImpl implements AppUserManStore {
     public void save(AppUserMan appUserMan, Persistent persistent, AppUserLimit appUserLimit) throws StoreException {
         try {
             this.appUserManService.save(appUserMan, persistent,appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void nextDay(AppUserMan appUserMan, Persistent persistent, List<AppUserFund> appUserFunds, List<AppUserFundDetail> appUserFundDetails, List<AppUserFundMarket> appUserFundMarkets) throws StoreException {
+        try {
+            this.appUserManService.nextDay(appUserMan, persistent, appUserFunds, appUserFundDetails, appUserFundMarkets);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

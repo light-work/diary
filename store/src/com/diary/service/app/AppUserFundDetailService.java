@@ -45,6 +45,12 @@ public class AppUserFundDetailService extends HQuery implements AppUserFundDetai
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
+    public void save(List<AppUserFundDetail> appUserFundDetails, Persistent persistent) throws StoreException {
+        $(appUserFundDetails).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void delete(List<AppUserFundDetail> appUserFundDetailList) throws StoreException {
         $(appUserFundDetailList).delete();
     }

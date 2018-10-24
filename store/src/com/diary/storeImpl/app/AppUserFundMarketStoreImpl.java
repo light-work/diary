@@ -11,6 +11,8 @@ import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.ConnectManager;
 import org.hibernate.HibernateException;
 
+import java.util.List;
+
 /**
  * Created by Lara Croft on 2016/12/21.
  */
@@ -57,7 +59,16 @@ public class AppUserFundMarketStoreImpl implements AppUserFundMarketStore {
         }
     }
 
-
+    @Override
+    @ConnectManager
+    public void save(List<AppUserFundMarket> appUserFundMarkets, Persistent persistent) throws StoreException {
+        try {
+            this.appUserFundMarketService.save(appUserFundMarkets, persistent);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager

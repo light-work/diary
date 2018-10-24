@@ -18,6 +18,7 @@ public interface AppUserFundDetailStore {
 
     void save(AppUserFundDetail appUserFundDetail, Persistent persistent) throws StoreException;
 
+    void save(List<AppUserFundDetail> appUserFundDetails, Persistent persistent) throws StoreException;
 
     void delete(AppUserFundDetail appUserFundDetail) throws StoreException;
 
