@@ -595,4 +595,72 @@ public class UserAPI extends BaseAPI {
         return Response.ok().entity(result.toString()).build();
     }
 
+    @Path("/fund/buy")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response buyFund(@FormParam("userId") Long userId,
+                            @FormParam("fundId") Long fundId,
+                            @FormParam("money") Integer money) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (fundId == null) {
+            errorBuilder.append("fundId was null.");
+        }
+        if (money == null) {
+            errorBuilder.append("money was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserFundBiz userFundBiz = hsfServiceFactory.consumer(UserFundBiz.class);
+                if (userFundBiz != null) {
+                    bizResult = userFundBiz.buyFund(userId, fundId, money);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+    @Path("/fund/sell")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response sellFund(@FormParam("userId") Long userId,
+                             @FormParam("fundId") Long fundId,
+                             @FormParam("money") Integer money) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (fundId == null) {
+            errorBuilder.append("fundId was null.");
+        }
+        if (money == null) {
+            errorBuilder.append("money was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserFundBiz userFundBiz = hsfServiceFactory.consumer(UserFundBiz.class);
+                if (userFundBiz != null) {
+                    bizResult = userFundBiz.sellFund(userId, fundId, money);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
 }

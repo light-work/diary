@@ -67,8 +67,18 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserFundStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserFundStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="appUserFundMarketStoreConsumer"
                   interface="com.diary.providers.store.app.AppUserFundMarketStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserFundDetailStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserFundDetailStore"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 

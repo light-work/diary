@@ -151,7 +151,6 @@ public class GameUtils {
             minish(infoObj);
             converInfoNumber(infoObj, "health");
             converInfoNumber(infoObj, "money");
-            converInfoNumber(infoObj, "profit");
             converInfoNumber(infoObj, "ability");
             converInfoNumber(infoObj, "experience");
             converInfoNumber(infoObj, "happy");
@@ -178,7 +177,6 @@ public class GameUtils {
             minish(infoObj);
             converInfoNumber(infoObj, "health");
             converInfoNumber(infoObj, "money");
-            converInfoNumber(infoObj, "profit");
             converInfoNumber(infoObj, "ability");
             converInfoNumber(infoObj, "wisdom");
             converInfoNumber(infoObj, "happy");
@@ -279,7 +277,7 @@ public class GameUtils {
             if (isManage != 0) {
                 JSONObject operationPROFIT = new JSONObject();
                 operationPROFIT.put("text", "理财收益");
-                operationPROFIT.put("value", isManage == 0 ? "PROFIT" : "PROFIT".toLowerCase());
+                operationPROFIT.put("value", isManage == 0 ? "FUND" : "FUND".toLowerCase());
                 jsonArray.add(operationPROFIT);
             }
 
@@ -323,7 +321,7 @@ public class GameUtils {
             if (isManage != 0) {
                 JSONObject operationPROFIT = new JSONObject();
                 operationPROFIT.put("text", "理财收益");
-                operationPROFIT.put("value", isManage == 0 ? "PROFIT" : "PROFIT".toLowerCase());
+                operationPROFIT.put("value", isManage == 0 ? "FUND" : "FUND".toLowerCase());
                 jsonArray.add(operationPROFIT);
             }
 

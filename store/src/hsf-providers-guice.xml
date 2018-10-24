@@ -96,10 +96,24 @@
                   enableTXC="true">
         </provider>
 
-        <service id="appUserFundMarketStore" class="com.diary.storeImpl.app.AppUserLuckFundMarketStoreImpl"/>
+        <service id="appUserFundStore" class="com.diary.storeImpl.app.AppUserFundStoreImpl"/>
+        <provider id="appUserFundStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFundStore"
+                  ref="appUserFundStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserFundMarketStore" class="com.diary.storeImpl.app.AppUserFundMarketStoreImpl"/>
         <provider id="appUserFundMarketStoreProvider"
                   interface="com.diary.providers.store.app.AppUserFundMarketStore"
                   ref="appUserFundMarketStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserFundDetailStore" class="com.diary.storeImpl.app.AppUserFundDetailStoreImpl"/>
+        <provider id="appUserFundDetailStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFundDetailStore"
+                  ref="appUserFundDetailStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
         

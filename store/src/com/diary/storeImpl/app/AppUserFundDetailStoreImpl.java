@@ -1,9 +1,9 @@
 package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
-import com.diary.entity.app.AppUserFundMarket;
-import com.diary.providers.store.app.AppUserFundMarketStore;
-import com.diary.service.app.AppUserFundMarketService;
+import com.diary.entity.app.AppUserFundDetail;
+import com.diary.providers.store.app.AppUserFundDetailStore;
+import com.diary.service.app.AppUserFundDetailService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -11,21 +11,23 @@ import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.ConnectManager;
 import org.hibernate.HibernateException;
 
+import java.util.List;
+
 /**
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class AppUserLuckFundMarketStoreImpl implements AppUserFundMarketStore {
+public class AppUserFundDetailStoreImpl implements AppUserFundDetailStore {
 
     @Inject
-    private AppUserFundMarketService appUserFundMarketService;
+    private AppUserFundDetailService appUserFundDetailService;
 
 
     @Override
     @ConnectManager
-    public AppUserFundMarket getById(Long id, Selector... selectors) throws StoreException {
+    public AppUserFundDetail getById(Long id, Selector... selectors) throws StoreException {
         try {
-            return this.appUserFundMarketService.getById(id, selectors);
+            return this.appUserFundDetailService.getById(id, selectors);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -35,9 +37,20 @@ public class AppUserLuckFundMarketStoreImpl implements AppUserFundMarketStore {
 
     @Override
     @ConnectManager
-    public AppUserFundMarket getByUserId(Long userId) throws StoreException {
+    public List<AppUserFundDetail> getByUserFundId(Long userFundId) throws StoreException {
         try {
-            return this.appUserFundMarketService.getByUserId(userId);
+            return this.appUserFundDetailService.getByUserFundId(userFundId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void save(AppUserFundDetail appUserFundDetail, Persistent persistent) throws StoreException {
+        try {
+            this.appUserFundDetailService.save(appUserFundDetail, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -45,25 +58,22 @@ public class AppUserLuckFundMarketStoreImpl implements AppUserFundMarketStore {
     }
 
 
-
     @Override
     @ConnectManager
-    public void save(AppUserFundMarket appUserFundMarket, Persistent persistent) throws StoreException {
+    public void delete(AppUserFundDetail appUserFundDetail) throws StoreException {
         try {
-            this.appUserFundMarketService.save(appUserFundMarket, persistent);
+            this.appUserFundDetailService.delete(appUserFundDetail);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
 
-
-
     @Override
     @ConnectManager
-    public void delete(AppUserFundMarket appUserFundMarket) throws StoreException {
+    public void delete(List<AppUserFundDetail> appUserFundDetailList) throws StoreException {
         try {
-            this.appUserFundMarketService.delete(appUserFundMarket);
+            this.appUserFundDetailService.delete(appUserFundDetailList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
