@@ -215,8 +215,9 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
             AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
             AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
             if (appUserStore != null && resFundStore != null && appUserFundMarketStore != null
-                    && appUserManStore != null && appUserLadyStore != null) {
+                    && appUserManStore != null && appUserLadyStore != null && appUserFundStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     ResFund resFund = resFundStore.getById(fundId);
@@ -274,8 +275,14 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                         JSONObject appUserFundMarketObj = JsonUtils.formIdEntity(appUserFundMarket, 0);
                         if (appUserFundMarketObj != null) {
                             GameUtils.minish(appUserFundMarketObj);
-                            resultObj.put("data", appUserFundMarketObj);
+                            resultObj.put("market", appUserFundMarketObj);
                         }
+                        AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
+                        Integer fundMoney = 0;
+                        if (appUserFund != null) {
+                            fundMoney = appUserFund.getMoney();
+                        }
+                        resultObj.put("fundMoney", GameUtils.formatGroupingUsed(fundMoney.longValue()));
                         resultObj.put("result", 0);
                     }
                 }
