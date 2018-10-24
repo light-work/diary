@@ -52,7 +52,7 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                 if (appUser != null) {
                     ResFund resFund = resFundStore.getById(fundId);
                     if (resFund != null) {
-                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserId(userId);
+                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserFundId(userId,fundId);
                         if (appUserFundMarket != null) {
                             int day = 0;
                             int userMoney = 0;
@@ -141,7 +141,7 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                 if (appUser != null) {
                     ResFund resFund = resFundStore.getById(fundId);
                     if (resFund != null) {
-                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserId(userId);
+                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserFundId(userId,fundId);
                         if (appUserFundMarket != null) {
                             AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
                             if (appUserFund != null) {
@@ -234,7 +234,7 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                                 day = appUserLady.getDays();
                             }
                         }
-                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserId(userId);
+                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserFundId(userId,fundId);
                         List<Double> doubleList = new ArrayList<>();
                         doubleList.add(resFund.getProbability());
                         doubleList.add(NumberUtils.subtract(1.00, resFund.getProbability()));

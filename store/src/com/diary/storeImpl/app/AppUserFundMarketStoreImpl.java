@@ -35,9 +35,9 @@ public class AppUserFundMarketStoreImpl implements AppUserFundMarketStore {
 
     @Override
     @ConnectManager
-    public AppUserFundMarket getByUserId(Long userId) throws StoreException {
+    public AppUserFundMarket getByUserFundId(Long userId,Long fundId) throws StoreException {
         try {
-            return this.appUserFundMarketService.getByUserId(userId);
+            return this.appUserFundMarketService.getByUserFundId(userId,fundId);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
