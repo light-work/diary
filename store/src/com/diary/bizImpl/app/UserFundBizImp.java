@@ -2,19 +2,13 @@ package com.diary.bizImpl.app;
 
 import com.diary.common.BizException;
 import com.diary.common.StoreException;
-import com.diary.entity.app.AppUser;
-import com.diary.entity.app.AppUserFundMarket;
-import com.diary.entity.app.AppUserLady;
-import com.diary.entity.app.AppUserMan;
+import com.diary.entity.app.*;
 import com.diary.entity.res.ResFund;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
 import com.diary.providers.biz.app.UserFundBiz;
-import com.diary.providers.store.app.AppUserFundMarketStore;
-import com.diary.providers.store.app.AppUserLadyStore;
-import com.diary.providers.store.app.AppUserManStore;
-import com.diary.providers.store.app.AppUserStore;
+import com.diary.providers.store.app.*;
 import com.diary.providers.store.res.ResFundStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
@@ -42,13 +36,173 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
     private HSFServiceFactory hsfServiceFactory;
 
     @Override
-    public String buyFund(Long userId, Long fundId, Long money) throws BizException {
-        return null;
+    public String buyFund(Long userId, Long fundId, Integer money) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
+            AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
+            if (appUserStore != null && resFundStore != null && appUserFundMarketStore != null
+                    && appUserManStore != null && appUserLadyStore != null && appUserFundStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    ResFund resFund = resFundStore.getById(fundId);
+                    if (resFund != null) {
+                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserId(userId);
+                        if (appUserFundMarket != null) {
+                            int day = 0;
+                            int userMoney = 0;
+                            AppUserMan appUserMan = null;
+                            AppUserLady appUserLady = null;
+                            if (appUser.getGender() == 1) {
+                                appUserMan = appUserManStore.getByUserId(userId);
+                                if (appUserMan != null) {
+                                    day = appUserMan.getDays();
+                                    userMoney = appUserMan.getMoney();
+                                }
+                            } else if (appUser.getGender() == 2) {
+                                appUserLady = appUserLadyStore.getByUserId(userId);
+                                if (appUserLady != null) {
+                                    day = appUserLady.getDays();
+                                    userMoney = appUserLady.getMoney();
+                                }
+                            }
+                            if (userMoney >= money) {
+                                AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
+                                Persistent persistent = Persistent.UPDATE;
+                                if (appUserFund == null) {
+                                    persistent = Persistent.SAVE;
+                                    appUserFund.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserFund.setUserId(appUser);
+                                    appUserFund.setFundId(resFund);
+                                    appUserFund.setDay(day);
+                                    appUserFund.setMoney(0);
+                                }
+                                String market = appUserFundMarket.getMarket();
+                                if (StringUtils.isNotBlank(market)) {
+                                    JSONArray marketArray = JSONArray.fromObject(market);
+                                    if (marketArray != null && !marketArray.isEmpty()) {
+                                        Double lastIndex = marketArray.getDouble(marketArray.size() - 1);
+                                        if (lastIndex != null) {
+                                            appUserFund.setMarket(lastIndex);
+                                            appUserFund.setMoney(appUserFund.getMoney() + money);
+
+                                            userMoney = userMoney - money;
+
+                                            bind(appUserFund, userId);
+                                            appUserFund.setUseYn("Y");
+                                            if (appUser.getGender() == 1) {
+                                                appUserMan.setMoney(userMoney);
+                                                bind(appUserMan, userId);
+                                                appUserFundStore.saveMan(appUserFund, persistent, appUserMan);
+                                            } else if (appUser.getGender() == 2) {
+                                                appUserLady.setMoney(userMoney);
+                                                bind(appUserLady, userId);
+                                                appUserFundStore.saveLady(appUserFund, persistent, appUserLady);
+                                            }
+                                            resultObj.put("result", 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
-    public String sellFund(Long userId, Long fundId, Long money) throws BizException {
-        return null;
+    public String sellFund(Long userId, Long fundId, Integer money) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
+            AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
+            AppUserFundDetailStore appUserFundDetailStore = hsfServiceFactory.consumer(AppUserFundDetailStore.class);
+            if (appUserStore != null && resFundStore != null && appUserFundMarketStore != null
+                    && appUserManStore != null && appUserLadyStore != null && appUserFundStore != null && appUserFundDetailStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    ResFund resFund = resFundStore.getById(fundId);
+                    if (resFund != null) {
+                        AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserId(userId);
+                        if (appUserFundMarket != null) {
+                            AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
+                            if (appUserFund != null) {
+                                if (money <= appUserFund.getMoney()) {
+                                    AppUserMan appUserMan = null;
+                                    AppUserLady appUserLady = null;
+                                    int userMoney = 0;
+                                    if (appUser.getGender() == 1) {
+                                        appUserMan = appUserManStore.getByUserId(userId);
+                                        if (appUserMan != null) {
+                                            userMoney = appUserMan.getMoney();
+                                        }
+                                    } else if (appUser.getGender() == 2) {
+                                        appUserLady = appUserLadyStore.getByUserId(userId);
+                                        if (appUserLady != null) {
+                                            userMoney = appUserLady.getMoney();
+                                        }
+                                    }
+                                    int diffMoney = appUserFund.getMoney() - money;
+                                    if (diffMoney == 0) {
+                                        List<AppUserFundDetail> appUserFundDetails = appUserFundDetailStore.getByUserFundId(appUserFund.getId());
+                                        userMoney = userMoney + money;
+                                        if (appUser.getGender() == 1) {
+                                            appUserMan.setMoney(userMoney);
+                                            bind(appUserMan, userId);
+                                            appUserFundStore.deleteMan(appUserFund, appUserMan, appUserFundMarket, appUserFundDetails);
+                                        } else if (appUser.getGender() == 2) {
+                                            appUserLady.setMoney(userMoney);
+                                            bind(appUserLady, userId);
+                                            appUserFundStore.deleteLady(appUserFund, appUserLady, appUserFundMarket, appUserFundDetails);
+                                        }
+                                        resultObj.put("result", 0);
+                                    } else {
+                                        appUserFund.setMoney(diffMoney);
+                                        bind(appUserFund, userId);
+                                        userMoney = userMoney + money;
+                                        if (appUser.getGender() == 1) {
+                                            appUserMan.setMoney(userMoney);
+                                            bind(appUserMan, userId);
+                                            appUserFundStore.saveMan(appUserFund, Persistent.UPDATE, appUserMan);
+                                        } else if (appUser.getGender() == 2) {
+                                            appUserLady.setMoney(userMoney);
+                                            bind(appUserLady, userId);
+                                            appUserFundStore.saveLady(appUserFund, Persistent.UPDATE, appUserLady);
+                                        }
+                                        resultObj.put("result", 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
     }
 
     @Override
@@ -61,22 +215,23 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
             AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
             AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
             if (appUserStore != null && resFundStore != null && appUserFundMarketStore != null
-                    &&appUserManStore!=null&&appUserLadyStore!=null) {
+                    && appUserManStore != null && appUserLadyStore != null && appUserFundStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     ResFund resFund = resFundStore.getById(fundId);
                     if (resFund != null) {
-                        int day=0;
+                        int day = 0;
                         if (appUser.getGender() == 1) {
                             AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                             if (appUserMan != null) {
-                                day=appUserMan.getDays();
+                                day = appUserMan.getDays();
                             }
-                        }else if (appUser.getGender() ==2) {
+                        } else if (appUser.getGender() == 2) {
                             AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                             if (appUserLady != null) {
-                                day=appUserLady.getDays();
+                                day = appUserLady.getDays();
                             }
                         }
                         AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserId(userId);
@@ -89,8 +244,8 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                             appUserFundMarket.setId(DrdsIDUtils.getID(DrdsTable.APP));
                             appUserFundMarket.setUserId(appUser);
                             appUserFundMarket.setFundId(resFund);
-                            int d=GameUtils.gameDays-day;
-                            int sum=7+d;
+                            int d = GameUtils.gameDays - day;
+                            int sum = 7 + d;
                             for (int i = 1; i <= sum; i++) {
                                 marketArray.add(String.valueOf(GameUtils.fundMarket(doubleList, resFund.getMinNum(), resFund.getMaxNum())));
                             }
@@ -100,14 +255,14 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                             appUserFundMarketStore.save(appUserFundMarket, Persistent.SAVE);
                         } else {
 
-                            String market=appUserFundMarket.getMarket();
-                            if(StringUtils.isNotBlank(market)){
-                                JSONArray marketArray=JSONArray.fromObject(market);
-                                int d=GameUtils.gameDays-day;
-                                int sum=7+d;
-                                if(marketArray.size()<sum){
-                                    int diff=sum-marketArray.size();
-                                    for(int i=1;i<=diff;i++){
+                            String market = appUserFundMarket.getMarket();
+                            if (StringUtils.isNotBlank(market)) {
+                                JSONArray marketArray = JSONArray.fromObject(market);
+                                int d = GameUtils.gameDays - day;
+                                int sum = 7 + d;
+                                if (marketArray.size() < sum) {
+                                    int diff = sum - marketArray.size();
+                                    for (int i = 1; i <= diff; i++) {
                                         marketArray.add(String.valueOf(GameUtils.fundMarket(doubleList, resFund.getMinNum(), resFund.getMaxNum())));
                                     }
                                     appUserFundMarket.setMarket(marketArray.toString());
@@ -117,11 +272,17 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                                 }
                             }
                         }
-                        JSONObject appUserFundMarketObj=JsonUtils.formIdEntity(appUserFundMarket,0);
-                        if(appUserFundMarketObj!=null){
+                        JSONObject appUserFundMarketObj = JsonUtils.formIdEntity(appUserFundMarket, 0);
+                        if (appUserFundMarketObj != null) {
                             GameUtils.minish(appUserFundMarketObj);
-                            resultObj.put("data", appUserFundMarketObj);
+                            resultObj.put("market", appUserFundMarketObj);
                         }
+                        AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
+                        Integer fundMoney = 0;
+                        if (appUserFund != null) {
+                            fundMoney = appUserFund.getMoney();
+                        }
+                        resultObj.put("fundMoney", GameUtils.formatGroupingUsed(fundMoney.longValue()));
                         resultObj.put("result", 0);
                     }
                 }

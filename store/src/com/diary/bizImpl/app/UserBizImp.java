@@ -37,7 +37,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
     private HSFServiceFactory hsfServiceFactory;
 
     @Override
-    public String login(String code,Long userId,String nickName, String avatarUrl,
+    public String login(String code, Long userId, String nickName, String avatarUrl,
                         Integer gender,
                         String city, String province, String country) throws BizException {
         JSONObject resultObj = new JSONObject();
@@ -45,11 +45,11 @@ public class UserBizImp extends BaseBiz implements UserBiz {
         try {
             AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
             if (appUserStore != null) {
-                AppUser appUser=null;
-                if(userId!=null){
-                    appUser= appUserStore.getById(userId);
+                AppUser appUser = null;
+                if (userId != null) {
+                    appUser = appUserStore.getById(userId);
                 }
-                if(appUser!=null){
+                if (appUser != null) {
                     appUser.setNickName(nickName);
                     appUser.setGender(gender);
                     appUser.setAvatarUrl(avatarUrl);
@@ -58,7 +58,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     appUser.setCountry(country);
                     bind(appUser, 1l);
                     appUserStore.save(appUser, Persistent.UPDATE);
-                }else{
+                } else {
                     String appId = "wxadc0c22656d6c116";
                     String secret = "890342da41f48c2dbbd1b4038060b056";
                     if (StringUtils.isNotBlank(secret)) {
@@ -95,7 +95,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     }
                 }
                 JSONObject userObj = JsonUtils.formIdEntity(appUser, 0);
-                if(userObj!=null){
+                if (userObj != null) {
                     GameUtils.minish(userObj);
                     userObj.put("userId", appUser.getId() + "");
                     resultObj.put("userData", userObj);
@@ -125,15 +125,17 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
             AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
             AppUserCoupleStore appUserCoupleStore = hsfServiceFactory.consumer(AppUserCoupleStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserLimitStore != null && appUserJobStore != null
-                    && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null && appUserLuxuryStore != null&&appUserCoupleStore!=null) {
+                    && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null && appUserLuxuryStore != null && appUserCoupleStore != null
+                    && appUserFundStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray attrArray = new JSONArray();
                     GameUtils.attrList(attrArray, appUser.getGender(), 1);
                     resultObj.put("attrList", attrArray);
                     AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
-                   AppUserCouple appUserCouple= appUserCoupleStore.getByUserId(userId);
+                    AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
                     String myJobId = "";
                     String myCoupleId = "";
                     if (appUserJob != null) {
@@ -141,6 +143,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     }
                     if (appUserCouple != null) {
                         myCoupleId = appUserCouple.getCoupleId().getId() + "";
+                    }
+                    Integer fund = appUserFundStore.getSumByUserId(userId);
+                    if (fund != null) {
+                        fund = 0;
                     }
                     if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
@@ -202,7 +208,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 infoObj.put("myHouseNumber", myHouseNumber);
                             }
                         }
-                    } else if (appUser.getGender() ==2) {
+                    } else if (appUser.getGender() == 2) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
                             JSONArray myClothesArray = new JSONArray();
@@ -264,6 +270,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                     }
                     if (infoObj != null) {
+                        infoObj.put("fund", GameUtils.formatGroupingUsed(fund.longValue()));
                         infoObj.put("myJobId", myJobId);
                         infoObj.put("myCoupleId", myCoupleId);
                         resultObj.put("userState", infoObj);
@@ -299,8 +306,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
-                    Integer days=0;
-                    boolean newGame=false;
+                    Integer days = 0;
+                    boolean newGame = false;
                     if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan == null) {
@@ -309,7 +316,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setUserId(appUser);
                             appUserMan.setHealth(100);
                             appUserMan.setMoney(8000);
-                            appUserMan.setProfit(0);
                             appUserMan.setAbility(100);
                             appUserMan.setExperience(100);
                             appUserMan.setHappy(100);
@@ -320,9 +326,9 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setUseYn("Y");
                             bind(appUserMan, userId);
                             appUserManStore.save(appUserMan, Persistent.SAVE);
-                            newGame=true;
+                            newGame = true;
                         }
-                        days=appUserMan.getDays();
+                        days = appUserMan.getDays();
                     } else if (appUser.getGender() == 2) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady == null) {
@@ -331,7 +337,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserLady.setUserId(appUser);
                             appUserLady.setHealth(100);
                             appUserLady.setMoney(8000);
-                            appUserLady.setProfit(0);
                             appUserLady.setAbility(100);
                             appUserLady.setWisdom(100);
                             appUserLady.setHappy(100);
@@ -342,16 +347,16 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserLady.setUseYn("Y");
                             bind(appUserLady, userId);
                             appUserLadyStore.save(appUserLady, Persistent.SAVE);
-                            newGame=true;
+                            newGame = true;
                         }
-                        days=appUserLady.getDays();
+                        days = appUserLady.getDays();
                     }
                     loadUserData(resultObj, userId);
                     String nightText = "第" + GameUtils.dayText(days) + "天";
                     resultObj.put("nightText", nightText);
-                    if(newGame){
+                    if (newGame) {
                         JSONArray resultArray = new JSONArray();
-                        GameUtils.addResultArray(resultArray, "北京是你的舞台，初到北京，给你8000启动资金，看"+days+"天后你能混出什么样来", null);
+                        GameUtils.addResultArray(resultArray, "北京是你的舞台，初到北京，给你8000启动资金，看" + days + "天后你能混出什么样来", null);
                         resultObj.put("resultArray", resultArray);
                     }
                 }
@@ -388,7 +393,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
             ResTipStore resTipStore = hsfServiceFactory.consumer(ResTipStore.class);
             if (appUserStore != null && resJobStore != null && resPlanStore != null && resCarStore != null && resHouseStore != null && resClothesStore != null
-                    && resLuxuryStore != null && resCoupleStore != null && resLuckStore != null&&resTipStore!=null&&resFundStore!=null) {
+                    && resLuxuryStore != null && resCoupleStore != null && resLuckStore != null && resTipStore != null && resFundStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     JSONArray jobArray = new JSONArray();
@@ -486,7 +491,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                     }
 
-                    if (appUser.getGender()== 1) {
+                    if (appUser.getGender() == 1) {
                         selectorList.clear();
                         selectorList.add(SelectorUtils.$eq("useYn", "Y"));
                         selectorList.add(SelectorUtils.$order("buyPrice", true));
@@ -568,9 +573,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
     }
 
 
-
-
-
     @Override
     public String nextDay(Long userId) throws BizException {
         JSONObject resultObj = new JSONObject();
@@ -598,7 +600,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
                     JSONArray resultArray = new JSONArray();
                     JSONArray effectArray = null;
-                    if (appUser.getGender()== 1) {
+                    if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             Integer days = appUserMan.getDays();
