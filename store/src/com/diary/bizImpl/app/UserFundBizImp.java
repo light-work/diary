@@ -16,7 +16,9 @@ import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
+import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
+import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
 
@@ -206,11 +208,11 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                                             if (appUser.getGender() == 1) {
                                                 appUserMan.setMoney(userMoney);
                                                 bind(appUserMan, userId);
-                                                appUserFundStore.deleteMan(appUserFund, appUserMan, appUserFundMarket, appUserFundDetails,appUserLimit);
+                                                appUserFundStore.deleteMan(appUserFund, appUserMan, appUserFundMarket, appUserFundDetails, appUserLimit);
                                             } else if (appUser.getGender() == 2) {
                                                 appUserLady.setMoney(userMoney);
                                                 bind(appUserLady, userId);
-                                                appUserFundStore.deleteLady(appUserFund, appUserLady, appUserFundMarket, appUserFundDetails,appUserLimit);
+                                                appUserFundStore.deleteLady(appUserFund, appUserLady, appUserFundMarket, appUserFundDetails, appUserLimit);
                                             }
                                             GameUtils.addResultArray(resultArray, "你已经成功卖出:" + resFund.getTitle() + "，投资有风险，见好就收，及时止损。", null);
 
@@ -255,7 +257,7 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
     }
 
     @Override
-    public String market(Long userId, Long fundId) throws BizException {
+    public String trade(Long userId, Long fundId) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -284,26 +286,10 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                             }
                         }
                         AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserFundId(userId, fundId);
-                        List<Double> doubleList = new ArrayList<>();
-                        doubleList.add(resFund.getProbability());
-                        doubleList.add(NumberUtils.subtract(1.00, resFund.getProbability()));
-                        if (appUserFundMarket == null) {
-                            JSONArray marketArray = new JSONArray();
-                            appUserFundMarket = new AppUserFundMarket();
-                            appUserFundMarket.setId(DrdsIDUtils.getID(DrdsTable.APP));
-                            appUserFundMarket.setUserId(appUser);
-                            appUserFundMarket.setFundId(resFund);
-                            int d = GameUtils.gameDays - day;
-                            int sum = 7 + d;
-                            for (int i = 1; i <= sum; i++) {
-                                marketArray.add(String.valueOf(GameUtils.fundMarket(doubleList, resFund.getMinNum(), resFund.getMaxNum())));
-                            }
-                            appUserFundMarket.setMarket(marketArray.toString());
-                            appUserFundMarket.setUseYn("Y");
-                            bind(appUserFundMarket, userId);
-                            appUserFundMarketStore.save(appUserFundMarket, Persistent.SAVE);
-                        } else {
-
+                        if(appUserFundMarket!=null){
+                            List<Double> doubleList = new ArrayList<>();
+                            doubleList.add(resFund.getProbability());
+                            doubleList.add(NumberUtils.subtract(1.00, resFund.getProbability()));
                             String market = appUserFundMarket.getMarket();
                             if (StringUtils.isNotBlank(market)) {
                                 JSONArray marketArray = JSONArray.fromObject(market);
@@ -319,20 +305,117 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                                     bind(appUserFundMarket, userId);
                                     appUserFundMarketStore.save(appUserFundMarket, Persistent.UPDATE);
                                 }
+                                JSONObject appUserFundMarketObj = JsonUtils.formIdEntity(appUserFundMarket, 0);
+                                if (appUserFundMarketObj != null) {
+                                    GameUtils.minish(appUserFundMarketObj);
+                                    resultObj.put("market", appUserFundMarketObj);
+                                }
+                                AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
+                                Integer fundMoney = 0;
+                                if (appUserFund != null) {
+                                    fundMoney = appUserFund.getMoney();
+                                }
+                                resultObj.put("fundMoney", GameUtils.formatGroupingUsed(fundMoney.longValue()));
+                                resultObj.put("result", 0);
                             }
                         }
-                        JSONObject appUserFundMarketObj = JsonUtils.formIdEntity(appUserFundMarket, 0);
-                        if (appUserFundMarketObj != null) {
-                            GameUtils.minish(appUserFundMarketObj);
-                            resultObj.put("market", appUserFundMarketObj);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String market(Long userId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            ResFundStore resFundStore = hsfServiceFactory.consumer(ResFundStore.class);
+            AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
+            if (appUserStore != null && resFundStore != null && appUserFundMarketStore != null
+                    && appUserManStore != null && appUserLadyStore != null && appUserFundStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    List<Selector> selectorList = new ArrayList<>();
+                    selectorList.add(SelectorUtils.$eq("useYn", "Y"));
+                    selectorList.add(SelectorUtils.$order("probability", true));
+                    List<ResFund> resFundList = resFundStore.getList(selectorList);
+                    if (resFundList != null && !resFundList.isEmpty()) {
+                        int day = 0;
+                        if (appUser.getGender() == 1) {
+                            AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                            if (appUserMan != null) {
+                                day = appUserMan.getDays();
+                            }
+                        } else if (appUser.getGender() == 2) {
+                            AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
+                            if (appUserLady != null) {
+                                day = appUserLady.getDays();
+                            }
                         }
-                        AppUserFund appUserFund = appUserFundStore.getByUserFundId(userId, fundId);
-                        Integer fundMoney = 0;
-                        if (appUserFund != null) {
-                            fundMoney = appUserFund.getMoney();
+                        List<AppUserFundMarket> saveAppUserFundMarketList=new ArrayList<>();
+                        List<AppUserFundMarket> updateAppUserFundMarketList=new ArrayList<>();
+                        for (ResFund resFund : resFundList) {
+                            if (resFund != null) {
+                                AppUserFundMarket appUserFundMarket = appUserFundMarketStore.getByUserFundId(userId, resFund.getId());
+                                List<Double> doubleList = new ArrayList<>();
+                                doubleList.add(resFund.getProbability());
+                                doubleList.add(NumberUtils.subtract(1.00, resFund.getProbability()));
+                                if (appUserFundMarket == null) {
+                                    JSONArray marketArray = new JSONArray();
+                                    appUserFundMarket = new AppUserFundMarket();
+                                    appUserFundMarket.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserFundMarket.setUserId(appUser);
+                                    appUserFundMarket.setFundId(resFund);
+                                    int d = GameUtils.gameDays - day;
+                                    int sum = 7 + d;
+                                    for (int i = 1; i <= sum; i++) {
+                                        marketArray.add(String.valueOf(GameUtils.fundMarket(doubleList, resFund.getMinNum(), resFund.getMaxNum())));
+                                    }
+                                    appUserFundMarket.setMarket(marketArray.toString());
+                                    appUserFundMarket.setUseYn("Y");
+                                    bind(appUserFundMarket, userId);
+                                    saveAppUserFundMarketList.add(appUserFundMarket);
+                                    resultObj.put(resFund.getId()+"", marketArray.getDouble(marketArray.size()-1));
+                                } else {
+                                    String market = appUserFundMarket.getMarket();
+                                    if (StringUtils.isNotBlank(market)) {
+                                        JSONArray marketArray = JSONArray.fromObject(market);
+                                        int d = GameUtils.gameDays - day;
+                                        int sum = 7 + d;
+                                        if (marketArray.size() < sum) {
+                                            int diff = sum - marketArray.size();
+                                            for (int i = 1; i <= diff; i++) {
+                                                marketArray.add(String.valueOf(GameUtils.fundMarket(doubleList, resFund.getMinNum(), resFund.getMaxNum())));
+                                            }
+                                            appUserFundMarket.setMarket(marketArray.toString());
+                                            appUserFundMarket.setUseYn("Y");
+                                            bind(appUserFundMarket, userId);
+                                            updateAppUserFundMarketList.add(appUserFundMarket);
+                                            resultObj.put(resFund.getId()+"", marketArray.getDouble(marketArray.size()-1));
+                                        }
+                                    }
+                                }
+                                if(saveAppUserFundMarketList!=null&&!saveAppUserFundMarketList.isEmpty()){
+                                    appUserFundMarketStore.save(saveAppUserFundMarketList,Persistent.SAVE);
+                                }
+                                if(updateAppUserFundMarketList!=null&&!updateAppUserFundMarketList.isEmpty()){
+                                    appUserFundMarketStore.save(updateAppUserFundMarketList,Persistent.UPDATE);
+                                }
+                                resultObj.put("result", 0);
+                            }
                         }
-                        resultObj.put("fundMoney", GameUtils.formatGroupingUsed(fundMoney.longValue()));
-                        resultObj.put("result", 0);
                     }
                 }
             }

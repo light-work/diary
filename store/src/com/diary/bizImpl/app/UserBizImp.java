@@ -149,6 +149,16 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     if (fund != null) {
                         fund = 0;
                     }
+                    JSONArray myFundArray = new JSONArray();
+                    List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
+                    if (appUserFundList != null && !appUserFundList.isEmpty()) {
+                        for (AppUserFund appUserFund : appUserFundList) {
+                            ResFund resFund = appUserFund.getFundId();
+                            if (resFund != null) {
+                                myFundArray.add(resFund.getId() + "");
+                            }
+                        }
+                    }
                     if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
@@ -271,6 +281,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                     }
                     if (infoObj != null) {
+                        infoObj.put("myFundArray", myFundArray);
                         infoObj.put("fund", GameUtils.formatGroupingUsed(fund.longValue()));
                         infoObj.put("myJobId", myJobId);
                         infoObj.put("myCoupleId", myCoupleId);

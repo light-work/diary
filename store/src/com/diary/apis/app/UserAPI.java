@@ -570,7 +570,31 @@ public class UserAPI extends BaseAPI {
     @Path("/fund/market")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response market(@QueryParam("userId") Long userId,
+    public Response market(@QueryParam("userId") Long userId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserFundBiz userFundBiz = hsfServiceFactory.consumer(UserFundBiz.class);
+                if (userFundBiz != null) {
+                    bizResult = userFundBiz.market(userId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/fund/trade")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response trade(@QueryParam("userId") Long userId,
                            @QueryParam("fundId") Long fundId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
@@ -585,7 +609,7 @@ public class UserAPI extends BaseAPI {
             try {
                 UserFundBiz userFundBiz = hsfServiceFactory.consumer(UserFundBiz.class);
                 if (userFundBiz != null) {
-                    bizResult = userFundBiz.market(userId, fundId);
+                    bizResult = userFundBiz.trade(userId, fundId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
