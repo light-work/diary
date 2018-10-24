@@ -38,6 +38,12 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
+    public List<AppUserFund> getByUserId(Long userId) throws StoreException {
+        return $($alias("fundId","fundId"),$eq("userId.id", userId)).list(AppUserFund.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
     public Integer getSumByUserId(Long userId) throws StoreException {
         return $($eq("userId.id", userId), $sum("money")).value(AppUserFund.class,Integer.class);
     }
@@ -51,13 +57,14 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void deleteMan(AppUserFund appUserFund, AppUserMan appUserMan,AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails) throws StoreException {
+    public void deleteMan(AppUserFund appUserFund, AppUserMan appUserMan,AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
+                          AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).delete();
         if(appUserFundMarket!=null){
             appUserFundMarketService.delete(appUserFundMarket);
         }
         if (appUserMan != null) {
-            appUserManService.save(appUserMan, Persistent.UPDATE);
+            appUserManService.save(appUserMan, Persistent.UPDATE,appUserLimit);
         }
         if (appUserFundDetails != null && !appUserFundDetails.isEmpty()) {
             appUserFundDetailService.delete(appUserFundDetails);
@@ -66,13 +73,14 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void deleteLady(AppUserFund appUserFund, AppUserLady appUserLady, AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails) throws StoreException {
+    public void deleteLady(AppUserFund appUserFund, AppUserLady appUserLady, AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
+                           AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).delete();
         if(appUserFundMarket!=null){
             appUserFundMarketService.delete(appUserFundMarket);
         }
         if (appUserLady != null) {
-            appUserLadyService.save(appUserLady, Persistent.UPDATE);
+            appUserLadyService.save(appUserLady, Persistent.UPDATE,appUserLimit);
         }
         if (appUserFundDetails != null && !appUserFundDetails.isEmpty()) {
             appUserFundDetailService.delete(appUserFundDetails);
@@ -88,19 +96,25 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void saveMan(AppUserFund appUserFund, Persistent persistent, AppUserMan appUserMan) throws StoreException {
+    public void save(List<AppUserFund> appUserFunds, Persistent persistent) throws StoreException {
+        $(appUserFunds).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void saveMan(AppUserFund appUserFund, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).save(persistent);
         if (appUserMan != null) {
-            appUserManService.save(appUserMan, Persistent.UPDATE);
+            appUserManService.save(appUserMan, Persistent.UPDATE,appUserLimit);
         }
     }
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void saveLady(AppUserFund appUserFund, Persistent persistent, AppUserLady appUserLady) throws StoreException {
+    public void saveLady(AppUserFund appUserFund, Persistent persistent, AppUserLady appUserLady,AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).save(persistent);
         if (appUserLady != null) {
-            appUserLadyService.save(appUserLady, Persistent.UPDATE);
+            appUserLadyService.save(appUserLady, Persistent.UPDATE,appUserLimit);
         }
     }
 

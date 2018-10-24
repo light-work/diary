@@ -1,8 +1,7 @@
 package com.diary.service.app;
 
 import com.diary.common.StoreException;
-import com.diary.entity.app.AppUserLimit;
-import com.diary.entity.app.AppUserMan;
+import com.diary.entity.app.*;
 import com.diary.providers.store.app.AppUserManStore;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -23,6 +22,15 @@ public class AppUserManService extends HQuery implements AppUserManStore {
 
     @Inject
     private AppUserLimitService appUserLimitService;
+
+    @Inject
+    private AppUserFundService appUserFundService;
+
+    @Inject
+    private AppUserFundDetailService appUserFundDetailService;
+
+    @Inject
+    private AppUserFundMarketService appUserFundMarketService;
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserMan getById(Long id, Selector... selectors) throws StoreException {
@@ -45,6 +53,21 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserMan appUserMan, Persistent persistent) throws StoreException {
         $(appUserMan).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void nextDay(AppUserMan appUserMan, Persistent persistent, List<AppUserFund> appUserFunds, List<AppUserFundDetail> appUserFundDetails, List<AppUserFundMarket> appUserFundMarkets) throws StoreException {
+        $(appUserMan).save(persistent);
+        if(appUserFunds!=null&&! appUserFunds.isEmpty()){
+            appUserFundService.save(appUserFunds,Persistent.UPDATE);
+        }
+        if(appUserFundDetails!=null&&! appUserFundDetails.isEmpty()){
+            appUserFundDetailService.save(appUserFundDetails,Persistent.SAVE);
+        }
+        if(appUserFundMarkets!=null&&! appUserFundMarkets.isEmpty()){
+            appUserFundMarketService.save(appUserFundMarkets,Persistent.UPDATE);
+        }
     }
 
     @Override

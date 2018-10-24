@@ -6,6 +6,8 @@ import com.diary.entity.app.AppUserFundMarket;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 
+import java.util.List;
+
 
 public interface AppUserFundMarketStore {
 
@@ -15,6 +17,7 @@ public interface AppUserFundMarketStore {
 
     void save(AppUserFundMarket appUserFundMarket, Persistent persistent) throws StoreException;
 
+    void save(List<AppUserFundMarket> appUserFundMarkets, Persistent persistent) throws StoreException;
 
     void delete(AppUserFundMarket appUserFundMarket) throws StoreException;
 
