@@ -116,7 +116,14 @@
                   ref="appUserFundDetailStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
-        
+
+
+        <service id="appUserRankingsStore" class="com.diary.storeImpl.app.AppUserRankingsStoreImpl"/>
+        <provider id="appUserRankingsStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserRankingsStore"
+                  ref="appUserRankingsStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
         
         <!--      res   -->
 

@@ -83,6 +83,7 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                                     Persistent persistent = Persistent.UPDATE;
                                     if (appUserFund == null) {
                                         persistent = Persistent.SAVE;
+                                        appUserFund=new AppUserFund();
                                         appUserFund.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                         appUserFund.setUserId(appUser);
                                         appUserFund.setFundId(resFund);
@@ -403,19 +404,20 @@ public class UserFundBizImp extends BaseBiz implements UserFundBiz {
                                             appUserFundMarket.setUseYn("Y");
                                             bind(appUserFundMarket, userId);
                                             updateAppUserFundMarketList.add(appUserFundMarket);
-                                            resultObj.put(resFund.getId()+"", marketArray.getDouble(marketArray.size()-1));
                                         }
+                                        resultObj.put(resFund.getId()+"", marketArray.getDouble(marketArray.size()-1));
                                     }
                                 }
-                                if(saveAppUserFundMarketList!=null&&!saveAppUserFundMarketList.isEmpty()){
-                                    appUserFundMarketStore.save(saveAppUserFundMarketList,Persistent.SAVE);
-                                }
-                                if(updateAppUserFundMarketList!=null&&!updateAppUserFundMarketList.isEmpty()){
-                                    appUserFundMarketStore.save(updateAppUserFundMarketList,Persistent.UPDATE);
-                                }
-                                resultObj.put("result", 0);
+
                             }
                         }
+                        if(saveAppUserFundMarketList!=null&&!saveAppUserFundMarketList.isEmpty()){
+                            appUserFundMarketStore.save(saveAppUserFundMarketList,Persistent.SAVE);
+                        }
+                        if(updateAppUserFundMarketList!=null&&!updateAppUserFundMarketList.isEmpty()){
+                            appUserFundMarketStore.save(updateAppUserFundMarketList,Persistent.UPDATE);
+                        }
+                        resultObj.put("result", 0);
                     }
                 }
             }

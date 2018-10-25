@@ -82,6 +82,12 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+
+        <consumer id="appUserRankingsStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserRankingsStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <!--      res   -->
 
         <consumer id="resCarStoreConsumer"

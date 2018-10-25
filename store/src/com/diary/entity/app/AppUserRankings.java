@@ -14,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_LADY")
-public class AppUserLady extends IdEntity implements Tracker, Cloneable {
+@Table(name = "APP_USER_RANKINGS")
+public class AppUserRankings extends IdEntity implements Tracker, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,27 +23,9 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     private AppUser userId;
 
-    private Integer health;
-
-    private Integer money;
-
-    private Integer ability;
-
-
-    private Integer wisdom;
-
-    private Integer happy;
-
-
-    private Integer beauty;
-
-    private Integer popularity;
-
-    private Integer days;
-
-    private Integer hours;
-
     private Integer score;
+
+    private Integer seq;
 
     private Date created;
 
@@ -75,88 +57,14 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
         this.userId = userId;
     }
 
-    @Column(name = "HEALTH")
-    public Integer getHealth() {
-        return health;
+
+    @Transient
+    public Integer getSeq() {
+        return seq;
     }
 
-    public void setHealth(Integer health) {
-        this.health = health;
-    }
-
-
-
-    @Column(name = "MONEY")
-    public Integer getMoney() {
-        return money;
-    }
-
-    public void setMoney(Integer money) {
-        this.money = money;
-    }
-
-    @Column(name = "ABILITY")
-    public Integer getAbility() {
-        return ability;
-    }
-
-    public void setAbility(Integer ability) {
-        this.ability = ability;
-    }
-
-
-    @Column(name = "HAPPY")
-    public Integer getHappy() {
-        return happy;
-    }
-
-    public void setHappy(Integer happy) {
-        this.happy = happy;
-    }
-
-    @Column(name = "WISDOM")
-    public Integer getWisdom() {
-        return wisdom;
-    }
-
-    public void setWisdom(Integer wisdom) {
-        this.wisdom = wisdom;
-    }
-
-    @Column(name = "BEAUTY")
-    public Integer getBeauty() {
-        return beauty;
-    }
-
-    public void setBeauty(Integer beauty) {
-        this.beauty = beauty;
-    }
-
-    @Column(name = "POPULARITY")
-    public Integer getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(Integer popularity) {
-        this.popularity = popularity;
-    }
-
-    @Column(name = "DAYS")
-    public Integer getDays() {
-        return days;
-    }
-
-    public void setDays(Integer days) {
-        this.days = days;
-    }
-
-    @Column(name = "HOURS")
-    public Integer getHours() {
-        return hours;
-    }
-
-    public void setHours(Integer hours) {
-        this.hours = hours;
+    public void setSeq(Integer seq) {
+        this.seq = seq;
     }
 
     @Column(name = "SCORE")
@@ -214,9 +122,9 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
     }
 
     public Object clone() {
-        AppUserLady sc = null;
+        AppUserRankings sc = null;
         try {
-            sc = (AppUserLady) super.clone();
+            sc = (AppUserRankings) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

@@ -46,7 +46,13 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private Integer house;
 
+
     private Integer car;
+
+    private Integer score;
+
+
+
 
     private Date created;
 
@@ -113,9 +119,14 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
         this.money = money;
     }
 
+    @Column(name = "SCORE")
+    public Integer getScore() {
+        return score;
+    }
 
-
-
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
     @Column(name = "ABILITY")
     public Integer getAbility() {
