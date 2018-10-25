@@ -93,6 +93,8 @@ public class GameUtils {
             sa.add(String.valueOf(fundMarket(doubleList,2.48d,4.22)));
         }
         System.out.println(sa.toString());
+        System.out.println(0-(-8));
+
 
     }
 
@@ -594,5 +596,94 @@ public class GameUtils {
                 }
             }
         }
+    }
+
+    public static Integer getScoreAttr(Integer value){
+        Integer score=-1;
+        if(value>=0&&value<20){
+            score=0;
+        }else if(value>=21&&value<40){
+            score=10000;
+        }else if(value>=41&&value<60){
+            score=20000;
+        }else if(value>=61&&value<80){
+            score=30000;
+        }else if(value>=81&&value<100){
+            score=50000;
+        }else if(value>=100&&value<110){
+            score=60000;
+        }else if(value>=111&&value<120){
+            score=70000;
+        }else if(value>=121&&value<130){
+            score=80000;
+        }else if(value>=131&&value<140){
+            score=90000;
+        }else if(value>=141&&value<150){
+            score=100000;
+        }else if(value>=151&&value<160){
+            score=110000;
+        }else if(value>=161&&value<170){
+            score=120000;
+        }else if(value>=171&&value<180){
+            score=130000;
+        }else if(value>=181&&value<190){
+            score=140000;
+        }else if(value>=191&&value<200){
+            score=150000;
+        }else if(value>=201&&value<250){
+            score=160000;
+        }else if(value>=251&&value<300){
+            score=180000;
+        }
+
+        return  score;
+    }
+
+    public static Integer getScoreMoney(Integer money){
+       Integer score=-1;
+       if(money>=0&&money<10000){
+           score=0;
+       }else if(money>=10001&&money<100000){
+           score=100000;
+       }else if(money>=100001&&money<500000){
+           score=20000;
+       }else if(money>=500001&&money<1000000){
+           score=300000;
+       }else if(money>=1000001&&money<2000000){
+           score=400000;
+       }else if(money>=2000001&&money<3000000){
+           score=500000;
+       }else if(money>=3000001&&money<5000000){
+           score=600000;
+       }else if(money>=5000001&&money<8000000){
+           score=700000;
+       }else if(money>=8000001&&money<12000000){
+           score=800000;
+       }else if(money>=12000001&&money<30000000){
+           score=1000000;
+       }else if(money>=30000001&&money<50000000){
+           score=1200000;
+       }else if(money>=50000001&&money<80000000){
+           score=1400000;
+       }else if(money>=80000001&&money<100000000){
+           score=2000000;
+       }else if(money>=100000001){
+           score=2888888;
+       }
+       return  score;
+    }
+
+    public static String getScoreComment(Integer score){
+        String comment="";
+        if(score>=0&&score<500000){
+            comment="穷困潦倒";
+        }else if(score>=500001&&score<1000000){
+            comment="碌碌无为";
+        }else if(score>=1000001&&score<2000000){
+            comment="风生水起";
+        }else if(score>=2000001){
+            comment="混王之王";
+        }
+        return  comment;
     }
 }

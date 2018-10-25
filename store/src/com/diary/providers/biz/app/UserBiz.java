@@ -22,4 +22,10 @@ public interface UserBiz {
 
     String nextDay(Long userId) throws BizException;
 
+    String done(Long userId) throws BizException;
+
+    String report(Long userId) throws BizException;
+
+    String rankings(Long userId,Integer start, Integer limit) throws BizException;
+
 }

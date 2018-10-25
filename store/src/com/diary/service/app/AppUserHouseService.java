@@ -42,7 +42,8 @@ public class AppUserHouseService extends HQuery implements AppUserHouseStore {
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public List<AppUserHouse> getByUserId(Long userId) throws StoreException {
-        return $($alias("userId", "userId"),$alias("houseId", "houseId"),  $eq("userId.id", userId)).list(AppUserHouse.class);
+        return $($alias("userId", "userId"),$alias("houseId", "houseId"),  $eq("userId.id", userId),
+                $order("houseId.buyPrice",false)).list(AppUserHouse.class);
     }
 
     @Override
