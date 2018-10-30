@@ -673,16 +673,32 @@ public class GameUtils {
        return  score;
     }
 
-    public static String getScoreComment(Integer score){
-        String comment="";
+    public static String getScoreComment(Integer score,boolean rankings){
+        String comment="https://img.jinrongzhushou.com/common/";
         if(score>=0&&score<500000){
-            comment="穷困潦倒";
+            if(rankings){
+                comment+="qiong-j.png";
+            }else{
+                comment+="qiong.png";
+            }
         }else if(score>=500001&&score<1000000){
-            comment="碌碌无为";
+            if(rankings){
+                comment+="lu-j.png";
+            }else{
+                comment+="lu.png";
+            }
         }else if(score>=1000001&&score<2000000){
-            comment="风生水起";
+            if(rankings){
+                comment+="feng-j.png";
+            }else{
+                comment+="feng.png";
+            }
         }else if(score>=2000001){
-            comment="混王之王";
+            if(rankings){
+                comment+="hun-j.png";
+            }else{
+                comment+="hun.png";
+            }
         }
         return  comment;
     }
