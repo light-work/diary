@@ -30,6 +30,10 @@ public class ResClothes extends IdEntity implements Tracker {
 
     private Integer sellPrice;
 
+    private Integer offsetBuy;
+
+    private Integer offsetSell;
+
     private String remarks;
 
     private Date created;
@@ -76,6 +80,24 @@ public class ResClothes extends IdEntity implements Tracker {
 
     public void setSellPrice(Integer sellPrice) {
         this.sellPrice = sellPrice;
+    }
+
+    @Column(name = "OFFSET_BUY")
+    public Integer getOffsetBuy() {
+        return offsetBuy;
+    }
+
+    public void setOffsetBuy(Integer offsetBuy) {
+        this.offsetBuy = offsetBuy;
+    }
+
+    @Column(name = "OFFSET_SELL")
+    public Integer getOffsetSell() {
+        return offsetSell;
+    }
+
+    public void setOffsetSell(Integer offsetSell) {
+        this.offsetSell = offsetSell;
     }
 
     @Column(name = "REMARKS")

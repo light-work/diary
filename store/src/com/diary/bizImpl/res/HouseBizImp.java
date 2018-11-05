@@ -87,7 +87,7 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
     }
 
     @Override
-    public String add(String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String add(String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -98,6 +98,8 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
                 resHouse.setTitle(title);
                 resHouse.setBuyPrice(buyPrice);
                 resHouse.setSellPrice(sellPrice);
+                resHouse.setOffsetBuy(offsetBuy);
+                resHouse.setOffsetSell(offsetSell);
                 resHouse.setRemarks(remarks);
                 bind(resHouse, 1l);
                 resHouse.setUseYn("Y");
@@ -115,7 +117,7 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice, Integer offsetBuy, Integer offsetSell,String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -126,6 +128,8 @@ public class HouseBizImp extends BaseBiz implements HouseBiz {
                     resHouse.setTitle(title);
                     resHouse.setBuyPrice(buyPrice);
                     resHouse.setSellPrice(sellPrice);
+                    resHouse.setOffsetBuy(offsetBuy);
+                    resHouse.setOffsetSell(offsetSell);
                     resHouse.setRemarks(remarks);
                     bind(resHouse, 1l);
                     resHouseStore.save(resHouse, Persistent.UPDATE);

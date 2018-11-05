@@ -322,7 +322,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
     }
 
     @Override
-    public String addEffect(Long resultId, String operation, String attrKey, Integer value) throws BizException {
+    public String addEffect(Long resultId, String operation, String attrKey, Integer value,String  percent) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -337,6 +337,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                     resEventResultEffect.setOperation(operation);
                     resEventResultEffect.setAttrKey(attrKey);
                     resEventResultEffect.setValue(value);
+                    resEventResultEffect.setPercent(percent);
                     bind(resEventResultEffect, 1l);
                     resEventResultEffect.setUseYn("Y");
                     resEventResultEffectStore.save(resEventResultEffect, Persistent.SAVE);
@@ -355,7 +356,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
     }
 
     @Override
-    public String editEffect(Long id, String operation, String attrKey, Integer value) throws BizException {
+    public String editEffect(Long id, String operation, String attrKey, Integer value,String  percent) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -368,6 +369,7 @@ public class EventBizImp extends BaseBiz implements EventBiz {
                         resEventResultEffect.setOperation(operation);
                         resEventResultEffect.setAttrKey(attrKey);
                         resEventResultEffect.setValue(value);
+                        resEventResultEffect.setPercent(percent);
                         bind(resEventResultEffect, 1l);
                         resEventResultEffectStore.save(resEventResultEffect, Persistent.UPDATE);
                         buildEffectList(resEventResult.getId(), resultObj);

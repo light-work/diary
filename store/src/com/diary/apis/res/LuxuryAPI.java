@@ -78,7 +78,9 @@ public class LuxuryAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
             @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-            @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
+            @FormParam("sellPrice") Integer sellPrice,
+            @FormParam("offsetBuy") Integer offsetBuy,@FormParam("offsetSell") Integer offsetSell,
+            @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -94,12 +96,18 @@ public class LuxuryAPI extends BaseAPI {
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
         }
+        if (offsetBuy == null) {
+            errorBuilder.append("offsetBuy was null.");
+        }
+        if (offsetSell == null) {
+            errorBuilder.append("offsetSell was null.");
+        }
 
         if (errorBuilder.length() == 0) {
             try {
                 LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (luxuryBiz != null) {
-                    bizResult = luxuryBiz.add(title, buyPrice, sellPrice, remarks);
+                    bizResult = luxuryBiz.add(title, buyPrice, sellPrice,offsetBuy,offsetSell, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -117,7 +125,9 @@ public class LuxuryAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
                          @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-                         @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
+                         @FormParam("sellPrice") Integer sellPrice,
+                         @FormParam("offsetBuy") Integer offsetBuy,@FormParam("offsetSell") Integer offsetSell,
+                         @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -136,12 +146,17 @@ public class LuxuryAPI extends BaseAPI {
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
         }
-
+        if (offsetBuy == null) {
+            errorBuilder.append("offsetBuy was null.");
+        }
+        if (offsetSell == null) {
+            errorBuilder.append("offsetSell was null.");
+        }
         if (errorBuilder.length() == 0) {
             try {
                 LuxuryBiz luxuryBiz = hsfServiceFactory.consumer(LuxuryBiz.class);
                 if (luxuryBiz != null) {
-                    bizResult = luxuryBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                    bizResult = luxuryBiz.edit(id, title, buyPrice, sellPrice, offsetBuy,offsetSell,remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

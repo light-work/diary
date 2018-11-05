@@ -87,7 +87,7 @@ public class CarBizImp extends BaseBiz implements CarBiz {
     }
 
     @Override
-    public String add(String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String add(String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -99,6 +99,8 @@ public class CarBizImp extends BaseBiz implements CarBiz {
                 resCar.setBuyPrice(buyPrice);
                 resCar.setSellPrice(sellPrice);
                 resCar.setRemarks(remarks);
+                resCar.setOffsetBuy(offsetBuy);
+                resCar.setOffsetSell(offsetSell);
                 bind(resCar, 1l);
                 resCar.setUseYn("Y");
                 resCarStore.save(resCar, Persistent.SAVE);
@@ -115,7 +117,7 @@ public class CarBizImp extends BaseBiz implements CarBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -126,6 +128,8 @@ public class CarBizImp extends BaseBiz implements CarBiz {
                     resCar.setTitle(title);
                     resCar.setBuyPrice(buyPrice);
                     resCar.setSellPrice(sellPrice);
+                    resCar.setOffsetBuy(offsetBuy);
+                    resCar.setOffsetSell(offsetSell);
                     resCar.setRemarks(remarks);
                     bind(resCar, 1l);
                     resCarStore.save(resCar, Persistent.UPDATE);

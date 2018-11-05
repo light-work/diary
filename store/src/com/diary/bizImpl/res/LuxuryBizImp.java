@@ -87,7 +87,7 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
     }
 
     @Override
-    public String add(String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String add(String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -98,6 +98,8 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
                 resLuxury.setTitle(title);
                 resLuxury.setBuyPrice(buyPrice);
                 resLuxury.setSellPrice(sellPrice);
+                resLuxury.setOffsetBuy(offsetBuy);
+                resLuxury.setOffsetSell(offsetSell);
                 resLuxury.setRemarks(remarks);
                 bind(resLuxury, 1l);
                 resLuxury.setUseYn("Y");
@@ -115,7 +117,7 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -126,6 +128,8 @@ public class LuxuryBizImp extends BaseBiz implements LuxuryBiz {
                     resLuxury.setTitle(title);
                     resLuxury.setBuyPrice(buyPrice);
                     resLuxury.setSellPrice(sellPrice);
+                    resLuxury.setOffsetBuy(offsetBuy);
+                    resLuxury.setOffsetSell(offsetSell);
                     resLuxury.setRemarks(remarks);
                     bind(resLuxury, 1l);
                     resLuxuryStore.save(resLuxury, Persistent.UPDATE);

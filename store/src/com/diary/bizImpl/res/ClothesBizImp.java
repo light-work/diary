@@ -87,7 +87,7 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
     }
 
     @Override
-    public String add(String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String add(String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -98,6 +98,8 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
                 resClothes.setTitle(title);
                 resClothes.setBuyPrice(buyPrice);
                 resClothes.setSellPrice(sellPrice);
+                resClothes.setOffsetBuy(offsetBuy);
+                resClothes.setOffsetSell(offsetSell);
                 resClothes.setRemarks(remarks);
                 bind(resClothes, 1l);
                 resClothes.setUseYn("Y");
@@ -115,7 +117,7 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
     }
 
     @Override
-    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice, String remarks) throws BizException {
+    public String edit(Long id, String title, Integer buyPrice, Integer sellPrice,Integer offsetBuy, Integer offsetSell, String remarks) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -126,6 +128,8 @@ public class ClothesBizImp extends BaseBiz implements ClothesBiz {
                     resClothes.setTitle(title);
                     resClothes.setBuyPrice(buyPrice);
                     resClothes.setSellPrice(sellPrice);
+                    resClothes.setOffsetBuy(offsetBuy);
+                    resClothes.setOffsetSell(offsetSell);
                     resClothes.setRemarks(remarks);
                     bind(resClothes, 1l);
                     resClothesStore.save(resClothes, Persistent.UPDATE);

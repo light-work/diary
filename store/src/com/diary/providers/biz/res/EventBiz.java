@@ -27,9 +27,9 @@ public interface EventBiz {
 
     String disableResult(Long resultId) throws BizException;
 
-    String addEffect(Long resultId, String operation, String attrKey, Integer value) throws BizException;
+    String addEffect(Long resultId, String operation, String attrKey, Integer value,String percent) throws BizException;
 
-    String editEffect(Long id, String operation, String attrKey, Integer value) throws BizException;
+    String editEffect(Long id, String operation, String attrKey, Integer value,String percent) throws BizException;
 
     String deleteEffect(Long id) throws BizException;
 

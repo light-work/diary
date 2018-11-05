@@ -365,7 +365,8 @@ public class EventAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response addEffect(@FormParam("resultId") Long resultId, @FormParam("operation") String operation,
-                              @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
+                              @FormParam("attrKey") String attrKey, @FormParam("value") Integer value,
+                              @FormParam("percent") String percent) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -375,6 +376,10 @@ public class EventAPI extends BaseAPI {
 
         if (StringUtils.isBlank(operation)) {
             errorBuilder.append("operation was null.");
+        }
+
+        if (StringUtils.isBlank(percent)) {
+            percent="N";
         }
 
         if (StringUtils.isBlank(attrKey)) {
@@ -388,7 +393,7 @@ public class EventAPI extends BaseAPI {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.addEffect(resultId, operation, attrKey, value);
+                    bizResult = eventBiz.addEffect(resultId, operation, attrKey, value,percent);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -404,7 +409,8 @@ public class EventAPI extends BaseAPI {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
     public Response editEffect(@FormParam("id") Long id, @FormParam("operation") String operation,
-                               @FormParam("attrKey") String attrKey, @FormParam("value") Integer value) {
+                               @FormParam("attrKey") String attrKey, @FormParam("value") Integer value,
+                               @FormParam("percent") String percent) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -423,11 +429,15 @@ public class EventAPI extends BaseAPI {
             errorBuilder.append("value was null.");
         }
 
+        if (StringUtils.isBlank(percent)) {
+            percent="N";
+        }
+
         if (errorBuilder.length() == 0) {
             try {
                 EventBiz eventBiz = hsfServiceFactory.consumer(EventBiz.class);
                 if (eventBiz != null) {
-                    bizResult = eventBiz.editEffect(id, operation, attrKey, value);
+                    bizResult = eventBiz.editEffect(id, operation, attrKey, value,percent);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
