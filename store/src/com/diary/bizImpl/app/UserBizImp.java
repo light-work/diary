@@ -150,6 +150,9 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     if (fund == null) {
                         fund = 0;
                     }
+                    if(fund < 0){
+                        fund = 0;
+                    }
                     JSONArray myFundArray = new JSONArray();
                     List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
                     if (appUserFundList != null && !appUserFundList.isEmpty()) {
@@ -1033,7 +1036,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     }
                                     JSONObject userObj = JsonUtils.formIdEntity(rankingsUser, 0);
                                     if (userObj != null) {
-                                        userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore()));
+                                        userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore(),true));
                                         userObj.put("score", appUserRankings.getScore());
                                         userObj.put("seq", appUserRankings.getSeq());
                                         GameUtils.minish(userObj);
@@ -1051,6 +1054,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         AppUserRankings appUserRankings = appUserRankingsStore.getByUserId(userId);
                         if (appUserRankings != null) {
                             userObj.put("score", appUserRankings.getScore());
+                            userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore(),true));
                             userObj.put("seq", mySeq);
                         } else {
                             userObj.put("seq", "999+");
@@ -1206,7 +1210,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                     }
                     infoObj.put("score",score);
-                    infoObj.put("comment", GameUtils.getScoreComment(score));
+                    infoObj.put("comment", GameUtils.getScoreComment(score,false));
                     resultObj.put("data", infoObj);
                     resultObj.put("result", 0);
                 }

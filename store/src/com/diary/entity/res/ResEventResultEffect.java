@@ -29,6 +29,7 @@ public class ResEventResultEffect extends IdEntity implements Tracker {
 
     private Integer value;
 
+    private String percent;
 
 
     private Date created;
@@ -61,7 +62,14 @@ public class ResEventResultEffect extends IdEntity implements Tracker {
     }
 
 
+    @Column(name = "PERCENT")
+    public String getPercent() {
+        return percent;
+    }
 
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
 
     @Column(name = "OPERATION")
     public String getOperation() {

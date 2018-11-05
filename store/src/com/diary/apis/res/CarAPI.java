@@ -78,7 +78,9 @@ public class CarAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
             @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-            @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
+            @FormParam("sellPrice") Integer sellPrice,
+            @FormParam("offsetBuy") Integer offsetBuy,@FormParam("offsetSell") Integer offsetSell,
+            @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -95,11 +97,17 @@ public class CarAPI extends BaseAPI {
             errorBuilder.append("remarks was null.");
         }
 
+        if (offsetBuy == null) {
+            errorBuilder.append("offsetBuy was null.");
+        }
+        if (offsetSell == null) {
+            errorBuilder.append("offsetSell was null.");
+        }
         if (errorBuilder.length() == 0) {
             try {
                 CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
                 if (carBiz != null) {
-                    bizResult = carBiz.add(title, buyPrice, sellPrice, remarks);
+                    bizResult = carBiz.add(title, buyPrice, sellPrice,offsetBuy,offsetSell, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -117,7 +125,9 @@ public class CarAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
                          @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-                         @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
+                         @FormParam("sellPrice") Integer sellPrice,
+                         @FormParam("offsetBuy") Integer offsetBuy,@FormParam("offsetSell") Integer offsetSell,
+                         @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -133,6 +143,12 @@ public class CarAPI extends BaseAPI {
         if (sellPrice == null) {
             errorBuilder.append("sellPrice was null.");
         }
+        if (offsetBuy == null) {
+            errorBuilder.append("offsetBuy was null.");
+        }
+        if (offsetSell == null) {
+            errorBuilder.append("offsetSell was null.");
+        }
         if (StringUtils.isBlank(remarks)) {
             errorBuilder.append("remarks was null.");
         }
@@ -141,7 +157,7 @@ public class CarAPI extends BaseAPI {
             try {
                 CarBiz carBiz = hsfServiceFactory.consumer(CarBiz.class);
                 if (carBiz != null) {
-                    bizResult = carBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                    bizResult = carBiz.edit(id, title, buyPrice, sellPrice, offsetBuy,offsetSell,remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

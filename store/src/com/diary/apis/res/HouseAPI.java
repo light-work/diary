@@ -78,7 +78,8 @@ public class HouseAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response add(
             @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-            @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
+            @FormParam("sellPrice") Integer sellPrice,   @FormParam("offsetBuy") Integer offsetBuy,@FormParam("offsetSell") Integer offsetSell,
+            @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -95,11 +96,18 @@ public class HouseAPI extends BaseAPI {
             errorBuilder.append("remarks was null.");
         }
 
+        if (offsetBuy == null) {
+            errorBuilder.append("offsetBuy was null.");
+        }
+        if (offsetSell == null) {
+            errorBuilder.append("offsetSell was null.");
+        }
+
         if (errorBuilder.length() == 0) {
             try {
                 HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
                 if (houseBiz != null) {
-                    bizResult = houseBiz.add(title, buyPrice, sellPrice, remarks);
+                    bizResult = houseBiz.add(title, buyPrice, sellPrice,offsetBuy,offsetSell, remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -117,7 +125,9 @@ public class HouseAPI extends BaseAPI {
     @Consumes("application/x-www-form-urlencoded")
     public Response edit(@FormParam("id") Long id,
                          @FormParam("title") String title, @FormParam("buyPrice") Integer buyPrice,
-                         @FormParam("sellPrice") Integer sellPrice, @FormParam("remarks") String remarks) {
+                         @FormParam("sellPrice") Integer sellPrice,
+                         @FormParam("offsetBuy") Integer offsetBuy,@FormParam("offsetSell") Integer offsetSell,
+                         @FormParam("remarks") String remarks) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -137,11 +147,17 @@ public class HouseAPI extends BaseAPI {
             errorBuilder.append("remarks was null.");
         }
 
+        if (offsetBuy == null) {
+            errorBuilder.append("offsetBuy was null.");
+        }
+        if (offsetSell == null) {
+            errorBuilder.append("offsetSell was null.");
+        }
         if (errorBuilder.length() == 0) {
             try {
                 HouseBiz houseBiz = hsfServiceFactory.consumer(HouseBiz.class);
                 if (houseBiz != null) {
-                    bizResult = houseBiz.edit(id, title, buyPrice, sellPrice, remarks);
+                    bizResult = houseBiz.edit(id, title, buyPrice, sellPrice, offsetBuy,offsetSell,remarks);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
