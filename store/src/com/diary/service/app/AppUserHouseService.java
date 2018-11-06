@@ -67,6 +67,12 @@ public class AppUserHouseService extends HQuery implements AppUserHouseStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserHouse> appUserHouseList) throws StoreException {
+        $(appUserHouseList).delete();
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserHouse appUserHouse, Persistent persistent) throws StoreException {
         $(appUserHouse).save(persistent);
     }

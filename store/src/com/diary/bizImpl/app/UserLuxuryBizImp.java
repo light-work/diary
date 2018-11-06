@@ -84,7 +84,7 @@ public class UserLuxuryBizImp extends BaseBiz implements UserLuxuryBiz {
                                     AppUserLady oldLady = (AppUserLady) appUserLady.clone();
                                     appUserLady.setMoney(appUserLady.getMoney() - resLuxury.getBuyPrice());
                                     effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                    GameUtils.useHour(appUserLady);
+                                   // GameUtils.useHour(appUserLady);
                                     bind(appUserLady, userId);
                                     appUserLuxuryStore.buy(appUserLuxury, Persistent.SAVE, appUserLady, appUserLimit);
                                     GameUtils.addResultArray(resultArray, "恭喜你,穿戴了:" + resLuxury.getTitle() + "，我怎么这么好看，这么好看怎么办！", null);
@@ -152,7 +152,7 @@ public class UserLuxuryBizImp extends BaseBiz implements UserLuxuryBiz {
                                             AppUserLady oldLady = (AppUserLady) appUserLady.clone();
                                             appUserLady.setMoney(appUserLady.getMoney() + resLuxury.getSellPrice());
                                             effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                            GameUtils.useHour(appUserLady);
+                                          //  GameUtils.useHour(appUserLady);
                                             bind(appUserLady, userId);
                                             appUserLuxuryStore.sell(appUserLuxury, appUserLady, appUserLimit);
                                             GameUtils.addResultArray(resultArray, "已将不想要的" + resLuxury.getTitle() + "饰品出售，这身衣服过时了！", null);

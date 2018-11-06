@@ -111,23 +111,23 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                         if (appUser.getGender() == 1) {
                             if (appUserMan != null) {
                                 AppUserMan oldMan = (AppUserMan) appUserMan.clone();
-                                appUserMan.setMoney(appUserMan.getMoney() - resLuck.getInvestPrice());
                                 if (status == 0) {
                                     appUserMan.setMoney(appUserMan.getMoney() + resLuck.getGainPrice());
+                                }else{
+                                    appUserMan.setMoney(appUserMan.getMoney() - resLuck.getInvestPrice());
                                 }
                                 effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                                GameUtils.useHour(appUserMan);
                                 appUserLuckStore.save(appUserLuck, Persistent.SAVE, appUserMan, appUserLimit);
                             }
                         } else if (appUser.getGender() == 2) {
                             if (appUserLady != null) {
                                 AppUserLady oldLady = (AppUserLady) appUserLady.clone();
-                                appUserLady.setMoney(appUserLady.getMoney() - resLuck.getInvestPrice());
                                 if (status == 0) {
                                     appUserLady.setMoney(appUserLady.getMoney() + resLuck.getGainPrice());
+                                }else{
+                                    appUserLady.setMoney(appUserLady.getMoney() - resLuck.getInvestPrice());
                                 }
                                 effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                GameUtils. useHour(appUserLady);
                                 appUserLuckStore.save(appUserLuck, Persistent.SAVE, appUserLady, appUserLimit);
                             }
                         }
@@ -151,22 +151,12 @@ public class UserLuckBizImp extends BaseBiz implements UserLuckBiz {
                         resultObj.put("resultArray", resultArray);
                     } else {
                         if (luckLimit == 0) {
-                            if (appUser.getGender() == 1) {
-                                if (appUserMan != null) {
-                                    GameUtils.useHour(appUserMan);
-                                    appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
-                                }
-                            } else if (appUser.getGender() == 2) {
-                                if (appUserLady != null) {
-                                    GameUtils. useHour(appUserLady);
-                                    appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
-                                }
-                            }
+                            appUserLimitStore.save(appUserLimit,Persistent.SAVE);
                         }
                         if (luckLimit == 1) {
                             GameUtils.addResultArray(resultArray, "抱歉，每日只能试一次手气!", null);
                         } else {
-                            GameUtils.addResultArray(resultArray, "凡事都需要有本钱，哪怕想试试手气也不例外!", null);
+                            GameUtils.addResultArray(resultArray, "凡事都需要有本钱，哪有空手套白狼的!", null);
                         }
                         resultObj.put("result", 1);
                         resultObj.put("resultArray", resultArray);

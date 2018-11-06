@@ -18,4 +18,6 @@ public interface AppUserLimitStore {
 
     void delete(AppUserLimit appUserLimit) throws StoreException;
 
+    void delete(List<AppUserLimit> appUserLimitList) throws StoreException;
+
 }

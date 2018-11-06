@@ -15,6 +15,7 @@ public interface AppUserFundDetailStore {
 
     List<AppUserFundDetail> getByUserFundId(Long userFundId) throws StoreException;
 
+    List<AppUserFundDetail> getByUserId(Long userId) throws StoreException;
 
     void save(AppUserFundDetail appUserFundDetail, Persistent persistent) throws StoreException;
 

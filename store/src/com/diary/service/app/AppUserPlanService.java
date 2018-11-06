@@ -55,6 +55,12 @@ public class AppUserPlanService extends HQuery implements AppUserPlanStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserPlan> appUserPlanList) throws StoreException {
+        $(appUserPlanList).delete();
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserPlan appUserPlan, Persistent persistent, AppUserMan appUserMan) throws StoreException {
         $(appUserPlan).save(persistent);
         appUserManService.save(appUserMan,Persistent.UPDATE);

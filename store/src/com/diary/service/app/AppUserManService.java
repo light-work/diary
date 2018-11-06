@@ -32,6 +32,26 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Inject
     private AppUserFundMarketService appUserFundMarketService;
 
+
+    @Inject
+    private AppUserJobService appUserJobService;
+
+    @Inject
+    private AppUserCarService appUserCarService;
+
+    @Inject
+    private AppUserHouseService appUserHouseService;
+
+    @Inject
+    private AppUserCoupleService appUserCoupleService;
+
+    @Inject
+    private AppUserLuckService appUserLuckService;
+
+    @Inject
+    private AppUserPlanService appUserPlanService;
+
+
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserMan getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserMan.class);
@@ -59,14 +79,14 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void nextDay(AppUserMan appUserMan, Persistent persistent, List<AppUserFund> appUserFunds, List<AppUserFundDetail> appUserFundDetails, List<AppUserFundMarket> appUserFundMarkets) throws StoreException {
         $(appUserMan).save(persistent);
-        if(appUserFunds!=null&&! appUserFunds.isEmpty()){
-            appUserFundService.save(appUserFunds,Persistent.UPDATE);
+        if (appUserFunds != null && !appUserFunds.isEmpty()) {
+            appUserFundService.save(appUserFunds, Persistent.UPDATE);
         }
-        if(appUserFundDetails!=null&&! appUserFundDetails.isEmpty()){
-            appUserFundDetailService.save(appUserFundDetails,Persistent.SAVE);
+        if (appUserFundDetails != null && !appUserFundDetails.isEmpty()) {
+            appUserFundDetailService.save(appUserFundDetails, Persistent.SAVE);
         }
-        if(appUserFundMarkets!=null&&! appUserFundMarkets.isEmpty()){
-            appUserFundMarketService.save(appUserFundMarkets,Persistent.UPDATE);
+        if (appUserFundMarkets != null && !appUserFundMarkets.isEmpty()) {
+            appUserFundMarketService.save(appUserFundMarkets, Persistent.UPDATE);
         }
     }
 
@@ -74,8 +94,47 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserMan appUserMan, Persistent persistent, AppUserLimit appUserLimit) throws StoreException {
         $(appUserMan).save(persistent);
-        if(appUserLimit!=null){
-            appUserLimitService.save(appUserLimit,Persistent.SAVE);
+        if (appUserLimit != null) {
+            appUserLimitService.save(appUserLimit, Persistent.SAVE);
         }
+    }
+
+    @Override
+    public void delete(AppUserMan appUserMan, List<AppUserLimit> userLimitList, AppUserJob userJob, List<AppUserCar> userCarList, List<AppUserHouse> userHouseList,
+                       AppUserCouple userCouple, List<AppUserFund> userFundList, List<AppUserFundMarket> userFundMarketList, List<AppUserFundDetail> userFundDetailList,
+                       List<AppUserLuck> userLuckList,List<AppUserPlan> userPlanList) throws StoreException {
+        $(appUserMan).delete();
+        if (userLimitList != null && !userLimitList.isEmpty()) {
+            appUserLimitService.delete(userLimitList);
+        }
+        if (userJob != null) {
+            appUserJobService.delete(userJob);
+        }
+        if (userCarList != null && !userCarList.isEmpty()) {
+            appUserCarService.delete(userCarList);
+        }
+        if (userHouseList != null && !userHouseList.isEmpty()) {
+            appUserHouseService.delete(userHouseList);
+        }
+        if (userCouple != null) {
+            appUserCoupleService.delete(userCouple);
+        }
+        if (userFundList != null && !userFundList.isEmpty()) {
+            appUserFundService.delete(userFundList);
+        }
+        if (userFundMarketList != null && !userFundMarketList.isEmpty()) {
+            appUserFundMarketService.delete(userFundMarketList);
+        }
+        if (userFundDetailList != null && !userFundDetailList.isEmpty()) {
+            appUserFundDetailService.delete(userFundDetailList);
+        }
+        if (userLuckList != null && !userLuckList.isEmpty()) {
+            appUserLuckService.delete(userLuckList);
+        }
+        if (userPlanList != null && !userPlanList.isEmpty()) {
+            appUserPlanService.delete(userPlanList);
+        }
+
+
     }
 }

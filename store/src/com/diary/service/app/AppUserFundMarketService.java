@@ -32,9 +32,21 @@ public class AppUserFundMarketService extends HQuery implements AppUserFundMarke
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<AppUserFundMarket> getByUserId(Long userId) throws StoreException {
+        return $($eq("userId.id", userId)).list(AppUserFundMarket.class);
+    }
+
+    @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void delete(AppUserFundMarket appUserFundMarket) throws StoreException {
         $(appUserFundMarket).delete();
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserFundMarket> appUserFundMarketList) throws StoreException {
+        $(appUserFundMarketList).delete();
     }
 
     @Override

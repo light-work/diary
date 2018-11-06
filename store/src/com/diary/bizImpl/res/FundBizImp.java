@@ -45,9 +45,10 @@ public class FundBizImp extends BaseBiz implements FundBiz {
                 Page<ResFund> resFundPage = resFundStore.getPageList(start, limit, selectorList);
                 JSONArray jobArray = new JSONArray();
                 if (resFundPage != null) {
-                    List<ResFund> jobList = resFundPage.getResultList();
-                    if (jobList != null && !jobList.isEmpty()) {
-                        for (ResFund resFund : jobList) {
+                    List<ResFund> fundList = resFundPage.getResultList();
+                    if (fundList != null && !fundList.isEmpty()) {
+
+                        for (ResFund resFund : fundList) {
                             JSONObject jobObj = JsonUtils.formIdEntity(resFund);
                             if (jobObj != null) {
                                 jobArray.add(jobObj);

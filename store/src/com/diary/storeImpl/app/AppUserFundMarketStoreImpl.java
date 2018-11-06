@@ -37,6 +37,17 @@ public class AppUserFundMarketStoreImpl implements AppUserFundMarketStore {
 
     @Override
     @ConnectManager
+    public List<AppUserFundMarket> getByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserFundMarketService.getByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public AppUserFundMarket getByUserFundId(Long userId,Long fundId) throws StoreException {
         try {
             return this.appUserFundMarketService.getByUserFundId(userId,fundId);
@@ -75,6 +86,17 @@ public class AppUserFundMarketStoreImpl implements AppUserFundMarketStore {
     public void delete(AppUserFundMarket appUserFundMarket) throws StoreException {
         try {
             this.appUserFundMarketService.delete(appUserFundMarket);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserFundMarket> appUserFundMarketList) throws StoreException {
+        try {
+            this.appUserFundMarketService.delete(appUserFundMarketList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

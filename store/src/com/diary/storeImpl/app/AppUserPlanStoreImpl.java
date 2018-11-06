@@ -95,4 +95,15 @@ public class AppUserPlanStoreImpl implements AppUserPlanStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserPlan> appUserPlanList) throws StoreException {
+        try {
+            this.appUserPlanService.delete(appUserPlanList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

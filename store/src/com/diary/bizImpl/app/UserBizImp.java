@@ -150,7 +150,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     if (fund == null) {
                         fund = 0;
                     }
-                    if(fund < 0){
+                    if (fund < 0) {
                         fund = 0;
                     }
                     JSONArray myFundArray = new JSONArray();
@@ -221,6 +221,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 infoObj.put("myCarNumber", myCarNumber);
                                 infoObj.put("myHouseArray", myHouseArray);
                                 infoObj.put("myHouseNumber", myHouseNumber);
+                                infoObj.put("currentDay",GameUtils.currentDay(day));
                             }
                         }
                     } else if (appUser.getGender() == 2) {
@@ -281,6 +282,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 infoObj.put("myClothesNumber", myClothesNumber);
                                 infoObj.put("myLuxuryArray", myLuxuryArray);
                                 infoObj.put("myLuxuryNumber", myLuxuryNumber);
+                                infoObj.put("currentDay",GameUtils.currentDay(day));
                             }
                         }
                     }
@@ -338,7 +340,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setPositive(100);
                             appUserMan.setConnections(100);
                             appUserMan.setDays(GameUtils.intDays);
-                            appUserMan.setHours(8);
+                            appUserMan.setHours(GameUtils.intHours);
                             appUserMan.setUseYn("Y");
                             bind(appUserMan, userId);
                             appUserManStore.save(appUserMan, Persistent.SAVE);
@@ -359,7 +361,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserLady.setBeauty(100);
                             appUserLady.setPopularity(100);
                             appUserLady.setDays(GameUtils.intDays);
-                            appUserLady.setHours(8);
+                            appUserLady.setHours(GameUtils.intHours);
                             appUserLady.setUseYn("Y");
                             bind(appUserLady, userId);
                             appUserLadyStore.save(appUserLady, Persistent.SAVE);
@@ -482,7 +484,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
                     selectorList.clear();
                     selectorList.add(SelectorUtils.$eq("useYn", "Y"));
-                    selectorList.add(SelectorUtils.$order("probability", true));
+                    selectorList.add(SelectorUtils.$order("probability", false));
                     List<ResFund> fundList = resFundStore.getList(selectorList);
                     if (fundList != null && !fundList.isEmpty()) {
                         for (ResFund resFund : fundList) {
@@ -699,7 +701,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     if (appUser.getGender() == 1) {
                         if (appUserMan != null) {
                             if (days > 0 && hours == 0) {
-                                appUserMan.setHours(8);
+                                appUserMan.setHours(GameUtils.intHours);
                                 appUserMan.setDays(days - 1);
                                 String resultText = "第" + GameUtils.dayText(appUserMan.getDays()) + "天,";
                                 List<AppUserCar> appUserCarList = appUserCarStore.getByUserId(userId);
@@ -747,7 +749,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     } else if (appUser.getGender() == 2) {
                         if (appUserLady != null) {
                             if (days > 0 && hours == 0) {
-                                appUserLady.setHours(8);
+                                appUserLady.setHours(GameUtils.intHours);
                                 appUserLady.setDays(days - 1);
                                 String resultText = "第" + GameUtils.dayText(appUserLady.getDays()) + "天,";
                                 List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserId(userId);
@@ -1022,21 +1024,21 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     selectorList.add(SelectorUtils.$order("score", false));
                     Page<AppUserRankings> appUserRankingsPage = appUserRankingsStore.getPageList(start, limit, selectorList);
                     JSONArray rankingsArray = new JSONArray();
-                    String mySeq=limit+"+";
+                    String mySeq = limit + "+";
                     if (appUserRankingsPage != null) {
                         List<AppUserRankings> appUserRankingsList = appUserRankingsPage.getResultList();
                         if (appUserRankingsList != null && !appUserRankingsList.isEmpty()) {
-                            int seqIndex=1;
+                            int seqIndex = 1;
                             for (AppUserRankings appUserRankings : appUserRankingsList) {
                                 appUserRankings.setSeq(seqIndex);
                                 AppUser rankingsUser = appUserRankings.getUserId();
                                 if (rankingsUser != null) {
-                                    if(rankingsUser.getId().equals(userId)){
-                                        mySeq=seqIndex+"";
+                                    if (rankingsUser.getId().equals(userId)) {
+                                        mySeq = seqIndex + "";
                                     }
                                     JSONObject userObj = JsonUtils.formIdEntity(rankingsUser, 0);
                                     if (userObj != null) {
-                                        userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore(),true));
+                                        userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore(), true));
                                         userObj.put("score", appUserRankings.getScore());
                                         userObj.put("seq", appUserRankings.getSeq());
                                         GameUtils.minish(userObj);
@@ -1054,7 +1056,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         AppUserRankings appUserRankings = appUserRankingsStore.getByUserId(userId);
                         if (appUserRankings != null) {
                             userObj.put("score", appUserRankings.getScore());
-                            userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore(),true));
+                            userObj.put("comment", GameUtils.getScoreComment(appUserRankings.getScore(), true));
                             userObj.put("seq", mySeq);
                         } else {
                             userObj.put("seq", "999+");
@@ -1209,11 +1211,68 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
                         }
                     }
-                    infoObj.put("score",score);
-                    infoObj.put("comment", GameUtils.getScoreComment(score,false));
+                    infoObj.put("score", score);
+                    infoObj.put("comment", GameUtils.getScoreComment(score, false));
                     resultObj.put("data", infoObj);
                     resultObj.put("result", 0);
                 }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String replay(Long userId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
+            AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
+            AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
+            AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+            AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
+            AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
+            AppUserCoupleStore appUserCoupleStore = hsfServiceFactory.consumer(AppUserCoupleStore.class);
+            AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
+            AppUserFundMarketStore appUserFundMarketStore = hsfServiceFactory.consumer(AppUserFundMarketStore.class);
+            AppUserFundDetailStore appUserFundDetailStore = hsfServiceFactory.consumer(AppUserFundDetailStore.class);
+            AppUserLuckStore appUserLuckStore = hsfServiceFactory.consumer(AppUserLuckStore.class);
+            AppUserPlanStore appUserPlanStore = hsfServiceFactory.consumer(AppUserPlanStore.class);
+            if (appUserStore != null) {
+                AppUser appUser = null;
+                if (userId != null) {
+                    appUser = appUserStore.getById(userId);
+                    if (appUser != null) {
+                        if (appUser.getGender() == 1) {
+                            AppUserMan appUserMan = appUserManStore.getByUserId(userId);
+                            if (appUserMan != null) {
+                                List<AppUserLimit> userLimitList = appUserLimitStore.getListByUserId(userId);
+                                AppUserJob userJob = appUserJobStore.getByUserId(userId);
+                                List<AppUserCar> userCarList = appUserCarStore.getByUserId(userId);
+                                List<AppUserHouse> userHouseList = appUserHouseStore.getByUserId(userId);
+                                AppUserCouple userCouple = appUserCoupleStore.getByUserId(userId);
+                                List<AppUserFund> userFundList = appUserFundStore.getByUserId(userId);
+                                List<AppUserFundMarket> userFundMarketList = appUserFundMarketStore.getByUserId(userId);
+                                List<AppUserFundDetail> userFundDetailList = appUserFundDetailStore.getByUserId(userId);
+                                List<AppUserLuck> userLuckList = appUserLuckStore.getByUserId(userId);
+                                List<AppUserPlan> userPlanList = appUserPlanStore.getByUserId(userId);
+                                appUserManStore.delete(appUserMan, userLimitList, userJob, userCarList
+                                        , userHouseList, userCouple, userFundList, userFundMarketList, userFundDetailList, userLuckList, userPlanList);
+                                resultObj.put("result", 0);
+                            }
+                        }
+                    }
+                }
+
             }
         } catch (Exception ex) {
             if (ex instanceof StoreException) {

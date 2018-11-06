@@ -69,4 +69,15 @@ public class AppUserLimitStoreImpl implements AppUserLimitStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserLimit> appUserLimitList) throws StoreException {
+        try {
+            this.appUserLimitService.delete(appUserLimitList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

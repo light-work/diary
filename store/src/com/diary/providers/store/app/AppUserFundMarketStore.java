@@ -15,10 +15,14 @@ public interface AppUserFundMarketStore {
 
     AppUserFundMarket getByUserFundId(Long userId,Long fundId) throws StoreException;
 
+    List<AppUserFundMarket> getByUserId(Long userId) throws StoreException;
+
     void save(AppUserFundMarket appUserFundMarket, Persistent persistent) throws StoreException;
 
     void save(List<AppUserFundMarket> appUserFundMarkets, Persistent persistent) throws StoreException;
 
     void delete(AppUserFundMarket appUserFundMarket) throws StoreException;
+
+    void delete(List<AppUserFundMarket> appUserFundMarketList) throws StoreException;
 
 }

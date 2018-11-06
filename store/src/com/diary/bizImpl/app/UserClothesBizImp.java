@@ -84,7 +84,7 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                                     AppUserLady oldLady = (AppUserLady) appUserLady.clone();
                                     appUserLady.setMoney(appUserLady.getMoney() - resClothes.getBuyPrice());
                                     effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                    GameUtils.useHour(appUserLady);
+                                    //GameUtils.useHour(appUserLady);
                                     bind(appUserLady, userId);
                                     appUserClothesStore.buy(appUserClothes, Persistent.SAVE, appUserLady, appUserLimit);
 
@@ -153,7 +153,7 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                                             AppUserLady oldLady = (AppUserLady) appUserLady.clone();
                                             appUserLady.setMoney(appUserLady.getMoney() + resClothes.getSellPrice());
                                             effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                            GameUtils.useHour(appUserLady);
+                                           // GameUtils.useHour(appUserLady);
                                             bind(appUserLady, userId);
                                             appUserClothesStore.sell(appUserClothes, appUserLady, appUserLimit);
                                             GameUtils.addResultArray(resultArray, "已将不想要的" + resClothes.getTitle() + "衣服出售，这身衣服过时了！", null);

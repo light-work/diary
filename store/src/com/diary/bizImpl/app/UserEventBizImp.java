@@ -56,7 +56,7 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                 selectorList.add(SelectorUtils.$eq("source", "RANDOM"));
 
                 GameUtils.randSelector(selectorList);
-                Page<ResEvent> resEventPage = resEventStore.getPageList(0, 20, selectorList);
+                Page<ResEvent> resEventPage = resEventStore.getPageList(0, 50, selectorList);
                 if (resEventPage != null) {
                     List<ResEvent> resEventList = resEventPage.getResultList();
                     if (resEventList != null && !resEventList.isEmpty()) {

@@ -22,12 +22,14 @@ public interface AppUserLuckStore {
     Page<AppUserLuck> getPageList(int start,
                                  int limit, List<Selector> selectorList) throws StoreException;
 
-    AppUserLuck getByUserId(Long userId) throws StoreException;
+    List<AppUserLuck> getByUserId(Long userId) throws StoreException;
 
     void save(AppUserLuck appUserLuck, Persistent persistent, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException;
 
     void save(AppUserLuck appUserLuck, Persistent persistent, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException;
 
     void delete(AppUserLuck appUserLuck) throws StoreException;
+
+    void delete(List<AppUserLuck> appUserLuckList) throws StoreException;
 
 }

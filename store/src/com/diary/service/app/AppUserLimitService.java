@@ -43,6 +43,12 @@ public class AppUserLimitService extends HQuery implements AppUserLimitStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserLimit> appUserLimitList) throws StoreException {
+        $(appUserLimitList).delete();
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserLimit appUserLimit, Persistent persistent) throws StoreException {
         $(appUserLimit).save(persistent);
     }

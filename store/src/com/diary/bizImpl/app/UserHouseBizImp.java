@@ -7,6 +7,7 @@ import com.diary.entity.app.AppUserHouse;
 import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserMan;
 import com.diary.entity.res.ResHouse;
+import com.diary.entity.res.ResHouseEffect;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
@@ -15,6 +16,7 @@ import com.diary.providers.store.app.AppUserHouseStore;
 import com.diary.providers.store.app.AppUserLimitStore;
 import com.diary.providers.store.app.AppUserManStore;
 import com.diary.providers.store.app.AppUserStore;
+import com.diary.providers.store.res.ResHouseEffectStore;
 import com.diary.providers.store.res.ResHouseStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
@@ -48,7 +50,9 @@ public class UserHouseBizImp extends BaseBiz implements UserHouseBiz {
             AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
             ResHouseStore resHouseStore = hsfServiceFactory.consumer(ResHouseStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
-            if (appUserStore != null && appUserManStore != null && resHouseStore != null && appUserHouseStore != null && appUserLimitStore != null) {
+            ResHouseEffectStore resHouseEffectStore = hsfServiceFactory.consumer(ResHouseEffectStore.class);
+            if (appUserStore != null && appUserManStore != null && resHouseStore != null && appUserHouseStore != null && appUserLimitStore != null
+                    &&resHouseEffectStore!=null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     if (appUser.getGender() == 1) {
@@ -60,8 +64,9 @@ public class UserHouseBizImp extends BaseBiz implements UserHouseBiz {
                             JSONArray resultArray = new JSONArray();
                             JSONArray effectArray = null;
                             if (houseLimit == 0) {
-
-                                if (appUserMan.getMoney() >= resHouse.getBuyPrice()) {
+                                Integer currentBuyPrice=GameUtils.dynamicPrice(appUserMan.getDays(),resHouse.getBuyPrice(),resHouse.getOffsetBuy());
+                                if (appUserMan.getMoney() >= currentBuyPrice) {
+                                    List<ResHouseEffect> houseEffectList=resHouseEffectStore.getListByHouseId(houseId);
                                     AppUserLimit appUserLimit = new AppUserLimit();
                                     appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                     appUserLimit.setUserId(appUser);
@@ -78,14 +83,14 @@ public class UserHouseBizImp extends BaseBiz implements UserHouseBiz {
                                     bind(appUserHouse, userId);
 
                                     AppUserMan oldMan = (AppUserMan) appUserMan.clone();
-                                    appUserMan.setMoney(appUserMan.getMoney() - resHouse.getBuyPrice());
+                                    appUserMan.setMoney(appUserMan.getMoney() - currentBuyPrice);
+                                    GameUtils.useEffect(houseEffectList, appUserMan);
                                     effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                                    GameUtils.useHour(appUserMan);
                                     bind(appUserMan, userId);
 
 
                                     appUserHouseStore.buy(appUserHouse, Persistent.SAVE, appUserMan, appUserLimit);
-                                    GameUtils.addResultArray(resultArray, "恭喜你,眼光独到,喜提:" + resHouse.getTitle(), null);
+                                    GameUtils.addResultArray(resultArray, "恭喜你,眼光独到,入住:" + resHouse.getTitle(), null);
                                     GameUtils.addResultArray(resultArray, "最终:", effectArray);
                                     result = 0;
                                 } else {
@@ -148,10 +153,11 @@ public class UserHouseBizImp extends BaseBiz implements UserHouseBiz {
                                     if (appUserHouse != null) {
                                         ResHouse resHouse = appUserHouse.getHouseId();
                                         if (resHouse != null) {
+                                            Integer currentSellPrice=GameUtils.dynamicPrice(appUserMan.getDays(),resHouse.getSellPrice(),resHouse.getOffsetSell());
+
                                             AppUserMan oldMan = (AppUserMan) appUserMan.clone();
-                                            appUserMan.setMoney(appUserMan.getMoney() + resHouse.getSellPrice());
+                                            appUserMan.setMoney(appUserMan.getMoney() + currentSellPrice);
                                             effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                                            GameUtils.useHour(appUserMan);
                                             bind(appUserMan, userId);
                                             appUserHouseStore.sell(appUserHouse, appUserMan, appUserLimit);
                                             GameUtils.addResultArray(resultArray, "成功出售房屋:" + resHouse.getTitle(), null);

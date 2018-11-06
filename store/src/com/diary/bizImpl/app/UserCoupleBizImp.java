@@ -110,7 +110,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             appUserMan.setMoney(appUserMan.getMoney() - 5000);
                             appUserMan.setPositive(appUserMan.getPositive() - 30);
                             JSONArray effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                            GameUtils.useHour(appUserMan);
+                            //GameUtils.useHour(appUserMan);
                             appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                             GameUtils.addResultArray(resultArray,
                                     "啧啧啧！" + GameUtils.callName(appUser.getGender()) + "，到处沾花惹草，吃着碗里的看着锅里的可不好。", null);
@@ -121,7 +121,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             appUserLady.setHappy(appUserLady.getHappy() - 30);
                             appUserLady.setPopularity(appUserLady.getPopularity() - 30);
                             JSONArray effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                            GameUtils.useHour(appUserLady);
+                            //GameUtils.useHour(appUserLady);
                             appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
                             GameUtils.addResultArray(resultArray,
                                     "啧啧啧！" + GameUtils.callName(appUser.getGender()) + "，红杏出墙会毁掉名声，不作死就不会死。", null);
@@ -143,12 +143,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                     bind(appUserCouple, userId);
                                     if (appUser.getGender() == 1) {
                                         if (appUserMan != null) {
-                                            GameUtils.useHour(appUserMan);
+                                           // GameUtils.useHour(appUserMan);
                                             appUserCoupleStore.save(appUserCouple, Persistent.SAVE, appUserMan, appUserLimit);
                                         }
                                     } else if (appUser.getGender() == 2) {
                                         if (appUserLady != null) {
-                                            GameUtils.useHour(appUserLady);
+                                           // GameUtils.useHour(appUserLady);
                                             appUserCoupleStore.save(appUserCouple, Persistent.SAVE, appUserLady, appUserLimit);
                                         }
                                     }
@@ -161,12 +161,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             if (coupleLimit == 0) {
                                 if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
-                                        GameUtils.useHour(appUserMan);
+                                       // GameUtils.useHour(appUserMan);
                                         appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                                     }
                                 } else if (appUser.getGender() == 2) {
                                     if (appUserLady != null) {
-                                        GameUtils.useHour(appUserLady);
+                                       // GameUtils.useHour(appUserLady);
                                         appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
                                     }
                                 }
@@ -256,12 +256,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             if (appUserCouple != null) {
                                 if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
-                                        GameUtils.useHour(appUserMan);
+                                     //   GameUtils.useHour(appUserMan);
                                         appUserCoupleStore.delete(appUserCouple, appUserMan, appUserLimit);
                                     }
                                 } else if (appUser.getGender() == 2) {
                                     if (appUserLady != null) {
-                                        GameUtils.useHour(appUserLady);
+                                     //   GameUtils.useHour(appUserLady);
                                         appUserCoupleStore.delete(appUserCouple, appUserLady, appUserLimit);
                                     }
                                 }

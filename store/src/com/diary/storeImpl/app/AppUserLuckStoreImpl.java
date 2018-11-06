@@ -41,7 +41,7 @@ public class AppUserLuckStoreImpl implements AppUserLuckStore {
 
     @Override
     @ConnectManager
-    public AppUserLuck getByUserId(Long userId) throws StoreException {
+    public List<AppUserLuck> getByUserId(Long userId) throws StoreException {
         try {
             return this.appUserLuckService.getByUserId(userId);
         } catch (HibernateException e) {
@@ -90,6 +90,18 @@ public class AppUserLuckStoreImpl implements AppUserLuckStore {
     public void delete(AppUserLuck appUserLuck) throws StoreException {
         try {
             this.appUserLuckService.delete(appUserLuck);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserLuck> appUserLuckList) throws StoreException {
+        try {
+            this.appUserLuckService.delete(appUserLuckList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

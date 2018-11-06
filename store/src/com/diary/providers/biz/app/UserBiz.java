@@ -28,4 +28,6 @@ public interface UserBiz {
 
     String rankings(Long userId,Integer start, Integer limit) throws BizException;
 
+    String replay(Long userId) throws BizException;
+
 }
