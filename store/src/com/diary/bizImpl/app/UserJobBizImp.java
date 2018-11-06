@@ -103,12 +103,12 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                             bind(appUserJob, userId);
                             if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
-                                    GameUtils.useHour(appUserMan);
+                                 //   GameUtils.useHour(appUserMan);
                                     appUserJobStore.save(appUserJob, persistent, appUserMan, appUserLimit);
                                 }
                             } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
-                                    GameUtils.useHour(appUserLady);
+                                //    GameUtils.useHour(appUserLady);
                                     appUserJobStore.save(appUserJob, persistent, appUserLady, appUserLimit);
                                 }
                             }
@@ -120,12 +120,12 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                         if (jobLimit == 0) {
                             if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
-                                    GameUtils.useHour(appUserMan);
+                                  //  GameUtils.useHour(appUserMan);
                                     appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                                 }
                             } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
-                                    GameUtils.useHour(appUserLady);
+                                   // GameUtils.useHour(appUserLady);
                                     appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
                                 }
                             }

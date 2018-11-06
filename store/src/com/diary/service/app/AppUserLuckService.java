@@ -45,14 +45,20 @@ public class AppUserLuckService extends HQuery implements AppUserLuckStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-    public AppUserLuck getByUserId(Long userId) throws StoreException {
-        return $($alias("luckId","luckId"),$eq("userId.id", userId)).get(AppUserLuck.class);
+    public List<AppUserLuck> getByUserId(Long userId) throws StoreException {
+        return $($alias("luckId","luckId"),$eq("userId.id", userId)).list(AppUserLuck.class);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void delete(AppUserLuck appUserLuck) throws StoreException {
         $(appUserLuck).delete();
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserLuck> appUserLuckList) throws StoreException {
+        $(appUserLuckList).delete();
     }
 
     @Override

@@ -34,6 +34,16 @@ public class AppUserFundDetailStoreImpl implements AppUserFundDetailStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public List<AppUserFundDetail> getByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserFundDetailService.getByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager

@@ -108,6 +108,17 @@ public class AppUserCarStoreImpl implements AppUserCarStore {
 
     @Override
     @ConnectManager
+    public void delete(List<AppUserCar> appUserCarList) throws StoreException {
+        try {
+            this.appUserCarService.delete(appUserCarList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void buy(AppUserCar appUserCar, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
         try {
             this.appUserCarService.buy(appUserCar,persistent,appUserMan,appUserLimit);

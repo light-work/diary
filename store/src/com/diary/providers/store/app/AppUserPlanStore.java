@@ -30,4 +30,6 @@ public interface AppUserPlanStore {
 
     void delete(AppUserPlan appUserPlan) throws StoreException;
 
+    void delete(List<AppUserPlan> appUserPlanList) throws StoreException;
+
 }

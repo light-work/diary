@@ -108,6 +108,17 @@ public class AppUserHouseStoreImpl implements AppUserHouseStore {
 
     @Override
     @ConnectManager
+    public void delete(List<AppUserHouse> appUserHouseList) throws StoreException {
+        try {
+            this.appUserHouseService.delete(appUserHouseList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public void buy(AppUserHouse appUserHouse, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
         try {
             this.appUserHouseService.buy(appUserHouse,persistent,appUserMan,appUserLimit);

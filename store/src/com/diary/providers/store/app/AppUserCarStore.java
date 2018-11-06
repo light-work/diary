@@ -35,4 +35,6 @@ public interface AppUserCarStore {
 
     void delete(AppUserCar appUserCar) throws StoreException;
 
+    void delete(List<AppUserCar> appUserCarList) throws StoreException;
+
 }

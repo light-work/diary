@@ -7,6 +7,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.lang.BeanUtils;
+import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
@@ -19,9 +20,11 @@ import java.util.Random;
 
 public class GameUtils {
 
-    public  static final   int gameDays=10;
+    public  static final   int gameDays=7;
 
-    public  static final   int intDays=9;
+    public  static final   int intDays=6;
+
+    public  static final   int intHours=6;
 
     public static double fundMarket(List<Double> doubleList,Double minNum,Double maxNum){
         Random r= new Random();
@@ -95,7 +98,20 @@ public class GameUtils {
         System.out.println(sa.toString());
         System.out.println(0-(-8));
 
+        dynamicPrice(2,25750,5);
 
+    }
+
+    public static Integer dynamicPrice(Integer day,Integer price,Integer offset) throws Exception {
+        offset = offset * currentDay(day);
+        offset = 100 + offset;
+        Double dyPrice = NumberUtils.divide(NumberUtils.multiply(price,offset,2),100,2);
+        price = Long.valueOf(Math.round(dyPrice)).intValue();
+        return  price;
+    }
+
+    public static Integer currentDay(Integer day) throws Exception {
+        return gameDays - day;
     }
 
     public static String dayText(Integer day) throws Exception {

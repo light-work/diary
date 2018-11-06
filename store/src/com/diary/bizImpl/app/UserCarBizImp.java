@@ -48,8 +48,10 @@ public class UserCarBizImp extends BaseBiz implements UserCarBiz {
             AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
             AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
             ResCarStore resCarStore = hsfServiceFactory.consumer(ResCarStore.class);
+            ResCarEffectStore resCarEffectStore=hsfServiceFactory.consumer(ResCarEffectStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
-            if (appUserStore != null && appUserManStore != null && resCarStore != null && appUserCarStore != null && appUserLimitStore != null) {
+            if (appUserStore != null && appUserManStore != null && resCarStore != null && appUserCarStore != null && appUserLimitStore != null
+                    &&resCarEffectStore!=null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
@@ -63,10 +65,9 @@ public class UserCarBizImp extends BaseBiz implements UserCarBiz {
                             JSONArray resultArray = new JSONArray();
                             JSONArray effectArray = null;
                             if (carLimit == 0) {
-
-
-                                if (appUserMan.getMoney() >= resCar.getBuyPrice()) {
-
+                                Integer currentBuyPrice=GameUtils.dynamicPrice(appUserMan.getDays(),resCar.getBuyPrice(),resCar.getOffsetBuy());
+                                if (appUserMan.getMoney() >= currentBuyPrice) {
+                                    List<ResCarEffect> carEffectList=resCarEffectStore.getListByCarId(carId);
                                     AppUserLimit appUserLimit = new AppUserLimit();
                                     appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                     appUserLimit.setUserId(appUser);
@@ -82,9 +83,9 @@ public class UserCarBizImp extends BaseBiz implements UserCarBiz {
                                     appUserCar.setUseYn("Y");
                                     bind(appUserCar, userId);
                                     AppUserMan oldMan = (AppUserMan) appUserMan.clone();
-                                    appUserMan.setMoney(appUserMan.getMoney() - resCar.getBuyPrice());
+                                    appUserMan.setMoney(appUserMan.getMoney() - currentBuyPrice);
+                                    GameUtils.useEffect(carEffectList, appUserMan);
                                     effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                                    GameUtils.useHour(appUserMan);
                                     bind(appUserMan, userId);
                                     appUserCarStore.buy(appUserCar, Persistent.SAVE, appUserMan, appUserLimit);
                                     GameUtils.addResultArray(resultArray, "恭喜你,阔气！喜提:" + resCar.getTitle(), null);
@@ -149,10 +150,11 @@ public class UserCarBizImp extends BaseBiz implements UserCarBiz {
                                     if (appUserCar != null) {
                                         ResCar resCar = appUserCar.getCarId();
                                         if (resCar != null) {
+                                            Integer currentSellPrice=GameUtils.dynamicPrice(appUserMan.getDays(),resCar.getSellPrice(),resCar.getOffsetSell());
+
                                             AppUserMan oldMan = (AppUserMan) appUserMan.clone();
-                                            appUserMan.setMoney(appUserMan.getMoney() + resCar.getSellPrice());
+                                            appUserMan.setMoney(appUserMan.getMoney() + currentSellPrice);
                                             effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                                            GameUtils.useHour(appUserMan);
                                             bind(appUserMan, userId);
                                             appUserCarStore.sell(appUserCar, appUserMan, appUserLimit);
                                             GameUtils.addResultArray(resultArray, "成功出售车辆:" + resCar.getTitle(), null);

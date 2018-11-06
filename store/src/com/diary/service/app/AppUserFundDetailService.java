@@ -27,7 +27,13 @@ public class AppUserFundDetailService extends HQuery implements AppUserFundDetai
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public List<AppUserFundDetail> getByUserFundId(Long userFundId) throws StoreException {
-        return $($eq("userFundId.id",userFundId)).list(AppUserFundDetail.class);
+        return $($eq("userFundId.id", userFundId)).list(AppUserFundDetail.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public List<AppUserFundDetail> getByUserId(Long userId) throws StoreException {
+        return $($alias("userFundId", "userFundId"), $eq("userFundId.userId.id", userId)).list(AppUserFundDetail.class);
     }
 
     @Override

@@ -297,7 +297,7 @@
 
 
         <consumer id="fundBizConsumer"
-                  interface="com.diary.providers.biz.res.q"
+                  interface="com.diary.providers.biz.res.FundBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 

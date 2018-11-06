@@ -69,6 +69,12 @@ public class AppUserCarService extends HQuery implements AppUserCarStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserCar> appUserCarList) throws StoreException {
+        $(appUserCarList).delete();
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserCar appUserCar, Persistent persistent) throws StoreException {
         $(appUserCar).save(persistent);
     }

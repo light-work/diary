@@ -150,4 +150,14 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
     }
 
 
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserFund> appUserFundList) throws StoreException {
+        try {
+            this.appUserFundService.delete(appUserFundList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

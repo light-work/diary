@@ -34,4 +34,6 @@ public interface AppUserHouseStore {
 
     void delete(AppUserHouse appUserHouse) throws StoreException;
 
+    void delete(List<AppUserHouse> appUserHouseList) throws StoreException;
+
 }

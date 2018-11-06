@@ -91,4 +91,15 @@ public class AppUserManStoreImpl implements AppUserManStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
+    @Override
+    @ConnectManager
+    public void delete(AppUserMan appUserMan, List<AppUserLimit> userLimitList, AppUserJob userJob, List<AppUserCar> userCarList, List<AppUserHouse> userHouseList, AppUserCouple userCouple, List<AppUserFund> userFundList, List<AppUserFundMarket> userFundMarketList, List<AppUserFundDetail> userFundDetailList, List<AppUserLuck> userLuckList, List<AppUserPlan> userPlanList) throws StoreException {
+        try {
+            this.appUserManService.delete(appUserMan, userLimitList, userJob, userCarList, userHouseList, userCouple, userFundList, userFundMarketList, userFundDetailList, userLuckList, userPlanList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }
