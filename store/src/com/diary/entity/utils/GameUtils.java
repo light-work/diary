@@ -294,7 +294,7 @@ public class GameUtils {
 
             if (isManage != 0) {
                 JSONObject operationPROFIT = new JSONObject();
-                operationPROFIT.put("text", "理财收益");
+                operationPROFIT.put("text", "理财投资");
                 operationPROFIT.put("value", isManage == 0 ? "FUND" : "FUND".toLowerCase());
                 jsonArray.add(operationPROFIT);
             }
@@ -338,7 +338,7 @@ public class GameUtils {
 
             if (isManage != 0) {
                 JSONObject operationPROFIT = new JSONObject();
-                operationPROFIT.put("text", "理财收益");
+                operationPROFIT.put("text", "理财投资");
                 operationPROFIT.put("value", isManage == 0 ? "FUND" : "FUND".toLowerCase());
                 jsonArray.add(operationPROFIT);
             }

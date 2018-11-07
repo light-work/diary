@@ -26,6 +26,8 @@ public class ResTip extends IdEntity implements Tracker {
 
     private String title;
 
+    private Integer gender;
+
     private String remarks;
 
     private Date created;
@@ -45,6 +47,15 @@ public class ResTip extends IdEntity implements Tracker {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Column(name = "GENDER")
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
     @Column(name = "TITLE")

@@ -374,7 +374,9 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     resultObj.put("nightText", nightText);
                     if (newGame) {
                         JSONArray resultArray = new JSONArray();
-                        GameUtils.addResultArray(resultArray, "北京是你的舞台，初到北京，给你8000启动资金，看" + days + "天后你能混出什么样来", null);
+                        GameUtils.addResultArray(resultArray, "北京是你的舞台，初到北京，给你8000启动资金。", null);
+                        GameUtils.addResultArray(resultArray, "你可以先找份最初级工作，这样每天可以获得工资。安顿好后要多四处逛逛见见市面，提高你的个人成长能力。", null);
+                        GameUtils.addResultArray(resultArray, "看" + GameUtils.gameDays + "天后你能混出什么样来", null);
                         resultObj.put("resultArray", resultArray);
                     }
                 }

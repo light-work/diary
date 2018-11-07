@@ -100,6 +100,7 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void delete(AppUserMan appUserMan, List<AppUserLimit> userLimitList, AppUserJob userJob, List<AppUserCar> userCarList, List<AppUserHouse> userHouseList,
                        AppUserCouple userCouple, List<AppUserFund> userFundList, List<AppUserFundMarket> userFundMarketList, List<AppUserFundDetail> userFundDetailList,
                        List<AppUserLuck> userLuckList,List<AppUserPlan> userPlanList) throws StoreException {
