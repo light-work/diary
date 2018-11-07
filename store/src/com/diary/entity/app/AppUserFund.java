@@ -32,6 +32,8 @@ public class AppUserFund extends IdEntity implements Tracker {
 
     private Double market;
 
+    private Integer buy;
+
     private Date created;
 
     private String createdBy;
@@ -98,6 +100,15 @@ public class AppUserFund extends IdEntity implements Tracker {
 
     public void setMoney(Integer money) {
         this.money = money;
+    }
+
+    @Column(name = "BUY")
+    public Integer getBuy() {
+        return buy;
+    }
+
+    public void setBuy(Integer buy) {
+        this.buy = buy;
     }
 
     @Column(name = "CREATED", updatable = false)

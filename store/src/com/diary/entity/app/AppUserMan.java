@@ -51,7 +51,7 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private Integer score;
 
-
+    private String comment;
 
 
     private Date created;
@@ -190,6 +190,15 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     public void setHours(Integer hours) {
         this.hours = hours;
+    }
+
+    @Column(name = "COMMENT")
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Column(name = "CREATED", updatable = false)

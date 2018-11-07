@@ -239,6 +239,12 @@
         </consumer>
 
 
+        <consumer id="resCommentStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCommentStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
 
         <consumer id="commonBizConsumer"
                   interface="com.diary.providers.biz.res.CommonBiz"

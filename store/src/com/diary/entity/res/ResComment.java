@@ -17,22 +17,18 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_JOB")
-public class ResJob extends IdEntity implements Tracker {
+@Table(name = "RES_COMMENT")
+public class ResComment extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String title;
-
-    private Integer price;
+    private String logicMatch;
 
     private Integer gender;
 
-    private Integer level;
-
-    private String remarks;
+    private String comment;
 
     private Date created;
 
@@ -53,24 +49,6 @@ public class ResJob extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @Column(name = "TITLE")
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Column(name = "PRICE")
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
     @Column(name = "GENDER")
     public Integer getGender() {
         return gender;
@@ -80,25 +58,22 @@ public class ResJob extends IdEntity implements Tracker {
         this.gender = gender;
     }
 
-
-
-
-    @Column(name = "LEVEL")
-    public Integer getLevel() {
-        return level;
+    @Column(name = "LOGIC_MATCH")
+    public String getLogicMatch() {
+        return logicMatch;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setLogicMatch(String logicMatch) {
+        this.logicMatch = logicMatch;
     }
 
-    @Column(name = "REMARKS")
-    public String getRemarks() {
-        return remarks;
+    @Column(name = "COMMENT")
+    public String getComment() {
+        return comment;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Column(name = "CREATED", updatable = false)

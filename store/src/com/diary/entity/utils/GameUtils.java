@@ -12,11 +12,10 @@ import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameUtils {
 
@@ -98,7 +97,43 @@ public class GameUtils {
         System.out.println(sa.toString());
         System.out.println(0-(-8));
 
-        dynamicPrice(2,25750,5);
+
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("js");
+
+        engine.put("jobLevel",3);
+        engine.put("carLevel",5);
+        engine.put("houseLevel",5);
+        engine.put("coupleLevel",1);
+        engine.put("money",900000);
+        engine.put("fundMoney",500000);
+        engine.put("health",80);
+
+        Map<Integer,String> stringMap=new HashMap<>();
+        stringMap.put(0,"hun");
+        stringMap.put(1,"ming");
+        stringMap.put(2,"feng");
+        stringMap.put(3,"lu");
+        stringMap.put(4,"qiong");
+        stringMap.put(5,"qiong");
+        List<String> matchList=new ArrayList<>();
+        matchList.add("(jobLevel>=5&&carLevel>=5&&houseLevel>=5&&coupleLevel>=1&&money>=2000000&&fundMoney>=500000&&health>=80)");
+        matchList.add("(jobLevel>=3&&carLevel>=3&&houseLevel>=3&&coupleLevel>=1&&money>=1000000&&fundMoney>=200000&&health>=70)");
+        matchList.add("(jobLevel>=3&&carLevel>=1&&houseLevel>=1&&coupleLevel>=0&&money>=500000&&fundMoney>=100000&&health>=60)");
+        matchList.add("(jobLevel>=1&&carLevel>=0&&houseLevel>=0&&coupleLevel>=0&&money>=300000&&fundMoney>=0&&health>=50)");
+        String str = "(jobLevel>=0&&carLevel==0&&houseLevel==0&&coupleLevel==0&&money<=300000&&fundMoney==0&&health>=50)";
+
+        int index=0;
+        for(String ma:matchList){
+            Object result = engine.eval(ma);
+            if(result.toString().equals("true")){
+                break;
+            }
+            index++;
+        }
+        System.out.println(stringMap.get(index));
+
+
 
     }
 
@@ -406,7 +441,7 @@ public class GameUtils {
                             } else {
                                 jsonObject.put("attrName", getAttrNameLady(requireKey));
                             }
-                            jsonObject.put("value", "-?");
+                            jsonObject.put("value", "-"+(requireValue-userValue));
                             failArray.add(jsonObject);
                         }
                     }
@@ -689,33 +724,37 @@ public class GameUtils {
        return  score;
     }
 
-    public static String getScoreComment(Integer score,boolean rankings){
-        String comment="https://img.jinrongzhushou.com/common/";
-        if(score>=0&&score<500000){
-            if(rankings){
-                comment+="qiong-j.png";
-            }else{
-                comment+="qiong.png";
-            }
-        }else if(score>=500001&&score<1000000){
-            if(rankings){
-                comment+="lu-j.png";
-            }else{
-                comment+="lu.png";
-            }
-        }else if(score>=1000001&&score<2000000){
-            if(rankings){
-                comment+="feng-j.png";
-            }else{
-                comment+="feng.png";
-            }
-        }else if(score>=2000001){
-            if(rankings){
-                comment+="hun-j.png";
-            }else{
-                comment+="hun.png";
-            }
+    public static String getScoreComment(Integer maxJobLevel,Integer maxCarLevel,Integer maxHouseLevel,
+                                         Integer maxCoupleLevel,Integer health,Integer money,Integer fundMoney){
+        if(maxJobLevel>=5&&maxCarLevel>=5&&maxHouseLevel>=5&&maxCoupleLevel>=1){
+            //if(health>=80&&money>)
         }
-        return  comment;
+//        String comment="https://img.jinrongzhushou.com/common/";
+//        if(score>=0&&score<500000){
+//            if(rankings){
+//                comment+="qiong-j.png";
+//            }else{
+//                comment+="qiong.png";
+//            }
+//        }else if(score>=500001&&score<1000000){
+//            if(rankings){
+//                comment+="lu-j.png";
+//            }else{
+//                comment+="lu.png";
+//            }
+//        }else if(score>=1000001&&score<2000000){
+//            if(rankings){
+//                comment+="feng-j.png";
+//            }else{
+//                comment+="feng.png";
+//            }
+//        }else if(score>=2000001){
+//            if(rankings){
+//                comment+="hun-j.png";
+//            }else{
+//                comment+="hun.png";
+//            }
+//        }
+        return  "";
     }
 }

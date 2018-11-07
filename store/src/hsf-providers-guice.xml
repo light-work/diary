@@ -345,6 +345,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="resCommentStore" class="com.diary.storeImpl.res.ResCommentStoreImpl"/>
+        <provider id="resCommentStoreProvider"
+                  interface="com.diary.providers.store.res.ResCommentStore"
+                  ref="resCommentStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
 
         <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
