@@ -383,6 +383,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
+
                     Integer days = 0;
                     boolean newGame = false;
                     if (appUser.getGender() == 1) {
@@ -402,11 +403,18 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserMan.setHours(GameUtils.intHours);
                             appUserMan.setScore(0);
                             appUserMan.setUseYn("Y");
+                            newGame = true;
                             bind(appUserMan, userId);
                             appUser.setPlayNumber(appUser.getPlayNumber() + 1);
                             bind(appUser, userId);
                             appUserManStore.save(appUserMan, Persistent.SAVE, appUser);
-                            newGame = true;
+                        }else{
+                            if(appUserMan.getScore()>0&&StringUtils.isNotBlank(appUserMan.getComment())){
+                                replay(userId);
+                            }
+                            appUser.setPlayNumber(appUser.getPlayNumber() + 1);
+                            bind(appUser, userId);
+                            appUserStore.save(appUser,Persistent.UPDATE);
                         }
                         days = appUserMan.getDays();
                     } else if (appUser.getGender() == 2) {
@@ -1511,6 +1519,17 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         if (appUser.getGender() == 1) {
                             AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                             if (appUserMan != null) {
+                                appUserMan.setHealth(100);
+                                appUserMan.setMoney(8000);
+                                appUserMan.setAbility(100);
+                                appUserMan.setExperience(100);
+                                appUserMan.setHappy(100);
+                                appUserMan.setPositive(100);
+                                appUserMan.setConnections(100);
+                                appUserMan.setDays(GameUtils.intDays);
+                                appUserMan.setHours(GameUtils.intHours);
+                                appUserMan.setScore(0);
+                                appUserMan.setComment(null);
                                 List<AppUserLimit> userLimitList = appUserLimitStore.getListByUserId(userId);
                                 AppUserJob userJob = appUserJobStore.getByUserId(userId);
                                 List<AppUserCar> userCarList = appUserCarStore.getByUserId(userId);

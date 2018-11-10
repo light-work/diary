@@ -6,6 +6,7 @@ import com.diary.entity.res.ResEventResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
+import org.guiceside.commons.OKHttpUtil;
 import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
@@ -138,6 +139,11 @@ public class GameUtils {
 
         System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
+        Map<String,String> parMap=new HashMap<>();
+        parMap.put("userId","6465547704677679104");
+        String r=OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay/1",parMap);
+
+        System.out.println(r);
 
 
     }
