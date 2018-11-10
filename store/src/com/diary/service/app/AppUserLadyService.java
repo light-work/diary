@@ -32,6 +32,9 @@ public class AppUserLadyService extends HQuery implements AppUserLadyStore {
     @Inject
     private AppUserFundMarketService appUserFundMarketService;
 
+    @Inject
+    private AppUserService appUserService;
+
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserLady getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserLady.class);
@@ -53,6 +56,13 @@ public class AppUserLadyService extends HQuery implements AppUserLadyStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserLady appUserLady, Persistent persistent) throws StoreException {
         $(appUserLady).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserLady appUserLady, Persistent persistent, AppUser appUser) throws StoreException {
+        $(appUserLady).save(persistent);
+        appUserService.save(appUser,Persistent.UPDATE);
     }
 
     @Override

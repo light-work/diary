@@ -23,6 +23,7 @@ public interface AppUserLadyStore {
 
     void save(AppUserLady appUserLady, Persistent persistent) throws StoreException;
 
+    void save(AppUserLady appUserLady, Persistent persistent, AppUser appUser) throws StoreException;
 
     void nextDay(AppUserLady appUserLady, Persistent persistent, List<AppUserFund> appUserFunds, List<AppUserFundDetail> appUserFundDetails, List<AppUserFundMarket> appUserFundMarkets) throws StoreException;
 

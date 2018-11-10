@@ -25,7 +25,7 @@ public class AppUserRankings extends IdEntity implements Tracker, Cloneable {
 
     private Integer score;
 
-    private Integer seq;
+    private String comment;
 
     private Date created;
 
@@ -57,15 +57,15 @@ public class AppUserRankings extends IdEntity implements Tracker, Cloneable {
         this.userId = userId;
     }
 
-
-    @Transient
-    public Integer getSeq() {
-        return seq;
+    @Column(name = "comment")
+    public String getComment() {
+        return comment;
     }
 
-    public void setSeq(Integer seq) {
-        this.seq = seq;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
+
 
     @Column(name = "SCORE")
     public Integer getScore() {

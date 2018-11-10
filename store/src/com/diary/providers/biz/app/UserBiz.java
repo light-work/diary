@@ -10,6 +10,8 @@ public interface UserBiz {
                  Integer gender,
                  String city, String province, String country) throws BizException;
 
+    String info(String code,Long userId) throws BizException;
+
     String start(Long userId) throws BizException;
 
     String refresh(Long userId) throws BizException;

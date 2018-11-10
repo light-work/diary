@@ -762,20 +762,47 @@ public class UserAPI extends BaseAPI {
     }
 
     @Path("/replay/{userId}")
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response replay(@PathParam("userId") Long userId) {
+    @Consumes("application/x-www-form-urlencoded")
+    public Response replay(@FormParam("userId") Long userId) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
         if (userId == null) {
             errorBuilder.append("userId was null.");
         }
+
         if (errorBuilder.length() == 0) {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
                     bizResult = userBiz.replay(userId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/info")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response info(@QueryParam("userId") Long userId,@QueryParam("code") String code) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (StringUtils.isBlank(code)&&userId==null) {
+            errorBuilder.append("code was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.info(code,userId);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

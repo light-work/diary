@@ -51,6 +51,9 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Inject
     private AppUserPlanService appUserPlanService;
 
+    @Inject
+    private AppUserService appUserService;
+
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserMan getById(Long id, Selector... selectors) throws StoreException {
@@ -73,6 +76,13 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserMan appUserMan, Persistent persistent) throws StoreException {
         $(appUserMan).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserMan appUserMan, Persistent persistent, AppUser appUser) throws StoreException {
+        $(appUserMan).save(persistent);
+        appUserService.save(appUser,Persistent.UPDATE);
     }
 
     @Override

@@ -38,6 +38,12 @@ public class AppUser extends IdEntity implements Tracker {
 
     private String country;
 
+    private Integer playNumber;
+
+    private Integer lastScore;
+
+    private String lastComment;
+
     private Date created;
 
     private String createdBy;
@@ -73,6 +79,24 @@ public class AppUser extends IdEntity implements Tracker {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    @Column(name = "LAST_SCORE")
+    public Integer getLastScore() {
+        return lastScore;
+    }
+
+    public void setLastScore(Integer lastScore) {
+        this.lastScore = lastScore;
+    }
+
+    @Column(name = "LAST_COMMENT")
+    public String getLastComment() {
+        return lastComment;
+    }
+
+    public void setLastComment(String lastComment) {
+        this.lastComment = lastComment;
     }
 
     @Column(name = "GENDER")
@@ -118,6 +142,15 @@ public class AppUser extends IdEntity implements Tracker {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    @Column(name = "PLAY_NUMBER")
+    public Integer getPlayNumber() {
+        return playNumber;
+    }
+
+    public void setPlayNumber(Integer playNumber) {
+        this.playNumber = playNumber;
     }
 
     @Column(name = "CREATED", updatable = false)

@@ -136,6 +136,8 @@ public class GameUtils {
         }
         System.out.println(stringMap.get(index));
 
+        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
+
 
 
     }
@@ -652,6 +654,21 @@ public class GameUtils {
         }
     }
 
+    public static String calProfit(Integer currentMoney,Integer baseMoney) throws Exception {
+        Double profitPercent=0.00d;
+        String profitPercentText="";
+        if(currentMoney==baseMoney){
+            profitPercent=0.00d;
+            profitPercentText+=profitPercent+"%";
+        }else if(currentMoney>baseMoney){
+            profitPercent=NumberUtils.divide(NumberUtils.subtract(currentMoney,baseMoney,2),baseMoney,2);
+            profitPercentText+="+"+profitPercent+"%";
+        }else if(currentMoney<baseMoney){
+            profitPercent=NumberUtils.divide(NumberUtils.subtract(baseMoney,currentMoney,2),baseMoney,2);
+            profitPercentText+="-"+profitPercent+"%";
+        }
+        return profitPercentText;
+    }
     public static Integer getScoreAttr(Integer value){
         Integer score=-1;
         if(value>=0&&value<20){

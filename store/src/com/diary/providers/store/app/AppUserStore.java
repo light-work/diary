@@ -22,4 +22,5 @@ public interface AppUserStore {
 
     void save(AppUser appUser, Persistent persistent) throws StoreException;
 
+
 }
