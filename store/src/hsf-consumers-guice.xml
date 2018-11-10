@@ -244,6 +244,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resCommentEvalStoreConsumer"
+                  interface="com.diary.providers.store.res.ResCommentEvalStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
 
 
         <consumer id="commonBizConsumer"

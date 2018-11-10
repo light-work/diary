@@ -19,6 +19,8 @@ public interface AppUserFundStore {
 
     Integer getSumByUserId(Long userId) throws StoreException;
 
+    Integer getSumBuyByUserId(Long userId) throws StoreException;
+
     void save(AppUserFund appUserFund, Persistent persistent) throws StoreException;
 
     void save(List<AppUserFund> appUserFunds, Persistent persistent) throws StoreException;

@@ -17,8 +17,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_COMMENT")
-public class ResComment extends IdEntity implements Tracker {
+@Table(name = "RES_COMMENT_EVAL")
+public class ResCommentEval extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,11 +26,11 @@ public class ResComment extends IdEntity implements Tracker {
 
     private String logicMatch;
 
-    private Integer health;
-
     private Integer gender;
 
     private String comment;
+
+    private String evalKey;
 
     private Date created;
 
@@ -60,15 +60,6 @@ public class ResComment extends IdEntity implements Tracker {
         this.gender = gender;
     }
 
-    @Column(name = "HEALTH")
-    public Integer getHealth() {
-        return health;
-    }
-
-    public void setHealth(Integer health) {
-        this.health = health;
-    }
-
     @Column(name = "LOGIC_MATCH")
     public String getLogicMatch() {
         return logicMatch;
@@ -85,6 +76,15 @@ public class ResComment extends IdEntity implements Tracker {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Column(name = "EVAL_KEY")
+    public String getEvalKey() {
+        return evalKey;
+    }
+
+    public void setEvalKey(String evalKey) {
+        this.evalKey = evalKey;
     }
 
     @Column(name = "CREATED", updatable = false)

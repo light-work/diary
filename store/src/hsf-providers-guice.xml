@@ -353,6 +353,13 @@
         </provider>
 
 
+        <service id="resCommentEvalStore" class="com.diary.storeImpl.res.ResCommentEvalStoreImpl"/>
+        <provider id="resCommentEvalStoreProvider"
+                  interface="com.diary.providers.store.res.ResCommentEvalStore"
+                  ref="resCommentEvalStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
         <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
         <provider id="commonBizProvider"

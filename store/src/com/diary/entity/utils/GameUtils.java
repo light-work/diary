@@ -108,6 +108,9 @@ public class GameUtils {
         engine.put("money",900000);
         engine.put("fundMoney",500000);
         engine.put("health",80);
+        engine.put("comment","lu");
+        Object result = engine.eval("comment=='lu'");
+        System.out.println(result);
 
         Map<Integer,String> stringMap=new HashMap<>();
         stringMap.put(0,"hun");
@@ -125,7 +128,7 @@ public class GameUtils {
 
         int index=0;
         for(String ma:matchList){
-            Object result = engine.eval(ma);
+             result = engine.eval(ma);
             if(result.toString().equals("true")){
                 break;
             }
@@ -257,7 +260,7 @@ public class GameUtils {
                 attrName = "健康";
                 break;
             case "MONEY":
-                attrName = "金钱";
+                attrName = "现金";
                 break;
             case "ABILITY":
                 attrName = "工作能力";
@@ -292,7 +295,7 @@ public class GameUtils {
                 attrName = "健康";
                 break;
             case "MONEY":
-                attrName = "金钱";
+                attrName = "现金";
                 break;
             case "ABILITY":
                 attrName = "工作能力";
@@ -323,13 +326,13 @@ public class GameUtils {
             jsonArray.add(operationHEALTH);
 
             JSONObject operationMONEY = new JSONObject();
-            operationMONEY.put("text", "金钱");
+            operationMONEY.put("text", "现金");
             operationMONEY.put("value", isManage == 0 ? "MONEY" : "MONEY".toLowerCase());
             jsonArray.add(operationMONEY);
 
             if (isManage != 0) {
                 JSONObject operationPROFIT = new JSONObject();
-                operationPROFIT.put("text", "理财投资");
+                operationPROFIT.put("text", "理财收益");
                 operationPROFIT.put("value", isManage == 0 ? "FUND" : "FUND".toLowerCase());
                 jsonArray.add(operationPROFIT);
             }
@@ -367,13 +370,13 @@ public class GameUtils {
             jsonArray.add(operationHEALTH);
 
             JSONObject operationMONEY = new JSONObject();
-            operationMONEY.put("text", "金钱");
+            operationMONEY.put("text", "现金");
             operationMONEY.put("value", isManage == 0 ? "MONEY" : "MONEY".toLowerCase());
             jsonArray.add(operationMONEY);
 
             if (isManage != 0) {
                 JSONObject operationPROFIT = new JSONObject();
-                operationPROFIT.put("text", "理财投资");
+                operationPROFIT.put("text", "理财收益");
                 operationPROFIT.put("value", isManage == 0 ? "FUND" : "FUND".toLowerCase());
                 jsonArray.add(operationPROFIT);
             }

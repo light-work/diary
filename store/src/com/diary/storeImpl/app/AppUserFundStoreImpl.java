@@ -58,6 +58,17 @@ public class AppUserFundStoreImpl implements AppUserFundStore {
 
     @Override
     @ConnectManager
+    public Integer getSumBuyByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserFundService.getSumBuyByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public AppUserFund getByUserFundId(Long userId,Long fundId) throws StoreException {
         try {
             return this.appUserFundService.getByUserFundId(userId,fundId);

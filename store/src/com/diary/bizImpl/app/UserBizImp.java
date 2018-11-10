@@ -156,6 +156,9 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         fund = 0;
                     }
                     JSONArray myFundArray = new JSONArray();
+                    Integer sumFundBuy = 0;
+                    Integer sumFundMoney = 0;
+                    Integer diffFundMoney = 0;
                     JSONObject myFundDiff = new JSONObject();
                     List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
                     if (appUserFundList != null && !appUserFundList.isEmpty()) {
@@ -163,9 +166,12 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             ResFund resFund = appUserFund.getFundId();
                             if (resFund != null) {
                                 myFundArray.add(resFund.getId() + "");
-                                myFundDiff.put(resFund.getId() + "",GameUtils.formatGroupingUsed((appUserFund.getMoney().longValue()-appUserFund.getBuy().longValue())));
+                                myFundDiff.put(resFund.getId() + "", GameUtils.formatGroupingUsed((appUserFund.getMoney().longValue() - appUserFund.getBuy().longValue())));
+                                sumFundBuy += appUserFund.getBuy();
+                                sumFundMoney += appUserFund.getMoney();
                             }
                         }
+                        diffFundMoney = sumFundMoney - sumFundBuy;
                     }
                     if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
@@ -293,6 +299,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     if (infoObj != null) {
                         infoObj.put("myFundArray", myFundArray);
                         infoObj.put("myFundDiff", myFundDiff);
+                        infoObj.put("diffFundMoney", diffFundMoney);
                         infoObj.put("fund", GameUtils.formatGroupingUsed(fund.longValue()));
                         infoObj.put("myJobId", myJobId);
                         infoObj.put("myCoupleId", myCoupleId);
@@ -863,7 +870,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 score += GameUtils.getScoreAttr(appUserMan.getConnections());
 
                                 Integer fundMoney = appUserFundStore.getSumByUserId(userId);
-                                if (fundMoney == null||fundMoney<0) {
+                                if (fundMoney == null || fundMoney < 0) {
                                     fundMoney = 0;
                                 }
                                 score += GameUtils.getScoreMoney(appUserMan.getMoney());
@@ -918,17 +925,31 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 if (resCommentList != null && !resCommentList.isEmpty()) {
                                     ScriptEngineManager manager = new ScriptEngineManager();
                                     ScriptEngine engine = manager.getEngineByName("js");
-                                    engine.put("jobLevel",maxJobLevel);
-                                    engine.put("carLevel",maxCarLevel);
-                                    engine.put("houseLevel",maxHouseLevel);
-                                    engine.put("coupleLevel",maxCoupleLevel);
-                                    engine.put("money",appUserMan.getMoney());
-                                    engine.put("fundMoney",fundMoney);
-                                    engine.put("health",appUserMan.getHealth());
+                                    engine.put("jobLevel", maxJobLevel);
+                                    engine.put("carLevel", maxCarLevel);
+                                    engine.put("houseLevel", maxHouseLevel);
+                                    engine.put("coupleLevel", maxCoupleLevel);
+                                    engine.put("money", appUserMan.getMoney());
+                                    engine.put("fundMoney", fundMoney);
+                                    engine.put("health", appUserMan.getHealth());
                                     for (ResComment commentMatch : resCommentList) {
                                         Object result = engine.eval(commentMatch.getLogicMatch());
                                         if (result.toString().equals("true")) {
-                                            comment = commentMatch.getComment();
+                                            if(appUserMan.getHealth()>=commentMatch.getHealth()){
+                                                comment = commentMatch.getComment();
+                                            }else{
+                                                if(commentMatch.getComment().equals("hun")){
+                                                    comment="ming";
+                                                }else  if(commentMatch.getComment().equals("ming")){
+                                                    comment="feng";
+                                                }else  if(commentMatch.getComment().equals("feng")){
+                                                    comment="lu";
+                                                }else  if(commentMatch.getComment().equals("lu")){
+                                                    comment="qiong";
+                                                }else  if(commentMatch.getComment().equals("qiong")){
+                                                    comment="qiong";
+                                                }
+                                            }
                                             break;
                                         }
                                     }
@@ -1142,18 +1163,25 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
             AppUserCoupleStore appUserCoupleStore = hsfServiceFactory.consumer(AppUserCoupleStore.class);
             AppUserFundStore appUserFundStore = hsfServiceFactory.consumer(AppUserFundStore.class);
+            ResCommentEvalStore resCommentEvalStore = hsfServiceFactory.consumer(ResCommentEvalStore.class);
             if (appUserStore != null && appUserManStore != null && appUserLadyStore != null && appUserJobStore != null
                     && appUserCarStore != null && appUserHouseStore != null && appUserClothesStore != null
-                    && appUserLuxuryStore != null && appUserCoupleStore != null) {
+                    && appUserLuxuryStore != null && appUserCoupleStore != null && resCommentEvalStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     AppUserMan appUserMan = null;
                     AppUserLady appUserLady = null;
                     JSONObject infoObj = null;
                     Integer fundMoney = appUserFundStore.getSumByUserId(userId);
-                    if (fundMoney == null||fundMoney<0) {
+                    if (fundMoney == null || fundMoney < 0) {
                         fundMoney = 0;
                     }
+                    Integer baseFundMoney = appUserFundStore.getSumBuyByUserId(userId);
+                    if (baseFundMoney == null || baseFundMoney < 0) {
+                        baseFundMoney = 0;
+                    }
+                    Integer diffFundMoney=fundMoney-baseFundMoney;
+
                     AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
                     AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
                     if (appUser.getGender() == 1) {
@@ -1197,6 +1225,119 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             if (appUserCouple != null) {
                                 infoObj.put("couple", appUserCouple.getCoupleId().getTitle());
                             }
+                            ScriptEngineManager manager = new ScriptEngineManager();
+                            ScriptEngine engine = manager.getEngineByName("js");
+                            engine.put("money", appUserMan.getMoney());
+                            engine.put("health", appUserMan.getHealth());
+                            engine.put("ability", appUserMan.getAbility());
+                            engine.put("experience", appUserMan.getExperience());
+                            engine.put("happy", appUserMan.getHappy());
+                            engine.put("positive", appUserMan.getPositive());
+                            engine.put("connections", appUserMan.getConnections());
+                            engine.put("comment", appUserMan.getComment());
+                            engine.put("fundMoney", fundMoney);
+                            engine.put("baseFundMoney", baseFundMoney);
+                            engine.put("diffFundMoney", diffFundMoney);
+                            JSONArray textArray = new JSONArray();
+                            List<ResCommentEval> commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "money");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  moneyComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        moneyComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add("你手头有现金" + appUserMan.getMoney() + "，"+moneyComment);
+                            }
+
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "fund");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  fundComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        fundComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add("你在北京投资了" + fundMoney+ "，"+fundComment);
+                            }
+
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "ability");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  abilityComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        abilityComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add(abilityComment);
+                            }
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "experience");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  experienceComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        experienceComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add(experienceComment);
+                            }
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "happy");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  happyComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        happyComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add(happyComment);
+                            }
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "positive");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  positiveComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        positiveComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add(positiveComment);
+                            }
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "connections");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  connectionsComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        connectionsComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add(connectionsComment);
+                            }
+                            commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "comment");
+                            if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                String  commentComment="";
+                                for (ResCommentEval commentEval : commentEvalList) {
+                                    Object result = engine.eval(commentEval.getLogicMatch());
+                                    if (result.toString().equals("true")) {
+                                        commentComment = commentEval.getComment();
+                                        break;
+                                    }
+                                }
+                                textArray.add(commentComment);
+                            }
+                            infoObj.put("text", textArray);
                         }
                     } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
@@ -1243,17 +1384,6 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
                         }
                     }
-                    JSONArray textArray=new JSONArray();
-                    textArray.add("你手头有现金"+infoObj.getInt("money")+"，富得走路都在掉钱。");
-                    textArray.add("你深知你不理财，财不理你，投资财富为"+infoObj.getInt("fundMoney")+"。");
-                    textArray.add("你有一份不错得工作"+infoObj.getString("job")+"，生活充实，有了最基本得保障。");
-                    textArray.add("你名下有车"+infoObj.getString("car")+"，再也不用在下雪或下雨路边等车了。");
-                    textArray.add("你名下有房"+infoObj.getString("house")+"，不用隔三岔五得搬家租房了。");
-                    textArray.add("你的能力才干已能笑看人生，金主都不再雇你，而是用钱和你谈合作。");
-                    textArray.add("你的社会经验只能用'老司机'来形容，坑蒙拐骗的地痞都得绕着你走。");
-                    textArray.add("生活充满希望，你每天都洋溢着微笑，没有什么困难能阻挠你。");
-                    textArray.add("你遇事能躲就躲，是个对社会正能量毫无贡献的人。");
-                    infoObj.put("text",textArray);
                     resultObj.put("data", infoObj);
                     resultObj.put("result", 0);
                 }
