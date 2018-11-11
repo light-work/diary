@@ -29,6 +29,8 @@ public interface AppUserManStore {
 
     void save(AppUserMan appUserMan, Persistent persistent, AppUser appUser) throws StoreException;
 
+    void saveDone(AppUserMan appUserMan, Persistent persistent, AppUser appUser,AppUserManHist appUserManHist,Persistent persistentHist) throws StoreException;
+
     void delete(AppUserMan appUserMan,List<AppUserLimit> userLimitList,AppUserJob userJob,
                 List<AppUserCar> userCarList,List<AppUserHouse> userHouseList,AppUserCouple userCouple,
                 List<AppUserFund> userFundList,List<AppUserFundMarket> userFundMarketList, List<AppUserFundDetail> userFundDetailList,

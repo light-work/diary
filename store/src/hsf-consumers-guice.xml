@@ -47,6 +47,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserManHistStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserManHistStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="appUserPlanStoreConsumer"
                   interface="com.diary.providers.store.app.AppUserPlanStore"
                   version="for-dev" clientTimeout="5000">

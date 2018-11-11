@@ -67,6 +67,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserManHistStore" class="com.diary.storeImpl.app.AppUserManHistStoreImpl"/>
+        <provider id="appUserManHistStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserManHistStore"
+                  ref="appUserManHistStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <service id="appUserPlanStore" class="com.diary.storeImpl.app.AppUserPlanStoreImpl"/>
         <provider id="appUserPlanStoreProvider"
                   interface="com.diary.providers.store.app.AppUserPlanStore"

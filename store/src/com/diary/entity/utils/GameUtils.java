@@ -140,8 +140,8 @@ public class GameUtils {
         System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
         Map<String,String> parMap=new HashMap<>();
-        parMap.put("userId","6465547704677679104");
-        String r=OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay/1",parMap);
+        parMap.put("userId","6467410916256223232");
+        String r=OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/done",parMap);
 
         System.out.println(r);
 
@@ -711,6 +711,8 @@ public class GameUtils {
             score=160000;
         }else if(value>=251&&value<300){
             score=180000;
+        }else if(value>=300){
+            score=220000;
         }
 
         return  score;
