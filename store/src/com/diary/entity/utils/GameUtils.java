@@ -109,39 +109,39 @@ public class GameUtils {
         engine.put("money",900000);
         engine.put("fundMoney",500000);
         engine.put("health",80);
-        engine.put("comment","lu");
-        Object result = engine.eval("comment=='lu'");
+        engine.put("comment","feng");
+        Object result = engine.eval("comment==='feng'");
         System.out.println(result);
 
-        Map<Integer,String> stringMap=new HashMap<>();
-        stringMap.put(0,"hun");
-        stringMap.put(1,"ming");
-        stringMap.put(2,"feng");
-        stringMap.put(3,"lu");
-        stringMap.put(4,"qiong");
-        stringMap.put(5,"qiong");
-        List<String> matchList=new ArrayList<>();
-        matchList.add("(jobLevel>=5&&carLevel>=5&&houseLevel>=5&&coupleLevel>=1&&money>=2000000&&fundMoney>=500000&&health>=80)");
-        matchList.add("(jobLevel>=3&&carLevel>=3&&houseLevel>=3&&coupleLevel>=1&&money>=1000000&&fundMoney>=200000&&health>=70)");
-        matchList.add("(jobLevel>=3&&carLevel>=1&&houseLevel>=1&&coupleLevel>=0&&money>=500000&&fundMoney>=100000&&health>=60)");
-        matchList.add("(jobLevel>=1&&carLevel>=0&&houseLevel>=0&&coupleLevel>=0&&money>=300000&&fundMoney>=0&&health>=50)");
-        String str = "(jobLevel>=0&&carLevel==0&&houseLevel==0&&coupleLevel==0&&money<=300000&&fundMoney==0&&health>=50)";
-
-        int index=0;
-        for(String ma:matchList){
-             result = engine.eval(ma);
-            if(result.toString().equals("true")){
-                break;
-            }
-            index++;
-        }
-        System.out.println(stringMap.get(index));
-
-        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
+//        Map<Integer,String> stringMap=new HashMap<>();
+//        stringMap.put(0,"hun");
+//        stringMap.put(1,"ming");
+//        stringMap.put(2,"feng");
+//        stringMap.put(3,"lu");
+//        stringMap.put(4,"qiong");
+//        stringMap.put(5,"qiong");
+//        List<String> matchList=new ArrayList<>();
+//        matchList.add("(jobLevel>=5&&carLevel>=5&&houseLevel>=5&&coupleLevel>=1&&money>=2000000&&fundMoney>=500000&&health>=80)");
+//        matchList.add("(jobLevel>=3&&carLevel>=3&&houseLevel>=3&&coupleLevel>=1&&money>=1000000&&fundMoney>=200000&&health>=70)");
+//        matchList.add("(jobLevel>=3&&carLevel>=1&&houseLevel>=1&&coupleLevel>=0&&money>=500000&&fundMoney>=100000&&health>=60)");
+//        matchList.add("(jobLevel>=1&&carLevel>=0&&houseLevel>=0&&coupleLevel>=0&&money>=300000&&fundMoney>=0&&health>=50)");
+//        String str = "(jobLevel>=0&&carLevel==0&&houseLevel==0&&coupleLevel==0&&money<=300000&&fundMoney==0&&health>=50)";
+//
+//        int index=0;
+//        for(String ma:matchList){
+//             result = engine.eval(ma);
+//            if(result.toString().equals("true")){
+//                break;
+//            }
+//            index++;
+//        }
+//        System.out.println(stringMap.get(index));
+//
+//        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
         Map<String,String> parMap=new HashMap<>();
-        parMap.put("userId","6467410916256223232");
-        String r=OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/done",parMap);
+        parMap.put("userId","6468359899361996800");
+        String r=OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay",parMap);
 
         System.out.println(r);
 
@@ -452,7 +452,7 @@ public class GameUtils {
                             } else {
                                 jsonObject.put("attrName", getAttrNameLady(requireKey));
                             }
-                            jsonObject.put("value", "-"+(requireValue-userValue));
+                            jsonObject.put("value", "需"+requireValue);
                             failArray.add(jsonObject);
                         }
                     }

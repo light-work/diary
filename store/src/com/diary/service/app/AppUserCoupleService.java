@@ -81,6 +81,29 @@ public class AppUserCoupleService extends HQuery implements AppUserCoupleStore {
         }
     }
 
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void deleteFire(AppUserCouple appUserCouple, AppUserCouple appCoupleUserCouple, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException {
+        $(appUserCouple).save(Persistent.SAVE);
+        $(appCoupleUserCouple).delete();
+        this.appUserManService.save(appUserMan,Persistent.UPDATE);
+        if(appUserLimit!=null){
+            this.appUserLimitService.save(appUserLimit, Persistent.SAVE);
+        }
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void deleteFire(AppUserCouple appUserCouple, AppUserCouple appCoupleUserCouple, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        $(appUserCouple).save(Persistent.SAVE);
+        $(appCoupleUserCouple).delete();
+        this.appUserLadyService.save(appUserLady,Persistent.UPDATE);
+        if(appUserLimit!=null){
+            this.appUserLimitService.save(appUserLimit, Persistent.SAVE);
+        }
+    }
+
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserCouple appUserCouple, Persistent persistent, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException {

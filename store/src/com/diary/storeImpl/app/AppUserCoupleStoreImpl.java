@@ -127,4 +127,26 @@ public class AppUserCoupleStoreImpl implements AppUserCoupleStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
+    @Override
+    @ConnectManager
+    public void deleteFire(AppUserCouple appUserCouple, AppUserCouple appCoupleUserCouple, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCoupleService.deleteFire(appUserCouple, appCoupleUserCouple, appUserMan, appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void deleteFire(AppUserCouple appUserCouple, AppUserCouple appCoupleUserCouple, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
+        try {
+            this.appUserCoupleService.deleteFire(appUserCouple, appCoupleUserCouple, appUserLady, appUserLimit);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }
