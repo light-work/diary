@@ -56,7 +56,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                 if (userId != null) {
                     appUser = appUserStore.getById(userId);
                 }
-                gender=1;
+                gender = 1;
                 if (appUser != null) {
                     appUser.setNickName(nickName);
                     appUser.setGender(gender);
@@ -239,14 +239,14 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                         diffFundMoney = sumFundMoney - sumFundBuy;
                     }
-                    boolean live=true;
+                    boolean live = true;
                     if (appUser.getGender() == 1) {
                         AppUserMan appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
-                            if(appUserMan.getHealth()<0){
+                            if (appUserMan.getHealth() < 0) {
                                 appUserMan.setDays(0);
                                 appUserMan.setHours(0);
-                                live=false;
+                                live = false;
                             }
                             JSONArray myCarArray = new JSONArray();
                             JSONObject myCarNumber = new JSONObject();
@@ -305,17 +305,17 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 infoObj.put("myHouseNumber", myHouseNumber);
                                 infoObj.put("currentDay", GameUtils.currentDay(day));
                             }
-                            if(!live){
-                                appUserManStore.save(appUserMan,Persistent.UPDATE);
+                            if (!live) {
+                                appUserManStore.save(appUserMan, Persistent.UPDATE);
                             }
                         }
                     } else if (appUser.getGender() == 2) {
                         AppUserLady appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
-                            if(appUserLady.getHealth()<0){
+                            if (appUserLady.getHealth() < 0) {
                                 appUserLady.setDays(0);
                                 appUserLady.setHours(0);
-                                live=false;
+                                live = false;
                             }
                             JSONArray myClothesArray = new JSONArray();
                             JSONObject myClothesNumber = new JSONObject();
@@ -374,8 +374,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 infoObj.put("myLuxuryNumber", myLuxuryNumber);
                                 infoObj.put("currentDay", GameUtils.currentDay(day));
                             }
-                            if(!live){
-                                appUserLadyStore.save(appUserLady,Persistent.UPDATE);
+                            if (!live) {
+                                appUserLadyStore.save(appUserLady, Persistent.UPDATE);
                             }
                         }
                     }
@@ -388,7 +388,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         infoObj.put("myJobId", myJobId);
                         infoObj.put("myCoupleId", myCoupleId);
                         resultObj.put("userState", infoObj);
-                        if(!live){
+                        if (!live) {
                             JSONArray resultArray = new JSONArray();
                             GameUtils.addResultArray(resultArray, "你死了！长期不在意健康，透支自己的身体，什么也没留下就离开了。", null);
                             resultObj.put("resultArray", resultArray);
@@ -453,6 +453,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         } else {
                             if (appUserMan.getScore() > 0 && StringUtils.isNotBlank(appUserMan.getComment())) {
                                 replay(userId);
+                                newGame = true;
                             }
                             appUser.setPlayNumber(appUser.getPlayNumber() + 1);
                             bind(appUser, userId);
@@ -487,6 +488,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     loadUserData(resultObj, userId);
                     String nightText = "第" + GameUtils.dayText(days) + "天";
                     resultObj.put("nightText", nightText);
+                    resultObj.put("newGame", newGame);
                     if (newGame) {
                         JSONArray resultArray = new JSONArray();
                         GameUtils.addResultArray(resultArray, "北京是你的舞台，初到北京，给你8000启动资金。", null);
@@ -973,360 +975,490 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 resultObj.put("comment", appUserMan.getComment());
                                 flagRanking = false;
                             } else {
-                                day = appUserMan.getDays();
-                                hour = appUserMan.getHours();
-                                if (day == 0 && hour == 0) {
-
-                                    System.out.println(JsonUtils.formIdEntity(appUserMan, 0));
-                                    String jobTitle = "无";
-
-                                    String coupleTitle = "无";
-
-                                    JSONArray carTitle = null;
-
-                                    JSONArray houseTitle = null;
-
-                                    JSONArray commentText = null;
-
-                                    score += GameUtils.getScoreAttr(appUserMan.getHealth());
-                                    System.out.println("getHealth=" + score);
-                                    score += GameUtils.getScoreAttr(appUserMan.getAbility());
-                                    System.out.println("getAbility=" + score);
-                                    score += GameUtils.getScoreAttr(appUserMan.getExperience());
-                                    System.out.println("getExperience=" + score);
-                                    score += GameUtils.getScoreAttr(appUserMan.getHappy());
-                                    System.out.println("getHappy=" + score);
-                                    score += GameUtils.getScoreAttr(appUserMan.getPositive());
-                                    System.out.println("getPositive=" + score);
-                                    score += GameUtils.getScoreAttr(appUserMan.getConnections());
-                                    System.out.println("getConnections=" + score);
-
-                                    Integer fundMoney = appUserFundStore.getSumByUserId(userId);
-                                    if (fundMoney == null || fundMoney < 0) {
-                                        fundMoney = 0;
-                                    }
-                                    Integer baseFundMoney = appUserFundStore.getSumBuyByUserId(userId);
-                                    if (baseFundMoney == null || baseFundMoney < 0) {
-                                        baseFundMoney = 0;
-                                    }
-                                    Integer diffFundMoney = fundMoney - baseFundMoney;
-
-                                    score += GameUtils.getScoreMoney(appUserMan.getMoney());
-                                    System.out.println("money=" + score);
-                                    score += GameUtils.getScoreMoney(fundMoney);
-                                    System.out.println("fundMoney=" + score);
-
-                                    AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
-                                    Integer maxJobLevel = 0;
-                                    Integer maxCarLevel = 0;
-                                    Integer maxHouseLevel = 0;
-                                    Integer maxCoupleLevel = 0;
-                                    if (appUserJob != null) {
-                                        maxJobLevel = appUserJob.getJobId().getLevel();
-                                        jobTitle = appUserJob.getJobId().getTitle();
-                                        List<ResJobRequire> jobRequireList = resJobRequireStore.getListByJobId(appUserJob.getJobId().getId());
-                                        if (jobRequireList != null && !jobRequireList.isEmpty()) {
-                                            for (ResJobRequire resJobRequire : jobRequireList) {
-                                                score += GameUtils.getScoreAttr(resJobRequire.getValue());
-                                            }
-                                        }
-                                        System.out.println("job=" + score);
-                                    }
-                                    List<AppUserCar> appUserCarList = appUserCarStore.getByUserId(userId);
-                                    carTitle = new JSONArray();
-                                    if (appUserCarList != null && !appUserCarList.isEmpty()) {
-                                        for (AppUserCar appUserCar : appUserCarList) {
-                                            carTitle.add(appUserCar.getCarId().getTitle());
-                                            if (appUserCar.getCarId().getLevel() > maxCarLevel) {
-                                                maxCarLevel = appUserCar.getCarId().getLevel();
-                                            }
-                                            score += GameUtils.getScoreMoney(appUserCar.getCarId().getSellPrice());
-                                        }
-                                        System.out.println("car=" + score);
-                                    } else {
-                                        carTitle.add("无");
-                                    }
-
-                                    List<AppUserHouse> appUserHouseList = appUserHouseStore.getByUserId(userId);
-                                    houseTitle = new JSONArray();
-                                    if (appUserHouseList != null && !appUserHouseList.isEmpty()) {
-                                        for (AppUserHouse appUserHouse : appUserHouseList) {
-                                            houseTitle.add(appUserHouse.getHouseId().getTitle());
-                                            if (appUserHouse.getHouseId().getLevel() > maxHouseLevel) {
-                                                maxHouseLevel = appUserHouse.getHouseId().getLevel();
-                                            }
-                                            score += GameUtils.getScoreMoney(appUserHouse.getHouseId().getSellPrice());
-                                        }
-                                        System.out.println("house=" + score);
-                                    } else {
-                                        houseTitle.add("无");
-                                    }
-                                    AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
-                                    if (appUserCouple != null) {
-                                        coupleTitle = appUserCouple.getCoupleId().getTitle();
-                                        score += 200000;
-                                        maxCoupleLevel = 1;
-                                        System.out.println("couple=" + score);
-                                    }
-                                    ScriptEngineManager manager = new ScriptEngineManager();
-                                    ScriptEngine engine = manager.getEngineByName("js");
-                                    engine.put("jobLevel", maxJobLevel);
-                                    engine.put("carLevel", maxCarLevel);
-                                    engine.put("houseLevel", maxHouseLevel);
-                                    engine.put("coupleLevel", maxCoupleLevel);
-                                    engine.put("score", score);
-
-                                    engine.put("money", appUserMan.getMoney());
-                                    engine.put("health", appUserMan.getHealth());
-                                    engine.put("ability", appUserMan.getAbility());
-                                    engine.put("experience", appUserMan.getExperience());
-                                    engine.put("happy", appUserMan.getHappy());
-                                    engine.put("positive", appUserMan.getPositive());
-                                    engine.put("connections", appUserMan.getConnections());
-                                    engine.put("comment", appUserMan.getComment());
-                                    engine.put("fundMoney", fundMoney);
-                                    engine.put("baseFundMoney", baseFundMoney);
-                                    engine.put("diffFundMoney", diffFundMoney);
-
-                                    List<ResComment> resCommentList = resCommentStore.getList(appUser.getGender());
-                                    comment = "qiong";
-                                    if (resCommentList != null && !resCommentList.isEmpty()) {
-
-                                        for (ResComment commentMatch : resCommentList) {
-                                            Object result = engine.eval(commentMatch.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                comment = commentMatch.getComment();
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    engine.put("comment", comment);
-
-                                    commentText = new JSONArray();
-                                    List<ResCommentEval> commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "money");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String moneyComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                moneyComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add("你手头有现金" + appUserMan.getMoney() + "，" + moneyComment);
-                                    }
-
-
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "fund");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String fundComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                fundComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-
-                                        if (fundMoney > 0) {
-                                            List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
-                                            if (appUserFundList != null && !appUserFundList.isEmpty()) {
-                                                commentText.add("你在北京投资了" + fundMoney + "，其中:");
-                                                String fundDetail = "";
-                                                for (AppUserFund appUserFund : appUserFundList) {
-                                                    fundDetail = appUserFund.getFundId().getTitle() + "总共投资了:" + appUserFund.getBuy() + ",投资回报:" +
-                                                            GameUtils.calProfit(appUserFund.getMoney(), appUserFund.getBuy()) + "。";
-                                                    commentText.add(fundDetail);
-                                                }
-                                                commentText.add(fundComment);
-                                            }
-
-                                        } else {
-                                            commentText.add("你在北京投资了" + fundMoney + "，" + fundComment);
-                                        }
-
-
-                                    }
-
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "ability");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String abilityComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                abilityComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add(abilityComment);
-                                    }
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "experience");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String experienceComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                experienceComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add(experienceComment);
-                                    }
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "happy");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String happyComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                happyComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add(happyComment);
-                                    }
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "positive");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String positiveComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                positiveComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add(positiveComment);
-                                    }
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "connections");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String connectionsComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                connectionsComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add(connectionsComment);
-                                    }
-                                    commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "comment");
-                                    if (commentEvalList != null && !commentEvalList.isEmpty()) {
-                                        String commentComment = "";
-                                        for (ResCommentEval commentEval : commentEvalList) {
-                                            Object result = engine.eval(commentEval.getLogicMatch());
-                                            if (result.toString().equals("true")) {
-                                                commentComment = commentEval.getComment();
-                                                break;
-                                            }
-                                        }
-                                        commentText.add(commentComment);
-                                    }
-
-                                    appUserMan.setScore(score);
-                                    appUserMan.setComment(comment);
-
-                                    AppUserManHist appUserManHist = appUserManHistStore.getByUserId(userId);
-                                    Persistent persistentHist = Persistent.UPDATE;
-                                    if (appUserManHist == null) {
-                                        persistentHist = Persistent.SAVE;
-                                        appUserManHist = new AppUserManHist();
-                                        appUserManHist.setId(DrdsIDUtils.getID(DrdsTable.APP));
-                                        appUserManHist.setUserId(appUser);
-                                    }
-                                    appUserManHist.setHealth(appUserMan.getHealth());
-                                    appUserManHist.setMoney(appUserMan.getMoney());
-                                    appUserManHist.setFundMoney(fundMoney);
-                                    appUserManHist.setAbility(appUserMan.getAbility());
-                                    appUserManHist.setExperience(appUserMan.getExperience());
-                                    appUserManHist.setHappy(appUserMan.getHappy());
-                                    appUserManHist.setPositive(appUserMan.getPositive());
-                                    appUserManHist.setConnections(appUserMan.getConnections());
-                                    appUserManHist.setDays(appUserMan.getDays());
-                                    appUserManHist.setHours(appUserMan.getHours());
-                                    appUserManHist.setScore(appUserMan.getScore());
-                                    appUserManHist.setComment(appUserMan.getComment());
-                                    appUserManHist.setJobTitle(jobTitle);
-                                    appUserManHist.setCoupleTitle(coupleTitle);
-                                    appUserManHist.setCarTitle(carTitle != null ? carTitle.toString() : null);
-                                    appUserManHist.setHouseTitle(houseTitle != null ? houseTitle.toString() : null);
-                                    appUserManHist.setCommentText(commentText != null ? commentText.toString() : null);
-                                    appUserManHist.setUseYn("Y");
-                                    bind(appUserManHist, userId);
-
-                                    resultObj.put("comment", appUserMan.getComment());
-                                    bind(appUserMan, userId);
-                                    appUser.setLastComment(comment);
-                                    appUser.setLastScore(score);
-                                    bind(appUser, userId);
-                                    appUserManStore.saveDone(appUserMan, Persistent.UPDATE, appUser, appUserManHist, persistentHist);
-                                }else{
-                                    if (StringUtils.isNotBlank(appUser.getLastComment()) && appUser.getLastScore() != 0) {
-                                        resultObj.put("comment", appUser.getLastComment());
-                                        flagRanking = false;
-                                    }
-                                }
-                            }
-                        }
-                    } else if (appUser.getGender() == 2) {
-                        appUserLady = appUserLadyStore.getByUserId(userId);
-                        if (appUserLady != null) {
-                            day = appUserLady.getDays();
-                            hour = appUserLady.getHours();
+                            day = appUserMan.getDays();
+                            hour = appUserMan.getHours();
                             if (day == 0 && hour == 0) {
-                                score += GameUtils.getScoreAttr(appUserLady.getHealth());
-                                score += GameUtils.getScoreAttr(appUserLady.getAbility());
-                                score += GameUtils.getScoreAttr(appUserLady.getWisdom());
-                                score += GameUtils.getScoreAttr(appUserLady.getHappy());
-                                score += GameUtils.getScoreAttr(appUserLady.getBeauty());
-                                score += GameUtils.getScoreAttr(appUserLady.getPopularity());
+
+                                System.out.println(JsonUtils.formIdEntity(appUserMan, 0));
+                                String jobTitle = "无";
+
+                                String coupleTitle = "无";
+
+                                JSONArray carTitle = null;
+
+                                JSONArray houseTitle = null;
+
+                                JSONArray commentText = null;
+
+                                score += GameUtils.getScoreAttr(appUserMan.getHealth(), "Health", appUser.getGender());
+                                if (score > 140) {
+                                    score += 200 * appUserMan.getHealth();
+                                }else if (score > 100) {
+                                    score += 150 * appUserMan.getHealth();
+                                } else if (score > 80) {
+                                    score += 100 * appUserMan.getHealth();
+                                }
+                                System.out.println("getHealth=" + score);
+                                score += GameUtils.getScoreAttr(appUserMan.getAbility(), "Ability", appUser.getGender());
+                                System.out.println("getAbility=" + score);
+                                score += GameUtils.getScoreAttr(appUserMan.getExperience(), "Experience", appUser.getGender());
+                                System.out.println("getExperience=" + score);
+                                score += GameUtils.getScoreAttr(appUserMan.getHappy(), "Happy", appUser.getGender());
+                                System.out.println("getHappy=" + score);
+                                score += GameUtils.getScoreAttr(appUserMan.getPositive(), "Positive", appUser.getGender());
+                                System.out.println("getPositive=" + score);
+                                score += GameUtils.getScoreAttr(appUserMan.getConnections(), "Connections", appUser.getGender());
+                                System.out.println("getConnections=" + score);
 
                                 Integer fundMoney = appUserFundStore.getSumByUserId(userId);
-                                if (fundMoney == null) {
+                                if (fundMoney == null || fundMoney < 0) {
                                     fundMoney = 0;
                                 }
-                                score += GameUtils.getScoreMoney(appUserLady.getMoney());
+                                if(fundMoney==0){
+                                    score-=50000;
+                                }
+                                Integer baseFundMoney = appUserFundStore.getSumBuyByUserId(userId);
+                                if (baseFundMoney == null || baseFundMoney < 0) {
+                                    baseFundMoney = 0;
+                                }
+                                Integer diffFundMoney = fundMoney - baseFundMoney;
+
+                                score += GameUtils.getScoreMoney(appUserMan.getMoney());
+                                System.out.println("money=" + score);
                                 score += GameUtils.getScoreMoney(fundMoney);
+                                System.out.println("fundMoney=" + score);
 
                                 AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
+                                Integer maxJobLevel = 0;
+                                Integer maxCarLevel = 0;
+                                Integer maxHouseLevel = 0;
+                                Integer maxCoupleLevel = 0;
                                 if (appUserJob != null) {
+                                    maxJobLevel = appUserJob.getJobId().getLevel();
+                                    jobTitle = appUserJob.getJobId().getTitle();
                                     List<ResJobRequire> jobRequireList = resJobRequireStore.getListByJobId(appUserJob.getJobId().getId());
                                     if (jobRequireList != null && !jobRequireList.isEmpty()) {
                                         for (ResJobRequire resJobRequire : jobRequireList) {
-                                            score += GameUtils.getScoreAttr(resJobRequire.getValue());
+                                            score += GameUtils.getScoreAttr(resJobRequire.getValue(), resJobRequire.getAttrKey(), appUser.getGender());
                                         }
                                     }
-                                }
-                                List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserId(userId);
-                                if (appUserClothesList != null && !appUserClothesList.isEmpty()) {
-                                    for (AppUserClothes appUserClothes : appUserClothesList) {
-                                        score += GameUtils.getScoreMoney(appUserClothes.getClothesId().getSellPrice());
+                                    if (appUserJob.getJobId().getLevel() >= 3) {
+                                        score += 10000 * appUserJob.getJobId().getLevel();
                                     }
+                                    System.out.println("job=" + score);
+                                }else{
+                                    score-=50000;
+                                }
+                                List<AppUserCar> appUserCarList = appUserCarStore.getByUserId(userId);
+                                carTitle = new JSONArray();
+                                if (appUserCarList != null && !appUserCarList.isEmpty()) {
+                                    for (AppUserCar appUserCar : appUserCarList) {
+                                        carTitle.add(appUserCar.getCarId().getTitle());
+                                        if (appUserCar.getCarId().getLevel() > maxCarLevel) {
+                                            maxCarLevel = appUserCar.getCarId().getLevel();
+                                        }
+                                        score += GameUtils.getScoreMoney(appUserCar.getCarId().getSellPrice());
+                                        if (appUserCar.getCarId().getLevel() >= 3) {
+                                            score += 10000 * appUserCar.getCarId().getLevel();
+                                        }
+
+                                    }
+                                    System.out.println("car=" + score);
+                                } else {
+                                    score-=80000;
+                                    carTitle.add("无");
                                 }
 
-                                List<AppUserLuxury> appUserLuxuryList = appUserLuxuryStore.getByUserId(userId);
-                                if (appUserLuxuryList != null && !appUserLuxuryList.isEmpty()) {
-                                    for (AppUserLuxury appUserLuxury : appUserLuxuryList) {
-                                        score += GameUtils.getScoreMoney(appUserLuxury.getLuxuryId().getSellPrice());
+                                List<AppUserHouse> appUserHouseList = appUserHouseStore.getByUserId(userId);
+                                houseTitle = new JSONArray();
+                                if (appUserHouseList != null && !appUserHouseList.isEmpty()) {
+                                    for (AppUserHouse appUserHouse : appUserHouseList) {
+                                        houseTitle.add(appUserHouse.getHouseId().getTitle());
+                                        if (appUserHouse.getHouseId().getLevel() > maxHouseLevel) {
+                                            maxHouseLevel = appUserHouse.getHouseId().getLevel();
+                                        }
+                                        score += GameUtils.getScoreMoney(appUserHouse.getHouseId().getSellPrice());
+                                        if (appUserHouse.getHouseId().getLevel() >= 3) {
+                                            score += 20000 * appUserHouse.getHouseId().getLevel();
+                                        }
                                     }
+                                    System.out.println("house=" + score);
+                                } else {
+                                    score-=100000;
+                                    houseTitle.add("无");
                                 }
                                 AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
                                 if (appUserCouple != null) {
-                                    List<ResCoupleRequire> coupleRequireList = resCoupleRequireStore.getListByCoupleId(appUserCouple.getCoupleId().getId());
-                                    if (coupleRequireList != null && !coupleRequireList.isEmpty()) {
-                                        for (ResCoupleRequire coupleRequire : coupleRequireList) {
-                                            if (coupleRequire.getAttrKey().toUpperCase().equals("MONEY")) {
-                                                score += 250000;
-                                            } else {
-                                                score += GameUtils.getScoreAttr(coupleRequire.getValue());
+                                    coupleTitle = appUserCouple.getCoupleId().getTitle();
+                                    score += 200000;
+                                    maxCoupleLevel = 1;
+                                    System.out.println("couple=" + score);
+                                }else{
+                                    score-=50000;
+                                }
+
+                                if(maxJobLevel>0&&maxCarLevel>0&&maxHouseLevel>0&&maxCoupleLevel>0){
+                                    score += 100000;
+                                    if(maxJobLevel>=5&&maxCarLevel>=4&&maxHouseLevel>=4){
+                                        score += 300000;
+                                    }else  if(maxJobLevel>=6&&maxCarLevel>=5&&maxHouseLevel>=5){
+                                        score += 500000;
+                                    }
+                                }
+
+                                ScriptEngineManager manager = new ScriptEngineManager();
+                                ScriptEngine engine = manager.getEngineByName("js");
+                                engine.put("jobLevel", maxJobLevel);
+                                engine.put("carLevel", maxCarLevel);
+                                engine.put("houseLevel", maxHouseLevel);
+                                engine.put("coupleLevel", maxCoupleLevel);
+                                engine.put("score", score);
+
+                                engine.put("money", appUserMan.getMoney());
+                                engine.put("health", appUserMan.getHealth());
+                                engine.put("ability", appUserMan.getAbility());
+                                engine.put("experience", appUserMan.getExperience());
+                                engine.put("happy", appUserMan.getHappy());
+                                engine.put("positive", appUserMan.getPositive());
+                                engine.put("connections", appUserMan.getConnections());
+                                engine.put("comment", appUserMan.getComment());
+                                engine.put("fundMoney", fundMoney);
+                                engine.put("baseFundMoney", baseFundMoney);
+                                engine.put("diffFundMoney", diffFundMoney);
+
+                                List<ResComment> resCommentList = resCommentStore.getList(appUser.getGender());
+                                comment = "qiong";
+                                if (resCommentList != null && !resCommentList.isEmpty()) {
+
+                                    for (ResComment commentMatch : resCommentList) {
+                                        Object result = engine.eval(commentMatch.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            comment = commentMatch.getComment();
+                                            if (appUserMan.getHealth() < commentMatch.getHealth()) {
+                                                if (comment.equals("hun")) {
+                                                    comment = "jing";
+                                                } else if (comment.equals("jing")) {
+                                                    comment = "feng";
+                                                } else if (comment.equals("feng")) {
+                                                    comment = "lu";
+                                                } else if (comment.equals("lu")) {
+                                                    comment = "qiong";
+                                                }
                                             }
+                                            break;
                                         }
                                     }
                                 }
-                                appUserLady.setScore(score);
-                                bind(appUserLady, userId);
-                                appUserLadyStore.save(appUserLady, Persistent.UPDATE);
+
+                                engine.put("comment", comment);
+
+                                commentText = new JSONArray();
+                                List<ResCommentEval> commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "money");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String moneyComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            moneyComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    commentText.add("你手头有现金" + appUserMan.getMoney() + "，" + moneyComment);
+                                }
+
+
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "fund");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String fundComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            fundComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+
+                                    if (fundMoney > 0) {
+                                        List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
+                                        if (appUserFundList != null && !appUserFundList.isEmpty()) {
+                                            commentText.add("你在北京投资了" + fundMoney + "，其中:");
+                                            String fundDetail = "";
+                                            for (AppUserFund appUserFund : appUserFundList) {
+                                                fundDetail = appUserFund.getFundId().getTitle() + "总共投资了:" + appUserFund.getBuy() + ",投资回报:" +
+                                                        GameUtils.calProfit(appUserFund.getMoney(), appUserFund.getBuy()) + "。";
+                                                commentText.add(fundDetail);
+                                            }
+                                            commentText.add(fundComment);
+                                        }
+
+                                    } else {
+                                        commentText.add("你在北京投资了" + fundMoney + "，" + fundComment);
+                                    }
+
+
+                                }
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "health");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String healthComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            healthComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(healthComment)) {
+                                        commentText.add(healthComment);
+                                    }
+
+                                }
+                                if (appUserJob != null) {
+                                    commentText.add("你有一份工作：" + appUserJob.getJobId().getTitle() + "，" + appUserJob.getJobId().getRemarks());
+                                } else {
+                                    if ((appUserMan.getMoney() + fundMoney) > 100000) {
+                                        commentText.add("你没有工作，不过有的是办法赚钱");
+                                    } else {
+                                        commentText.add("你没有工作，成天游手好闲");
+                                    }
+                                }
+
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "car");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String carComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            carComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(carComment)) {
+                                        commentText.add(carComment);
+                                    }
+
+                                }
+
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "house");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String houseComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            houseComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(houseComment)) {
+                                        commentText.add(houseComment);
+                                    }
+
+                                }
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "ability");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String abilityComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            abilityComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(abilityComment)) {
+                                        commentText.add(abilityComment);
+                                    }
+
+                                }
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "experience");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String experienceComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            experienceComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(experienceComment)) {
+                                        commentText.add(experienceComment);
+                                    }
+
+                                }
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "happy");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String happyComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            happyComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(happyComment)) {
+                                        commentText.add(happyComment);
+                                    }
+
+                                }
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "positive");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String positiveComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            positiveComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(positiveComment)) {
+                                        commentText.add(positiveComment);
+                                    }
+
+                                }
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "connections");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String connectionsComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            connectionsComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(connectionsComment)) {
+                                        commentText.add(connectionsComment);
+                                    }
+                                }
+
+                                if (appUserCouple != null) {
+                                    commentText.add("你的对象是：" + appUserCouple.getCoupleId().getTitle() + "，" + appUserCouple.getCoupleId().getComment());
+                                } else {
+                                    commentText.add("你没有对象，单身的你和右手成为了最好的朋友，麒麟臂侠说的就是你！");
+                                }
+
+                                commentText.add("最后根据你的各项属性、资产以及独特的经历，综合评分为：" + score);
+
+                                commentText.add("你的这段北京生活经历最后评级为：" + GameUtils.getCommentText(comment));
+
+                                commentEvalList = resCommentEvalStore.getList(appUser.getGender(), "comment");
+                                if (commentEvalList != null && !commentEvalList.isEmpty()) {
+                                    String commentComment = "";
+                                    for (ResCommentEval commentEval : commentEvalList) {
+                                        Object result = engine.eval(commentEval.getLogicMatch());
+                                        if (result.toString().equals("true")) {
+                                            commentComment = commentEval.getComment();
+                                            break;
+                                        }
+                                    }
+                                    if (StringUtils.isNotBlank(commentComment)) {
+                                        commentText.add(commentComment);
+                                    }
+
+                                }
+
+                                appUserMan.setScore(score);
+                                appUserMan.setComment(comment);
+
+                                AppUserManHist appUserManHist = appUserManHistStore.getByUserId(userId);
+                                Persistent persistentHist = Persistent.UPDATE;
+                                if (appUserManHist == null) {
+                                    persistentHist = Persistent.SAVE;
+                                    appUserManHist = new AppUserManHist();
+                                    appUserManHist.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                    appUserManHist.setUserId(appUser);
+                                }
+                                appUserManHist.setHealth(appUserMan.getHealth());
+                                appUserManHist.setMoney(appUserMan.getMoney());
+                                appUserManHist.setFundMoney(fundMoney);
+                                appUserManHist.setAbility(appUserMan.getAbility());
+                                appUserManHist.setExperience(appUserMan.getExperience());
+                                appUserManHist.setHappy(appUserMan.getHappy());
+                                appUserManHist.setPositive(appUserMan.getPositive());
+                                appUserManHist.setConnections(appUserMan.getConnections());
+                                appUserManHist.setDays(appUserMan.getDays());
+                                appUserManHist.setHours(appUserMan.getHours());
+                                appUserManHist.setScore(appUserMan.getScore());
+                                appUserManHist.setComment(appUserMan.getComment());
+                                appUserManHist.setJobTitle(jobTitle);
+                                appUserManHist.setCoupleTitle(coupleTitle);
+                                appUserManHist.setCarTitle(carTitle != null ? carTitle.toString() : null);
+                                appUserManHist.setHouseTitle(houseTitle != null ? houseTitle.toString() : null);
+                                appUserManHist.setCommentText(commentText != null ? commentText.toString() : null);
+                                appUserManHist.setUseYn("Y");
+                                bind(appUserManHist, userId);
+
+                                resultObj.put("comment", appUserMan.getComment());
+                                bind(appUserMan, userId);
+                                appUser.setLastComment(comment);
+                                appUser.setLastScore(score);
+                                bind(appUser, userId);
+                                appUserManStore.saveDone(appUserMan, Persistent.UPDATE, appUser, appUserManHist, persistentHist);
+                            } else {
+                                if (StringUtils.isNotBlank(appUser.getLastComment()) && appUser.getLastScore() != 0) {
+                                    resultObj.put("comment", appUser.getLastComment());
+                                    flagRanking = false;
+                                }
                             }
+                             }
                         }
+                    } else if (appUser.getGender() == 2) {
+//                        appUserLady = appUserLadyStore.getByUserId(userId);
+//                        if (appUserLady != null) {
+//                            day = appUserLady.getDays();
+//                            hour = appUserLady.getHours();
+//                            if (day == 0 && hour == 0) {
+//                                score += GameUtils.getScoreAttr(appUserLady.getHealth());
+//                                score += GameUtils.getScoreAttr(appUserLady.getAbility());
+//                                score += GameUtils.getScoreAttr(appUserLady.getWisdom());
+//                                score += GameUtils.getScoreAttr(appUserLady.getHappy());
+//                                score += GameUtils.getScoreAttr(appUserLady.getBeauty());
+//                                score += GameUtils.getScoreAttr(appUserLady.getPopularity());
+//
+//                                Integer fundMoney = appUserFundStore.getSumByUserId(userId);
+//                                if (fundMoney == null) {
+//                                    fundMoney = 0;
+//                                }
+//                                score += GameUtils.getScoreMoney(appUserLady.getMoney());
+//                                score += GameUtils.getScoreMoney(fundMoney);
+//
+//                                AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
+//                                if (appUserJob != null) {
+//                                    List<ResJobRequire> jobRequireList = resJobRequireStore.getListByJobId(appUserJob.getJobId().getId());
+//                                    if (jobRequireList != null && !jobRequireList.isEmpty()) {
+//                                        for (ResJobRequire resJobRequire : jobRequireList) {
+//                                            score += GameUtils.getScoreAttr(resJobRequire.getValue());
+//                                        }
+//                                    }
+//                                }
+//                                List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserId(userId);
+//                                if (appUserClothesList != null && !appUserClothesList.isEmpty()) {
+//                                    for (AppUserClothes appUserClothes : appUserClothesList) {
+//                                        score += GameUtils.getScoreMoney(appUserClothes.getClothesId().getSellPrice());
+//                                    }
+//                                }
+//
+//                                List<AppUserLuxury> appUserLuxuryList = appUserLuxuryStore.getByUserId(userId);
+//                                if (appUserLuxuryList != null && !appUserLuxuryList.isEmpty()) {
+//                                    for (AppUserLuxury appUserLuxury : appUserLuxuryList) {
+//                                        score += GameUtils.getScoreMoney(appUserLuxury.getLuxuryId().getSellPrice());
+//                                    }
+//                                }
+//                                AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
+//                                if (appUserCouple != null) {
+//                                    List<ResCoupleRequire> coupleRequireList = resCoupleRequireStore.getListByCoupleId(appUserCouple.getCoupleId().getId());
+//                                    if (coupleRequireList != null && !coupleRequireList.isEmpty()) {
+//                                        for (ResCoupleRequire coupleRequire : coupleRequireList) {
+//                                            if (coupleRequire.getAttrKey().toUpperCase().equals("MONEY")) {
+//                                                score += 250000;
+//                                            } else {
+//                                                score += GameUtils.getScoreAttr(coupleRequire.getValue());
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                appUserLady.setScore(score);
+//                                bind(appUserLady, userId);
+//                                appUserLadyStore.save(appUserLady, Persistent.UPDATE);
+//                            }
+//                        }
                     }
 
                     if (flagRanking) {

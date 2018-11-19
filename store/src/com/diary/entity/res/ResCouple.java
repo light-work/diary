@@ -30,6 +30,8 @@ public class ResCouple extends IdEntity implements Tracker {
 
     private String remarks;
 
+    private String comment;
+
     private Date created;
 
     private String createdBy;
@@ -75,6 +77,15 @@ public class ResCouple extends IdEntity implements Tracker {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    @Column(name = "COMMENT")
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Column(name = "CREATED", updatable = false)

@@ -5,6 +5,7 @@ import com.diary.entity.app.AppUserMan;
 import com.diary.entity.res.ResEventResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import ognl.NoSuchPropertyException;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.OKHttpUtil;
 import org.guiceside.commons.lang.BeanUtils;
@@ -20,38 +21,39 @@ import java.util.*;
 
 public class GameUtils {
 
-    public  static final   int gameDays=7;
+    public static final int gameDays = 7;
 
-    public  static final   int intDays=6;
+    public static final int intDays = 6;
 
-    public  static final   int intHours=6;
+    public static final int intHours = 6;
 
-    public static double fundMarket(List<Double> doubleList,Double minNum,Double maxNum){
-        Random r= new Random();
-        Double market=null;
-        int point=r.nextInt(99-10)+10;
-        int flagInt=  GameUtils.lottery(doubleList);
-        int temp=r.nextInt(maxNum.intValue()-minNum.intValue())+minNum.intValue();
-        if(flagInt==1){
-            temp=temp*-1;
+    public static double fundMarket(List<Double> doubleList, Double minNum, Double maxNum) {
+        Random r = new Random();
+        Double market = null;
+        int point = r.nextInt(99 - 10) + 10;
+        int flagInt = GameUtils.lottery(doubleList);
+        int temp = r.nextInt(maxNum.intValue() - minNum.intValue()) + minNum.intValue();
+        if (flagInt == 1) {
+            temp = temp * -1;
         }
-        market=new Double(temp+"."+point);
+        market = new Double(temp + "." + point);
         return market;
     }
 
-    public static int randGetIndex(int size){
-        int b=(int)(Math.random()*size-1);
+    public static int randGetIndex(int size) {
+        int b = (int) (Math.random() * size - 1);
         return b;
     }
+
     public static void randSelector(List<Selector> selectorList) {
-        List<Double> orignalRates=new ArrayList<>();
+        List<Double> orignalRates = new ArrayList<>();
         orignalRates.add(0.49);
         orignalRates.add(0.51);
-        int flag=lottery(orignalRates);
-        if(flag==0){
-            selectorList.add(SelectorUtils.$order("id",true));
-        }else{
-            selectorList.add(SelectorUtils.$order("id",false));
+        int flag = lottery(orignalRates);
+        if (flag == 0) {
+            selectorList.add(SelectorUtils.$order("id", true));
+        } else {
+            selectorList.add(SelectorUtils.$order("id", false));
         }
     }
 
@@ -91,25 +93,25 @@ public class GameUtils {
         List<Double> doubleList = new ArrayList<>();
         doubleList.add(0.55);
         doubleList.add(0.45);
-         JSONArray sa=new JSONArray();
+        JSONArray sa = new JSONArray();
         for (int i = 1; i <= 10; i++) {
-            sa.add(String.valueOf(fundMarket(doubleList,2.48d,4.22)));
+            sa.add(String.valueOf(fundMarket(doubleList, 2.48d, 4.22)));
         }
         System.out.println(sa.toString());
-        System.out.println(0-(-8));
+        System.out.println(0 - (-8));
 
 
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("js");
 
-        engine.put("jobLevel",3);
-        engine.put("carLevel",5);
-        engine.put("houseLevel",5);
-        engine.put("coupleLevel",1);
-        engine.put("money",900000);
-        engine.put("fundMoney",500000);
-        engine.put("health",80);
-        engine.put("comment","feng");
+        engine.put("jobLevel", 3);
+        engine.put("carLevel", 5);
+        engine.put("houseLevel", 5);
+        engine.put("coupleLevel", 1);
+        engine.put("money", 900000);
+        engine.put("fundMoney", 500000);
+        engine.put("health", 80);
+        engine.put("comment", "feng");
         Object result = engine.eval("comment==='feng'");
         System.out.println(result);
 
@@ -139,21 +141,21 @@ public class GameUtils {
 //
 //        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
-        Map<String,String> parMap=new HashMap<>();
-        parMap.put("userId","6468359899361996800");
-        String r=OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay",parMap);
+        Map<String, String> parMap = new HashMap<>();
+        parMap.put("userId", "6468371351881961472");
+        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/done", parMap);
 
         System.out.println(r);
 
 
     }
 
-    public static Integer dynamicPrice(Integer day,Integer price,Integer offset) throws Exception {
+    public static Integer dynamicPrice(Integer day, Integer price, Integer offset) throws Exception {
         offset = offset * currentDay(day);
         offset = 100 + offset;
-        Double dyPrice = NumberUtils.divide(NumberUtils.multiply(price,offset,2),100,2);
+        Double dyPrice = NumberUtils.divide(NumberUtils.multiply(price, offset, 2), 100, 2);
         price = Long.valueOf(Math.round(dyPrice)).intValue();
-        return  price;
+        return price;
     }
 
     public static Integer currentDay(Integer day) throws Exception {
@@ -213,6 +215,7 @@ public class GameUtils {
 
 
             minish(infoObj);
+            infoObj.put("moneyNumber", infoObj.getLong("money"));
             converInfoNumber(infoObj, "health");
             converInfoNumber(infoObj, "money");
             converInfoNumber(infoObj, "ability");
@@ -239,6 +242,7 @@ public class GameUtils {
             infoObj.put("luxuryLimit", luxuryLimit);
             infoObj.put("coupleLimit", coupleLimit);
             minish(infoObj);
+            infoObj.put("moneyNumber", infoObj.getLong("money"));
             converInfoNumber(infoObj, "health");
             converInfoNumber(infoObj, "money");
             converInfoNumber(infoObj, "ability");
@@ -258,6 +262,32 @@ public class GameUtils {
         jsonObject.remove("updated");
         jsonObject.remove("updatedBy");
         jsonObject.remove("useYn");
+    }
+
+    public static Integer getBaseScoreAttrMan(String attrKey) {
+        Integer base = 0;
+        attrKey = attrKey.toUpperCase();
+        switch (attrKey) {
+            case "HEALTH":
+                base = 1000;
+                break;
+            case "ABILITY":
+                base = 600;
+                break;
+            case "EXPERIENCE":
+                base = 600;
+                break;
+            case "HAPPY":
+                base = 700;
+                break;
+            case "POSITIVE":
+                base = 700;
+                break;
+            case "CONNECTIONS":
+                base = 600;
+                break;
+        }
+        return base;
     }
 
     public static String getAttrNameMan(String attrKey) {
@@ -293,6 +323,35 @@ public class GameUtils {
                 break;
         }
         return attrName;
+    }
+
+    public static Integer getBaseScoreAttrLady(String attrKey) {
+        Integer base = 0;
+        attrKey = attrKey.toUpperCase();
+        switch (attrKey) {
+            case "HEALTH":
+                base = 1000;
+                break;
+            case "MONEY":
+                base = 1000;
+                break;
+            case "ABILITY":
+                base = 600;
+                break;
+            case "WISDOM":
+                base = 600;
+                break;
+            case "HAPPY":
+                base = 700;
+                break;
+            case "BEAUTY":
+                base = 700;
+                break;
+            case "POPULARITY":
+                base = 600;
+                break;
+        }
+        return base;
     }
 
     public static String getAttrNameLady(String attrKey) {
@@ -452,7 +511,7 @@ public class GameUtils {
                             } else {
                                 jsonObject.put("attrName", getAttrNameLady(requireKey));
                             }
-                            jsonObject.put("value", "需"+requireValue);
+                            jsonObject.put("value", "需" + requireValue);
                             failArray.add(jsonObject);
                         }
                     }
@@ -464,20 +523,20 @@ public class GameUtils {
     }
 
     public static JSONArray requireCompare(List<ResEventResult> eventResults, Object userObj) throws Exception {
-       JSONArray eventResultArray=new JSONArray();
+        JSONArray eventResultArray = new JSONArray();
         for (ResEventResult eventResult : eventResults) {
             String compare = eventResult.getCompare();
-            if(StringUtils.isNotBlank(compare)){
+            if (StringUtils.isNotBlank(compare)) {
                 String requireKey = eventResult.getAttrKey().toLowerCase();
                 Integer value = eventResult.getValue();
-                if (StringUtils.isNotBlank(requireKey)&&value!=null) {
+                if (StringUtils.isNotBlank(requireKey) && value != null) {
                     Integer userValue = BeanUtils.getValue(userObj, requireKey, Integer.class);
                     if (userValue != null) {
-                        if(compare.equals(">")){
+                        if (compare.equals(">")) {
                             if (userValue <= value) {
-                               continue;
+                                continue;
                             }
-                        }else if(compare.equals("<")){
+                        } else if (compare.equals("<")) {
                             if (userValue >= value) {
                                 continue;
                             }
@@ -486,7 +545,7 @@ public class GameUtils {
                 }
             }
             JSONObject eventObj = JsonUtils.formIdEntity(eventResult, 0);
-            if(eventObj!=null){
+            if (eventObj != null) {
                 GameUtils.minish(eventObj);
                 eventObj.remove("compare");
                 eventObj.remove("attrKey");
@@ -619,10 +678,30 @@ public class GameUtils {
                 if (StringUtils.isNotBlank(effectKey) && value != null) {
                     Integer effectValue = BeanUtils.getValue(userObj, effectKey, Integer.class);
                     if (effectValue != null) {
-                        if (operation.equals("SUB")) {
-                            effectValue = effectValue - value;
-                        } else if (operation.equals("ADD")) {
-                            effectValue = effectValue + value;
+                        String percent = "N";
+
+                        Object percentObj = null;
+                        try {
+                            percentObj = BeanUtils.getValue(effect, "percent");
+                        } catch (NoSuchPropertyException noSuchPropertyException) {
+
+                        }
+                        if (percentObj != null) {
+                            percent = percentObj.toString().toUpperCase();
+                        }
+                        if (percent.equals("N")) {
+                            if (operation.equals("SUB")) {
+                                effectValue = effectValue - value;
+                            } else if (operation.equals("ADD")) {
+                                effectValue = effectValue + value;
+                            }
+                        } else if (percent.equals("Y")) {
+                            if (operation.equals("SUB")) {
+                                value = 0 - value;
+                            }
+                            value = 100 + value;
+                            Double dyPrice = NumberUtils.divide(NumberUtils.multiply(effectValue, value, 2), 100, 2);
+                            effectValue = Long.valueOf(Math.round(dyPrice)).intValue();
                         }
                         BeanUtils.setValue(userObj, effectKey, effectValue);
                     }
@@ -660,129 +739,100 @@ public class GameUtils {
         }
     }
 
-    public static String calProfit(Integer currentMoney,Integer baseMoney) throws Exception {
-        Double profitPercent=0.00d;
-        String profitPercentText="";
-        if(currentMoney==baseMoney){
-            profitPercent=0.00d;
-            profitPercentText+=profitPercent+"%";
-        }else if(currentMoney>baseMoney){
-            profitPercent=NumberUtils.divide(NumberUtils.subtract(currentMoney,baseMoney,2),baseMoney,2);
-            profitPercentText+="+"+profitPercent+"%";
-        }else if(currentMoney<baseMoney){
-            profitPercent=NumberUtils.divide(NumberUtils.subtract(baseMoney,currentMoney,2),baseMoney,2);
-            profitPercentText+="-"+profitPercent+"%";
+    public static String calProfit(Integer currentMoney, Integer baseMoney) throws Exception {
+        Double profitPercent = 0.00d;
+        String profitPercentText = "";
+        if (currentMoney == baseMoney) {
+            profitPercent = 0.00d;
+            profitPercentText += profitPercent + "%";
+        } else if (currentMoney > baseMoney) {
+            profitPercent = NumberUtils.divide(NumberUtils.subtract(currentMoney, baseMoney, 2), baseMoney, 2);
+            profitPercentText += "+" + profitPercent + "%";
+        } else if (currentMoney < baseMoney) {
+            profitPercent = NumberUtils.divide(NumberUtils.subtract(baseMoney, currentMoney, 2), baseMoney, 2);
+            profitPercentText += "-" + profitPercent + "%";
         }
         return profitPercentText;
     }
-    public static Integer getScoreAttr(Integer value){
-        Integer score=-1;
-        if(value>=0&&value<20){
-            score=0;
-        }else if(value>=21&&value<40){
-            score=10000;
-        }else if(value>=41&&value<60){
-            score=20000;
-        }else if(value>=61&&value<80){
-            score=30000;
-        }else if(value>=81&&value<100){
-            score=50000;
-        }else if(value>=100&&value<110){
-            score=60000;
-        }else if(value>=111&&value<120){
-            score=70000;
-        }else if(value>=121&&value<130){
-            score=80000;
-        }else if(value>=131&&value<140){
-            score=90000;
-        }else if(value>=141&&value<150){
-            score=100000;
-        }else if(value>=151&&value<160){
-            score=110000;
-        }else if(value>=161&&value<170){
-            score=120000;
-        }else if(value>=171&&value<180){
-            score=130000;
-        }else if(value>=181&&value<190){
-            score=140000;
-        }else if(value>=191&&value<200){
-            score=150000;
-        }else if(value>=201&&value<250){
-            score=160000;
-        }else if(value>=251&&value<300){
-            score=180000;
-        }else if(value>=300){
-            score=220000;
-        }
 
-        return  score;
+    public static Integer getScore(Integer value, String attrKey) {
+        Integer score = -1;
+        if (value > 0) {
+            score = value * 1000;
+        } else {
+            score = 0;
+        }
+        return score;
     }
 
-    public static Integer getScoreMoney(Integer money){
-       Integer score=-1;
-       if(money>=0&&money<10000){
-           score=0;
-       }else if(money>=10001&&money<100000){
-           score=100000;
-       }else if(money>=100001&&money<500000){
-           score=20000;
-       }else if(money>=500001&&money<1000000){
-           score=300000;
-       }else if(money>=1000001&&money<2000000){
-           score=400000;
-       }else if(money>=2000001&&money<3000000){
-           score=500000;
-       }else if(money>=3000001&&money<5000000){
-           score=600000;
-       }else if(money>=5000001&&money<8000000){
-           score=700000;
-       }else if(money>=8000001&&money<12000000){
-           score=800000;
-       }else if(money>=12000001&&money<30000000){
-           score=1000000;
-       }else if(money>=30000001&&money<50000000){
-           score=1200000;
-       }else if(money>=50000001&&money<80000000){
-           score=1400000;
-       }else if(money>=80000001&&money<100000000){
-           score=2000000;
-       }else if(money>=100000001){
-           score=2888888;
-       }
-       return  score;
+    public static String getCommentText(String comment) {
+        String commentText = null;
+        comment = comment.toLowerCase();
+        switch (comment) {
+            case "hun":
+                commentText = "混王之王";
+                break;
+            case "jing":
+                commentText = "名动京城";
+                break;
+            case "feng":
+                commentText = "风生水起";
+                break;
+            case "lu":
+                commentText = "碌碌无为";
+                break;
+            case "qiong":
+                commentText = "穷困潦倒";
+                break;
+        }
+        return commentText;
     }
 
-    public static String getScoreComment(Integer maxJobLevel,Integer maxCarLevel,Integer maxHouseLevel,
-                                         Integer maxCoupleLevel,Integer health,Integer money,Integer fundMoney){
-        if(maxJobLevel>=5&&maxCarLevel>=5&&maxHouseLevel>=5&&maxCoupleLevel>=1){
-            //if(health>=80&&money>)
+    public static Integer getScoreAttr(Integer value, String attrKey, Integer gender) {
+        Integer score = 0;
+        if (value > 0) {
+            Integer base = 0;
+            if (gender == 1) {
+                base = getBaseScoreAttrMan(attrKey);
+            } else if (gender == 2) {
+                base = getBaseScoreAttrLady(attrKey);
+            }
+            score = value * base;
         }
-//        String comment="https://img.jinrongzhushou.com/common/";
-//        if(score>=0&&score<500000){
-//            if(rankings){
-//                comment+="qiong-j.png";
-//            }else{
-//                comment+="qiong.png";
-//            }
-//        }else if(score>=500001&&score<1000000){
-//            if(rankings){
-//                comment+="lu-j.png";
-//            }else{
-//                comment+="lu.png";
-//            }
-//        }else if(score>=1000001&&score<2000000){
-//            if(rankings){
-//                comment+="feng-j.png";
-//            }else{
-//                comment+="feng.png";
-//            }
-//        }else if(score>=2000001){
-//            if(rankings){
-//                comment+="hun-j.png";
-//            }else{
-//                comment+="hun.png";
-//            }
-//        }
-        return  "";
+        return score;
+    }
+
+    public static Integer getScoreMoney(Integer money) {
+        Integer score = -1;
+        if (money >= 0 && money < 10000) {
+            score = 0;
+        } else if (money >= 10001 && money < 100000) {
+            score = 100000;
+        } else if (money >= 100001 && money < 500000) {
+            score = 20000;
+        } else if (money >= 500001 && money < 1000000) {
+            score = 300000;
+        } else if (money >= 1000001 && money < 2000000) {
+            score = 400000;
+        } else if (money >= 2000001 && money < 3000000) {
+            score = 500000;
+        } else if (money >= 3000001 && money < 5000000) {
+            score = 600000;
+        } else if (money >= 5000001 && money < 8000000) {
+            score = 700000;
+        } else if (money >= 8000001 && money < 12000000) {
+            score = 800000;
+        } else if (money >= 12000001 && money < 30000000) {
+            score = 1000000;
+        } else if (money >= 30000001 && money < 50000000) {
+            score = 1200000;
+        } else if (money >= 50000001 && money < 80000000) {
+            score = 1400000;
+        } else if (money >= 80000001 && money < 100000000) {
+            score = 2000000;
+        } else if (money >= 100000001) {
+            score = 2888888;
+        }
+        return score;
     }
 }

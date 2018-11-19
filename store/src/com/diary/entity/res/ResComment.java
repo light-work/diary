@@ -26,6 +26,8 @@ public class ResComment extends IdEntity implements Tracker {
 
     private String logicMatch;
 
+    private Integer health;
+
     private Integer gender;
 
     private String comment;
@@ -56,6 +58,15 @@ public class ResComment extends IdEntity implements Tracker {
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    @Column(name = "HEALTH")
+    public Integer getHealth() {
+        return health;
+    }
+
+    public void setHealth(Integer health) {
+        this.health = health;
     }
 
 
