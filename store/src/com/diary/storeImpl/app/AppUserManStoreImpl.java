@@ -69,6 +69,27 @@ public class AppUserManStoreImpl implements AppUserManStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public void saveDone(AppUserMan appUserMan, Persistent persistent, AppUser appUser, AppUserManHist appUserManHist, Persistent persistentHist) throws StoreException {
+        try {
+            this.appUserManService.saveDone(appUserMan, persistent,appUser,appUserManHist,persistentHist);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void save(AppUserMan appUserMan, Persistent persistent, AppUser appUser) throws StoreException {
+        try {
+            this.appUserManService.save(appUserMan, persistent,appUser);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager

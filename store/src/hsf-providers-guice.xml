@@ -67,6 +67,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserManHistStore" class="com.diary.storeImpl.app.AppUserManHistStoreImpl"/>
+        <provider id="appUserManHistStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserManHistStore"
+                  ref="appUserManHistStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <service id="appUserPlanStore" class="com.diary.storeImpl.app.AppUserPlanStoreImpl"/>
         <provider id="appUserPlanStoreProvider"
                   interface="com.diary.providers.store.app.AppUserPlanStore"
@@ -124,7 +131,14 @@
                   ref="appUserRankingsStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
-        
+
+        <service id="appUserFormStore" class="com.diary.storeImpl.app.AppUserFormStoreImpl"/>
+        <provider id="appUserFormStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFormStore"
+                  ref="appUserFormStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <!--      res   -->
 
         <service id="resCarStore" class="com.diary.storeImpl.res.ResCarStoreImpl"/>
@@ -345,6 +359,20 @@
                   enableTXC="true">
         </provider>
 
+        <service id="resCommentStore" class="com.diary.storeImpl.res.ResCommentStoreImpl"/>
+        <provider id="resCommentStoreProvider"
+                  interface="com.diary.providers.store.res.ResCommentStore"
+                  ref="resCommentStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resCommentEvalStore" class="com.diary.storeImpl.res.ResCommentEvalStoreImpl"/>
+        <provider id="resCommentEvalStoreProvider"
+                  interface="com.diary.providers.store.res.ResCommentEvalStore"
+                  ref="resCommentEvalStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
 
 
         <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
@@ -503,6 +531,13 @@
         <provider id="userEventBizProvider"
                   interface="com.diary.providers.biz.app.UserEventBiz"
                   ref="userEventBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userFormBiz" class="com.diary.bizImpl.app.UserFormBizImp"/>
+        <provider id="userFormBizProvider"
+                  interface="com.diary.providers.biz.app.UserFormBiz"
+                  ref="userFormBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>

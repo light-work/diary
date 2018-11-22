@@ -112,7 +112,6 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                     resultObj.put("result", 0);
                     resultObj.put("eventResultArray", eventResultArray);
                 }
-                System.out.println(resultObj.toString());
             }
         } catch (Exception ex) {
             if (ex instanceof StoreException) {

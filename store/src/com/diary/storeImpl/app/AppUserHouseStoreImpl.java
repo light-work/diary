@@ -51,6 +51,17 @@ public class AppUserHouseStoreImpl implements AppUserHouseStore {
 
     @Override
     @ConnectManager
+    public Integer getMaxLevelByUserId(Long userId) throws StoreException {
+        try {
+            return this.appUserHouseService.getMaxLevelByUserId(userId);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Integer getCountByUserId(Long userId) throws StoreException {
         try {
             return this.appUserHouseService.getCountByUserId(userId);

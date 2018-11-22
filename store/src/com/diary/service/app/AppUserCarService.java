@@ -42,6 +42,12 @@ public class AppUserCarService extends HQuery implements AppUserCarStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
+    public Integer getMaxLevelByUserId(Long userId) throws StoreException {
+        return $($alias("carId","carId"),$eq("userId.id", userId),$max("carId.level")).value(AppUserCar.class,Integer.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
     public Integer getCountByUserId(Long userId) throws StoreException {
         return $($eq("userId.id", userId),$count("id")).value(AppUserCar.class,Integer.class);
     }

@@ -51,6 +51,12 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Inject
     private AppUserPlanService appUserPlanService;
 
+    @Inject
+    private AppUserService appUserService;
+
+    @Inject
+    private AppUserManHistService appUserManHistService;
+
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserMan getById(Long id, Selector... selectors) throws StoreException {
@@ -73,6 +79,21 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     @Transactional(type = TransactionType.READ_WRITE)
     public void save(AppUserMan appUserMan, Persistent persistent) throws StoreException {
         $(appUserMan).save(persistent);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserMan appUserMan, Persistent persistent, AppUser appUser) throws StoreException {
+        $(appUserMan).save(persistent);
+        appUserService.save(appUser,Persistent.UPDATE);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void saveDone(AppUserMan appUserMan, Persistent persistent, AppUser appUser, AppUserManHist appUserManHist, Persistent persistentHist) throws StoreException {
+        $(appUserMan).save(persistent);
+        appUserService.save(appUser,Persistent.UPDATE);
+        appUserManHistService.save(appUserManHist,persistentHist);
     }
 
     @Override
@@ -100,10 +121,11 @@ public class AppUserManService extends HQuery implements AppUserManStore {
     }
 
     @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void delete(AppUserMan appUserMan, List<AppUserLimit> userLimitList, AppUserJob userJob, List<AppUserCar> userCarList, List<AppUserHouse> userHouseList,
                        AppUserCouple userCouple, List<AppUserFund> userFundList, List<AppUserFundMarket> userFundMarketList, List<AppUserFundDetail> userFundDetailList,
                        List<AppUserLuck> userLuckList,List<AppUserPlan> userPlanList) throws StoreException {
-        $(appUserMan).delete();
+        $(appUserMan).save(Persistent.UPDATE);
         if (userLimitList != null && !userLimitList.isEmpty()) {
             appUserLimitService.delete(userLimitList);
         }

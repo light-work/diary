@@ -36,4 +36,8 @@ public interface AppUserCoupleStore {
 
     void delete(AppUserCouple appUserCouple,AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException;
 
+    void deleteFire(AppUserCouple appUserCouple,AppUserCouple appCoupleUserCouple, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException;
+
+    void deleteFire(AppUserCouple appUserCouple,AppUserCouple appCoupleUserCouple, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException;
+
 }

@@ -14,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_LADY")
-public class AppUserLady extends IdEntity implements Tracker, Cloneable {
+@Table(name = "APP_USER_LADY_HIST")
+public class AppUserLadyHist extends IdEntity implements Tracker, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -225,9 +225,9 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
     }
 
     public Object clone() {
-        AppUserLady sc = null;
+        AppUserLadyHist sc = null;
         try {
-            sc = (AppUserLady) super.clone();
+            sc = (AppUserLadyHist) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

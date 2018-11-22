@@ -69,6 +69,16 @@ public class AppUserLadyStoreImpl implements AppUserLadyStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public void save(AppUserLady appUserLady, Persistent persistent, AppUser appUser) throws StoreException {
+        try {
+            this.appUserLadyService.save(appUserLady, persistent,appUser);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager

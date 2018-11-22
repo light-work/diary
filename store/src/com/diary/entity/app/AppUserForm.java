@@ -1,12 +1,10 @@
-package com.diary.entity.res;
+package com.diary.entity.app;
 
+import com.diary.entity.res.ResFund;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -17,22 +15,22 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_JOB")
-public class ResJob extends IdEntity implements Tracker {
+@Table(name = "APP_USER_FORM")
+public class AppUserForm extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String title;
+    private AppUser userId;
 
-    private Integer price;
+    private String formId;
 
-    private Integer gender;
+    private Integer year;
 
-    private Integer level;
+    private Integer month;
 
-    private String remarks;
+    private Integer day;
 
     private Date created;
 
@@ -53,53 +51,54 @@ public class ResJob extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @Column(name = "TITLE")
-    public String getTitle() {
-        return title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    public AppUser getUserId() {
+        return userId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Column(name = "PRICE")
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    @Column(name = "GENDER")
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
+    public void setUserId(AppUser userId) {
+        this.userId = userId;
     }
 
 
-
-
-    @Column(name = "LEVEL")
-    public Integer getLevel() {
-        return level;
+    @Column(name = "FORM_ID")
+    public String getFormId() {
+        return formId;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
-    @Column(name = "REMARKS")
-    public String getRemarks() {
-        return remarks;
+    @Column(name = "YEAR")
+    public Integer getYear() {
+        return year;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setYear(Integer year) {
+        this.year = year;
     }
+
+    @Column(name = "MONTH")
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    @Column(name = "DAY")
+    public Integer getDay() {
+        return day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
+    }
+
 
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {

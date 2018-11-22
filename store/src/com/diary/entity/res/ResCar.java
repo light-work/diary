@@ -34,6 +34,8 @@ public class ResCar extends IdEntity implements Tracker {
 
     private Integer offsetSell;
 
+    private Integer level;
+
     private String remarks;
 
     private Date created;
@@ -98,6 +100,15 @@ public class ResCar extends IdEntity implements Tracker {
 
     public void setOffsetSell(Integer offsetSell) {
         this.offsetSell = offsetSell;
+    }
+
+    @Column(name = "LEVEL")
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     @Column(name = "REMARKS")

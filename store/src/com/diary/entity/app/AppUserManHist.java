@@ -14,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_LADY")
-public class AppUserLady extends IdEntity implements Tracker, Cloneable {
+@Table(name = "APP_USER_MAN_HIST")
+public class AppUserManHist extends IdEntity implements Tracker, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,25 +27,43 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     private Integer money;
 
+    private Integer fundMoney;
+
     private Integer ability;
 
 
-    private Integer wisdom;
+    private Integer experience;
 
     private Integer happy;
 
 
-    private Integer beauty;
+    private Integer positive;
 
-    private Integer popularity;
+    private Integer connections;
 
     private Integer days;
 
     private Integer hours;
 
+    private Integer house;
+
+
+    private Integer car;
+
     private Integer score;
 
     private String comment;
+
+    private String commentText;
+
+
+    private String jobTitle;
+
+    private String coupleTitle;
+
+    private String carTitle;
+
+    private String houseTitle;
 
     private Date created;
 
@@ -65,6 +83,25 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Transient
+    public Integer getHouse() {
+        return house;
+    }
+
+    public void setHouse(Integer house) {
+        this.house = house;
+    }
+
+    @Transient
+    public Integer getCar() {
+        return car;
+    }
+
+    public void setCar(Integer car) {
+        this.car = car;
+    }
+
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -86,8 +123,6 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
         this.health = health;
     }
 
-
-
     @Column(name = "MONEY")
     public Integer getMoney() {
         return money;
@@ -95,6 +130,15 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     public void setMoney(Integer money) {
         this.money = money;
+    }
+
+    @Column(name = "SCORE")
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
     @Column(name = "ABILITY")
@@ -106,6 +150,14 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
         this.ability = ability;
     }
 
+    @Column(name = "EXPERIENCE")
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
+    }
 
     @Column(name = "HAPPY")
     public Integer getHappy() {
@@ -116,31 +168,31 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
         this.happy = happy;
     }
 
-    @Column(name = "WISDOM")
-    public Integer getWisdom() {
-        return wisdom;
+    @Column(name = "FUND_MONEY")
+    public Integer getFundMoney() {
+        return fundMoney;
     }
 
-    public void setWisdom(Integer wisdom) {
-        this.wisdom = wisdom;
+    public void setFundMoney(Integer fundMoney) {
+        this.fundMoney = fundMoney;
     }
 
-    @Column(name = "BEAUTY")
-    public Integer getBeauty() {
-        return beauty;
+    @Column(name = "POSITIVE")
+    public Integer getPositive() {
+        return positive;
     }
 
-    public void setBeauty(Integer beauty) {
-        this.beauty = beauty;
+    public void setPositive(Integer positive) {
+        this.positive = positive;
     }
 
-    @Column(name = "POPULARITY")
-    public Integer getPopularity() {
-        return popularity;
+    @Column(name = "CONNECTIONS")
+    public Integer getConnections() {
+        return connections;
     }
 
-    public void setPopularity(Integer popularity) {
-        this.popularity = popularity;
+    public void setConnections(Integer connections) {
+        this.connections = connections;
     }
 
     @Column(name = "DAYS")
@@ -161,15 +213,6 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
         this.hours = hours;
     }
 
-    @Column(name = "SCORE")
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
     @Column(name = "COMMENT")
     public String getComment() {
         return comment;
@@ -177,6 +220,52 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+
+    @Column(name = "COMMENT_TEXT")
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    @Column(name = "JOB_TITLE")
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    @Column(name = "COUPLE_TITLE")
+    public String getCoupleTitle() {
+        return coupleTitle;
+    }
+
+    public void setCoupleTitle(String coupleTitle) {
+        this.coupleTitle = coupleTitle;
+    }
+
+    @Column(name = "CAR_TITLE")
+    public String getCarTitle() {
+        return carTitle;
+    }
+
+    public void setCarTitle(String carTitle) {
+        this.carTitle = carTitle;
+    }
+
+    @Column(name = "HOUSE_TITLE")
+    public String getHouseTitle() {
+        return houseTitle;
+    }
+
+    public void setHouseTitle(String houseTitle) {
+        this.houseTitle = houseTitle;
     }
 
     @Column(name = "CREATED", updatable = false)
@@ -225,13 +314,12 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
     }
 
     public Object clone() {
-        AppUserLady sc = null;
+        AppUserManHist sc = null;
         try {
-            sc = (AppUserLady) super.clone();
+            sc = (AppUserManHist) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
         return sc;
     }
-
 }

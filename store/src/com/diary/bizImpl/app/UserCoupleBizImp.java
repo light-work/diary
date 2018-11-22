@@ -18,6 +18,8 @@ import com.diary.providers.store.res.ResCoupleStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.guiceside.commons.lang.BeanUtils;
+import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.support.hsf.BaseBiz;
 import org.guiceside.support.hsf.HSFServiceFactory;
@@ -66,17 +68,17 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                     if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
-                            Integer carCount = appUserCarStore.getCountByUserId(userId);
-                            if (carCount == null) {
-                                carCount = 0;
+                            Integer carMaxLevel = appUserCarStore.getMaxLevelByUserId(userId);
+                            if (carMaxLevel == null || carMaxLevel < 1) {
+                                carMaxLevel = 0;
                             }
-                            appUserMan.setCar(carCount);
+                            appUserMan.setCar(carMaxLevel);
 
-                            Integer houseCount = appUserHouseStore.getCountByUserId(userId);
-                            if (houseCount == null) {
-                                houseCount = 0;
+                            Integer houseMaxLevel = appUserHouseStore.getMaxLevelByUserId(userId);
+                            if (houseMaxLevel == null || houseMaxLevel < 1) {
+                                houseMaxLevel = 0;
                             }
-                            appUserMan.setHouse(houseCount);
+                            appUserMan.setHouse(houseMaxLevel);
 
                             day = appUserMan.getDays();
                             coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "COUPLE");
@@ -105,12 +107,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                     }
                     AppUserCouple appUserCouple = appUserCoupleStore.getByUserId(userId);
                     if (appUserCouple != null) {
+                        //自己有对象的情况下
                         if (appUser.getGender() == 1) {
                             AppUserMan oldMan = (AppUserMan) appUserMan.clone();
                             appUserMan.setMoney(appUserMan.getMoney() - 5000);
                             appUserMan.setPositive(appUserMan.getPositive() - 30);
                             JSONArray effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
-                            //GameUtils.useHour(appUserMan);
                             appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
                             GameUtils.addResultArray(resultArray,
                                     "啧啧啧！" + GameUtils.callName(appUser.getGender()) + "，到处沾花惹草，吃着碗里的看着锅里的可不好。", null);
@@ -121,7 +123,6 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             appUserLady.setHappy(appUserLady.getHappy() - 30);
                             appUserLady.setPopularity(appUserLady.getPopularity() - 30);
                             JSONArray effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                            //GameUtils.useHour(appUserLady);
                             appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
                             GameUtils.addResultArray(resultArray,
                                     "啧啧啧！" + GameUtils.callName(appUser.getGender()) + "，红杏出墙会毁掉名声，不作死就不会死。", null);
@@ -131,10 +132,15 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                         resultObj.put("result", 1);
                         resultObj.put("resultArray", resultArray);
                     } else {
+                        //自己没对象
                         if (pass && coupleLimit == 0) {
+                            //符合条件
                             ResCouple resCouple = resCoupleStore.getById(coupleId);
                             if (resCouple != null) {
+
+                                appUserCouple = appUserCoupleStore.getByCoupleId(coupleId);
                                 if (appUserCouple == null) {
+                                    //如果对象没有人
                                     appUserCouple = new AppUserCouple();
                                     appUserCouple.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                     appUserCouple.setUserId(appUser);
@@ -143,37 +149,84 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                     bind(appUserCouple, userId);
                                     if (appUser.getGender() == 1) {
                                         if (appUserMan != null) {
-                                           // GameUtils.useHour(appUserMan);
+                                            // GameUtils.useHour(appUserMan);
                                             appUserCoupleStore.save(appUserCouple, Persistent.SAVE, appUserMan, appUserLimit);
                                         }
                                     } else if (appUser.getGender() == 2) {
                                         if (appUserLady != null) {
-                                           // GameUtils.useHour(appUserLady);
+                                            // GameUtils.useHour(appUserLady);
                                             appUserCoupleStore.save(appUserCouple, Persistent.SAVE, appUserLady, appUserLimit);
                                         }
                                     }
                                     GameUtils.addResultArray(resultArray, "你们互相欣赏对方，一见钟情，有情人终成眷属！", null);
                                     resultObj.put("result", 0);
                                     resultObj.put("resultArray", resultArray);
+                                } else {
+                                    //如果对象有人
+                                    AppUser coupleUser = appUserCouple.getUserId();
+                                    if (coupleUser != null) {
+                                        if (appUser.getGender() == 1) {
+                                            AppUserMan coupleUserMan = appUserManStore.getByUserId(coupleUser.getId());
+                                            if (coupleUserMan != null) {
+                                                Integer coupleUserCarMaxLevel = appUserCarStore.getMaxLevelByUserId(coupleUser.getId());
+                                                if (coupleUserCarMaxLevel == null || coupleUserCarMaxLevel < 1) {
+                                                    coupleUserCarMaxLevel = 0;
+                                                }
+                                                coupleUserMan.setCar(coupleUserCarMaxLevel);
+
+                                                Integer coupleUserHouseMaxLevel = appUserHouseStore.getMaxLevelByUserId(coupleUser.getId());
+                                                if (coupleUserHouseMaxLevel == null || coupleUserHouseMaxLevel < 1) {
+                                                    coupleUserHouseMaxLevel = 0;
+                                                }
+                                                coupleUserMan.setHouse(coupleUserHouseMaxLevel);
+                                                boolean fire = true;
+                                                if (requireList != null && !requireList.isEmpty()) {
+                                                    for (ResCoupleRequire coupleRequire : requireList) {
+                                                        String requireKey = coupleRequire.getAttrKey().toLowerCase();
+                                                        if (StringUtils.isNotBlank(requireKey)) {
+                                                            Integer userValue = BeanUtils.getValue(appUserMan, requireKey, Integer.class);
+                                                            Integer coupleUserValue = BeanUtils.getValue(coupleUserMan, requireKey, Integer.class);
+                                                            if (userValue != null && coupleUserValue != null) {
+                                                                if (userValue <= coupleUserValue) {
+                                                                    fire = false;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if (fire) {
+                                                    //抢成功
+                                                    AppUserCouple appUserCoupleFire = new AppUserCouple();
+                                                    appUserCoupleFire.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                                    appUserCoupleFire.setUserId(appUser);
+                                                    appUserCoupleFire.setCoupleId(resCouple);
+                                                    appUserCoupleFire.setUseYn("Y");
+                                                    bind(appUserCoupleFire, userId);
+
+                                                    appUserCoupleStore.deleteFire(appUserCoupleFire,appUserCouple,  appUserMan, appUserLimit);
+                                                    GameUtils.addResultArray(resultArray, "你各方面碾压" + coupleUser.getNickName() + "，抱得美人归！", null);
+                                                    resultObj.put("result", 0);
+                                                    resultObj.put("resultArray", resultArray);
+                                                } else {
+                                                    //抢失败
+                                                    appUserLimitStore.save(appUserLimit, Persistent.SAVE);
+                                                    GameUtils.addResultArray(resultArray, "你各方面都不如" + coupleUser.getNickName() + "，灰头土脸的回来了！", null);
+                                                    resultObj.put("result", 1);
+                                                    resultObj.put("resultArray", resultArray);
+                                                }
+                                            }
+                                        } else if (appUser.getGender() == 2) {
+
+                                        }
+                                    }
                                 }
                             }
                         } else {
-                            if (coupleLimit == 0) {
-                                if (appUser.getGender() == 1) {
-                                    if (appUserMan != null) {
-                                       // GameUtils.useHour(appUserMan);
-                                        appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
-                                    }
-                                } else if (appUser.getGender() == 2) {
-                                    if (appUserLady != null) {
-                                       // GameUtils.useHour(appUserLady);
-                                        appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
-                                    }
-                                }
-                            }
+                            //不符合条件
                             if (coupleLimit == 1) {
                                 GameUtils.addResultArray(resultArray, "先努力成为更好的自己，死缠烂打只会招人烦！", null);
-                            } else {
+                            } else if (coupleLimit == 0) {
+                                appUserLimitStore.save(appUserLimit, Persistent.SAVE);
                                 JSONArray failAttrName = null;
                                 if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
@@ -256,12 +309,12 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             if (appUserCouple != null) {
                                 if (appUser.getGender() == 1) {
                                     if (appUserMan != null) {
-                                     //   GameUtils.useHour(appUserMan);
+                                        //   GameUtils.useHour(appUserMan);
                                         appUserCoupleStore.delete(appUserCouple, appUserMan, appUserLimit);
                                     }
                                 } else if (appUser.getGender() == 2) {
                                     if (appUserLady != null) {
-                                     //   GameUtils.useHour(appUserLady);
+                                        //   GameUtils.useHour(appUserLady);
                                         appUserCoupleStore.delete(appUserCouple, appUserLady, appUserLimit);
                                     }
                                 }

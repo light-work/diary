@@ -4,12 +4,14 @@ import com.diary.common.BizException;
 import com.diary.common.StoreException;
 import com.diary.entity.app.*;
 import com.diary.entity.res.ResJob;
+import com.diary.entity.res.ResJobEffect;
 import com.diary.entity.res.ResJobRequire;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
 import com.diary.providers.biz.app.UserJobBiz;
 import com.diary.providers.store.app.*;
+import com.diary.providers.store.res.ResJobEffectStore;
 import com.diary.providers.store.res.ResJobRequireStore;
 import com.diary.providers.store.res.ResJobStore;
 import com.google.inject.Inject;
@@ -45,8 +47,10 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
             AppUserJobStore appUserJobStore = hsfServiceFactory.consumer(AppUserJobStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
             ResJobStore resJobStore = hsfServiceFactory.consumer(ResJobStore.class);
+            ResJobEffectStore resJobEffectStore = hsfServiceFactory.consumer(ResJobEffectStore.class);
             if (appUserManStore != null && appUserLadyStore != null && appUserStore != null
-                    && resJobRequireStore != null && appUserJobStore != null && resJobStore != null && appUserLimitStore != null) {
+                    && resJobRequireStore != null && appUserJobStore != null && resJobStore != null && appUserLimitStore != null
+                    &&resJobEffectStore!=null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     List<ResJobRequire> requireList = resJobRequireStore.getListByJobId(jobId);
@@ -87,10 +91,11 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                     }
                     if (pass && jobLimit == 0) {
 
-
+                        JSONArray effectArray = null;
                         AppUserJob appUserJob = appUserJobStore.getByUserId(userId);
                         ResJob resJob = resJobStore.getById(jobId);
                         if (resJob != null) {
+                           List<ResJobEffect> jobEffectList= resJobEffectStore.getListByJobId(jobId);
                             Persistent persistent = Persistent.UPDATE;
                             if (appUserJob == null) {
                                 appUserJob = new AppUserJob();
@@ -103,34 +108,25 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                             bind(appUserJob, userId);
                             if (appUser.getGender() == 1) {
                                 if (appUserMan != null) {
-                                 //   GameUtils.useHour(appUserMan);
+                                    AppUserMan oldMan = (AppUserMan) appUserMan.clone();
+                                    GameUtils.useEffect(jobEffectList, appUserMan);
+                                    effectArray = GameUtils.diffEffectMan(oldMan, appUserMan);
                                     appUserJobStore.save(appUserJob, persistent, appUserMan, appUserLimit);
                                 }
                             } else if (appUser.getGender() == 2) {
                                 if (appUserLady != null) {
-                                //    GameUtils.useHour(appUserLady);
+                                    AppUserLady oldLady = (AppUserLady) appUserLady.clone();
+                                    GameUtils.useEffect(jobEffectList, appUserLady);
+                                    effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
                                     appUserJobStore.save(appUserJob, persistent, appUserLady, appUserLimit);
                                 }
                             }
                             GameUtils.addResultArray(resultArray, "恭喜你轻而易举的得到了面试官的认可，获得了工作！", null);
+                            GameUtils.addResultArray(resultArray, "最终:", effectArray);
                             resultObj.put("result", 0);
                             resultObj.put("resultArray", resultArray);
                         }
                     } else {
-                        if (jobLimit == 0) {
-                            if (appUser.getGender() == 1) {
-                                if (appUserMan != null) {
-                                  //  GameUtils.useHour(appUserMan);
-                                    appUserManStore.save(appUserMan, Persistent.UPDATE, appUserLimit);
-                                }
-                            } else if (appUser.getGender() == 2) {
-                                if (appUserLady != null) {
-                                   // GameUtils.useHour(appUserLady);
-                                    appUserLadyStore.save(appUserLady, Persistent.UPDATE, appUserLimit);
-                                }
-                            }
-                        }
-
                         if (jobLimit == 1) {
                             GameUtils.addResultArray(resultArray, "抱歉，每日只能应聘一次工作！", null);
                         } else {
@@ -144,6 +140,7 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                                     failAttrName = GameUtils.failAttrNames(requireList, appUserLady, appUser.getGender());
                                 }
                             }
+                            appUserLimitStore.save(appUserLimit,Persistent.SAVE);
                             GameUtils.addResultArray(resultArray, "你卖力的表现了下自己，但是面试官觉得你的能力无法胜任这份工作！", null);
                             GameUtils.addResultArray(resultArray, "原因：", failAttrName);
                         }

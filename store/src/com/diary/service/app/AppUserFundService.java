@@ -50,6 +50,12 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
+    public Integer getSumBuyByUserId(Long userId) throws StoreException {
+        return $($eq("userId.id", userId), $sum("buy")).value(AppUserFund.class,Integer.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
     public AppUserFund getByUserFundId(Long userId, Long fundId) throws StoreException {
         return $($eq("userId.id", userId), $eq("fundId.id", fundId)).get(AppUserFund.class);
     }

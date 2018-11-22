@@ -17,26 +17,20 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_LUXURY")
-public class ResLuxury extends IdEntity implements Tracker {
+@Table(name = "RES_COMMENT_EVAL")
+public class ResCommentEval extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String title;
+    private String logicMatch;
 
-    private Integer buyPrice;
+    private Integer gender;
 
-    private Integer sellPrice;
+    private String comment;
 
-    private Integer offsetBuy;
-
-    private Integer offsetSell;
-
-    private Integer level;
-
-    private String remarks;
+    private String evalKey;
 
     private Date created;
 
@@ -57,68 +51,40 @@ public class ResLuxury extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @Column(name = "TITLE")
-    public String getTitle() {
-        return title;
+    @Column(name = "GENDER")
+    public Integer getGender() {
+        return gender;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
-    @Column(name = "BUY_PRICE")
-    public Integer getBuyPrice() {
-        return buyPrice;
+    @Column(name = "LOGIC_MATCH")
+    public String getLogicMatch() {
+        return logicMatch;
     }
 
-    public void setBuyPrice(Integer buyPrice) {
-        this.buyPrice = buyPrice;
+    public void setLogicMatch(String logicMatch) {
+        this.logicMatch = logicMatch;
     }
 
-    @Column(name = "SELL_PRICE")
-    public Integer getSellPrice() {
-        return sellPrice;
+    @Column(name = "COMMENT")
+    public String getComment() {
+        return comment;
     }
 
-    public void setSellPrice(Integer sellPrice) {
-        this.sellPrice = sellPrice;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    @Column(name = "OFFSET_BUY")
-    public Integer getOffsetBuy() {
-        return offsetBuy;
+    @Column(name = "EVAL_KEY")
+    public String getEvalKey() {
+        return evalKey;
     }
 
-    public void setOffsetBuy(Integer offsetBuy) {
-        this.offsetBuy = offsetBuy;
-    }
-
-    @Column(name = "OFFSET_SELL")
-    public Integer getOffsetSell() {
-        return offsetSell;
-    }
-
-    public void setOffsetSell(Integer offsetSell) {
-        this.offsetSell = offsetSell;
-    }
-
-
-    @Column(name = "LEVEL")
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    @Column(name = "REMARKS")
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setEvalKey(String evalKey) {
+        this.evalKey = evalKey;
     }
 
     @Column(name = "CREATED", updatable = false)

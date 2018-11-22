@@ -17,26 +17,20 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "RES_LUXURY")
-public class ResLuxury extends IdEntity implements Tracker {
+@Table(name = "RES_COMMENT")
+public class ResComment extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String title;
+    private String logicMatch;
 
-    private Integer buyPrice;
+    private Integer health;
 
-    private Integer sellPrice;
+    private Integer gender;
 
-    private Integer offsetBuy;
-
-    private Integer offsetSell;
-
-    private Integer level;
-
-    private String remarks;
+    private String comment;
 
     private Date created;
 
@@ -57,68 +51,41 @@ public class ResLuxury extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @Column(name = "TITLE")
-    public String getTitle() {
-        return title;
+    @Column(name = "GENDER")
+    public Integer getGender() {
+        return gender;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
-    @Column(name = "BUY_PRICE")
-    public Integer getBuyPrice() {
-        return buyPrice;
+    @Column(name = "HEALTH")
+    public Integer getHealth() {
+        return health;
     }
 
-    public void setBuyPrice(Integer buyPrice) {
-        this.buyPrice = buyPrice;
-    }
-
-    @Column(name = "SELL_PRICE")
-    public Integer getSellPrice() {
-        return sellPrice;
-    }
-
-    public void setSellPrice(Integer sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
-    @Column(name = "OFFSET_BUY")
-    public Integer getOffsetBuy() {
-        return offsetBuy;
-    }
-
-    public void setOffsetBuy(Integer offsetBuy) {
-        this.offsetBuy = offsetBuy;
-    }
-
-    @Column(name = "OFFSET_SELL")
-    public Integer getOffsetSell() {
-        return offsetSell;
-    }
-
-    public void setOffsetSell(Integer offsetSell) {
-        this.offsetSell = offsetSell;
+    public void setHealth(Integer health) {
+        this.health = health;
     }
 
 
-    @Column(name = "LEVEL")
-    public Integer getLevel() {
-        return level;
+    @Column(name = "LOGIC_MATCH")
+    public String getLogicMatch() {
+        return logicMatch;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setLogicMatch(String logicMatch) {
+        this.logicMatch = logicMatch;
     }
 
-    @Column(name = "REMARKS")
-    public String getRemarks() {
-        return remarks;
+    @Column(name = "COMMENT")
+    public String getComment() {
+        return comment;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Column(name = "CREATED", updatable = false)
