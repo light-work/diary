@@ -93,6 +93,10 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserFormStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserFormStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
         <!--      res   -->
 
         <consumer id="resCarStoreConsumer"
@@ -370,6 +374,11 @@
 
         <consumer id="userEventBizConsumer"
                   interface="com.diary.providers.biz.app.UserEventBiz"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="userFormBizConsumer"
+                  interface="com.diary.providers.biz.app.UserFormBiz"
                   version="for-dev" clientTimeout="5000">
         </consumer>
     </group>

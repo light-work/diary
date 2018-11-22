@@ -131,7 +131,14 @@
                   ref="appUserRankingsStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
-        
+
+        <service id="appUserFormStore" class="com.diary.storeImpl.app.AppUserFormStoreImpl"/>
+        <provider id="appUserFormStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFormStore"
+                  ref="appUserFormStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <!--      res   -->
 
         <service id="resCarStore" class="com.diary.storeImpl.res.ResCarStoreImpl"/>
@@ -524,6 +531,13 @@
         <provider id="userEventBizProvider"
                   interface="com.diary.providers.biz.app.UserEventBiz"
                   ref="userEventBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="userFormBiz" class="com.diary.bizImpl.app.UserFormBizImp"/>
+        <provider id="userFormBizProvider"
+                  interface="com.diary.providers.biz.app.UserFormBiz"
+                  ref="userFormBiz" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
     </group>
