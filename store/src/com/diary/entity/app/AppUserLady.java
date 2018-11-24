@@ -47,6 +47,17 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     private String comment;
 
+    private String commentText;
+
+
+    private String jobTitle;
+
+    private String coupleTitle;
+
+    private String clothesTitle;
+
+    private String luxuryTitle;
+
     private Date created;
 
     private String createdBy;
@@ -177,6 +188,51 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Column(name = "COMMENT_TEXT")
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    @Column(name = "JOB_TITLE")
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    @Column(name = "COUPLE_TITLE")
+    public String getCoupleTitle() {
+        return coupleTitle;
+    }
+
+    public void setCoupleTitle(String coupleTitle) {
+        this.coupleTitle = coupleTitle;
+    }
+
+    @Column(name = "CLOTHES_TITLE")
+    public String getClothesTitle() {
+        return clothesTitle;
+    }
+
+    public void setClothesTitle(String clothesTitle) {
+        this.clothesTitle = clothesTitle;
+    }
+
+    @Column(name = "LUXURY_TITLE")
+    public String getLuxuryTitle() {
+        return luxuryTitle;
+    }
+
+    public void setLuxuryTitle(String luxuryTitle) {
+        this.luxuryTitle = luxuryTitle;
     }
 
     @Column(name = "CREATED", updatable = false)

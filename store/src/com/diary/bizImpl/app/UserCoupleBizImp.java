@@ -238,7 +238,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                     }
                                 }
                                 GameUtils.addResultArray(resultArray, "你激动地介绍自己，可对方并没看上你，还是先成为更好的自己吧！", null);
-                                GameUtils.addResultArray(resultArray, "原因：", failAttrName);
+                                GameUtils.addResultArray(resultArray, "要求：", failAttrName);
                             }
 
                             resultObj.put("result", 1);

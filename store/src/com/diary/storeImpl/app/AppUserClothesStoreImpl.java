@@ -115,4 +115,15 @@ public class AppUserClothesStoreImpl implements AppUserClothesStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserClothes> appUserClothesList) throws StoreException {
+        try {
+            this.appUserClothesService.delete(appUserClothesList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

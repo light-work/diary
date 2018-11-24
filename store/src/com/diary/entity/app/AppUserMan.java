@@ -53,6 +53,16 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private String comment;
 
+    private String commentText;
+
+
+    private String jobTitle;
+
+    private String coupleTitle;
+
+    private String carTitle;
+
+    private String houseTitle;
 
     private Date created;
 
@@ -199,6 +209,52 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+
+    @Column(name = "COMMENT_TEXT")
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    @Column(name = "JOB_TITLE")
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    @Column(name = "COUPLE_TITLE")
+    public String getCoupleTitle() {
+        return coupleTitle;
+    }
+
+    public void setCoupleTitle(String coupleTitle) {
+        this.coupleTitle = coupleTitle;
+    }
+
+    @Column(name = "CAR_TITLE")
+    public String getCarTitle() {
+        return carTitle;
+    }
+
+    public void setCarTitle(String carTitle) {
+        this.carTitle = carTitle;
+    }
+
+    @Column(name = "HOUSE_TITLE")
+    public String getHouseTitle() {
+        return houseTitle;
+    }
+
+    public void setHouseTitle(String houseTitle) {
+        this.houseTitle = houseTitle;
     }
 
     @Column(name = "CREATED", updatable = false)

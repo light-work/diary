@@ -115,4 +115,15 @@ public class AppUserLuxuryStoreImpl implements AppUserLuxuryStore {
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
+
+    @Override
+    @ConnectManager
+    public void delete(List<AppUserLuxury> appUserLuxuryList) throws StoreException {
+        try {
+            this.appUserLuxuryService.delete(appUserLuxuryList);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 }

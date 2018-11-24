@@ -7,6 +7,7 @@ import com.diary.entity.app.AppUserLady;
 import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.app.AppUserLuxury;
 import com.diary.entity.res.ResLuxury;
+import com.diary.entity.res.ResLuxuryEffect;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
@@ -15,6 +16,7 @@ import com.diary.providers.store.app.AppUserLadyStore;
 import com.diary.providers.store.app.AppUserLimitStore;
 import com.diary.providers.store.app.AppUserLuxuryStore;
 import com.diary.providers.store.app.AppUserStore;
+import com.diary.providers.store.res.ResLuxuryEffectStore;
 import com.diary.providers.store.res.ResLuxuryStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
@@ -47,8 +49,10 @@ public class UserLuxuryBizImp extends BaseBiz implements UserLuxuryBiz {
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
             AppUserLuxuryStore appUserLuxuryStore = hsfServiceFactory.consumer(AppUserLuxuryStore.class);
             ResLuxuryStore resLuxuryStore = hsfServiceFactory.consumer(ResLuxuryStore.class);
+            ResLuxuryEffectStore resLuxuryEffectStore = hsfServiceFactory.consumer(ResLuxuryEffectStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
-            if (appUserStore != null && appUserLadyStore != null && appUserLuxuryStore != null && resLuxuryStore != null && appUserLimitStore != null) {
+            if (appUserStore != null && appUserLadyStore != null && appUserLuxuryStore != null && resLuxuryStore != null && appUserLimitStore != null
+                    &&resLuxuryEffectStore!=null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
@@ -63,10 +67,10 @@ public class UserLuxuryBizImp extends BaseBiz implements UserLuxuryBiz {
                             Integer luxuryLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "LUXURY");
 
                             if (luxuryLimit == 0) {
+                                Integer currentBuyPrice = GameUtils.dynamicPrice(appUserLady.getDays(), resLuxury.getBuyPrice(), resLuxury.getOffsetBuy());
 
-
-                                if (appUserLady.getMoney() >= resLuxury.getBuyPrice()) {
-
+                                if (appUserLady.getMoney() >= currentBuyPrice) {
+                                    List<ResLuxuryEffect> luxuryEffectList = resLuxuryEffectStore.getListByLuxuryId(luxuryId);
                                     AppUserLimit appUserLimit = new AppUserLimit();
                                     appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                     appUserLimit.setUserId(appUser);
@@ -82,12 +86,13 @@ public class UserLuxuryBizImp extends BaseBiz implements UserLuxuryBiz {
                                     appUserLuxury.setUseYn("Y");
                                     bind(appUserLuxury, userId);
                                     AppUserLady oldLady = (AppUserLady) appUserLady.clone();
-                                    appUserLady.setMoney(appUserLady.getMoney() - resLuxury.getBuyPrice());
+                                    appUserLady.setMoney(appUserLady.getMoney() - currentBuyPrice);
+                                    GameUtils.useEffect(luxuryEffectList, appUserLady);
                                     effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                   // GameUtils.useHour(appUserLady);
+
                                     bind(appUserLady, userId);
                                     appUserLuxuryStore.buy(appUserLuxury, Persistent.SAVE, appUserLady, appUserLimit);
-                                    GameUtils.addResultArray(resultArray, "恭喜你,穿戴了:" + resLuxury.getTitle() + "，我怎么这么好看，这么好看怎么办！", null);
+                                    GameUtils.addResultArray(resultArray, "恭喜你,添置了:" + resLuxury.getTitle() , null);
                                     GameUtils.addResultArray(resultArray, "最终:", effectArray);
                                     result = 0;
                                 } else {
@@ -149,13 +154,13 @@ public class UserLuxuryBizImp extends BaseBiz implements UserLuxuryBiz {
                                     if (appUserLuxury != null) {
                                         ResLuxury resLuxury = appUserLuxury.getLuxuryId();
                                         if (resLuxury != null) {
+                                            Integer currentSellPrice = GameUtils.dynamicPrice(appUserLady.getDays(), resLuxury.getSellPrice(), resLuxury.getOffsetSell());
                                             AppUserLady oldLady = (AppUserLady) appUserLady.clone();
-                                            appUserLady.setMoney(appUserLady.getMoney() + resLuxury.getSellPrice());
+                                            appUserLady.setMoney(appUserLady.getMoney() + currentSellPrice);
                                             effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                          //  GameUtils.useHour(appUserLady);
                                             bind(appUserLady, userId);
                                             appUserLuxuryStore.sell(appUserLuxury, appUserLady, appUserLimit);
-                                            GameUtils.addResultArray(resultArray, "已将不想要的" + resLuxury.getTitle() + "饰品出售，这身衣服过时了！", null);
+                                            GameUtils.addResultArray(resultArray, "已将不想要的" + resLuxury.getTitle() + "出售，老娘需要更好的！", null);
                                             GameUtils.addResultArray(resultArray, "最终:", effectArray);
                                             result = 0;
                                         }
