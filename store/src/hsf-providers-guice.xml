@@ -74,6 +74,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserLadyHistStore" class="com.diary.storeImpl.app.AppUserLadyHistStoreImpl"/>
+        <provider id="appUserLadyHistStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserLadyHistStore"
+                  ref="appUserLadyHistStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <service id="appUserPlanStore" class="com.diary.storeImpl.app.AppUserPlanStoreImpl"/>
         <provider id="appUserPlanStoreProvider"
                   interface="com.diary.providers.store.app.AppUserPlanStore"

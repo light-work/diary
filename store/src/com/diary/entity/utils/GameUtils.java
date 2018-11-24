@@ -142,8 +142,8 @@ public class GameUtils {
 //        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
         Map<String, String> parMap = new HashMap<>();
-        parMap.put("userId", "6468371351881961472");
-        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/done", parMap);
+        parMap.put("userId", "6465580136151400448");
+        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
 
         System.out.println(r);
 
@@ -511,7 +511,7 @@ public class GameUtils {
                             } else {
                                 jsonObject.put("attrName", getAttrNameLady(requireKey));
                             }
-                            jsonObject.put("value", "需" + requireValue);
+                            jsonObject.put("value",  requireValue);
                             failArray.add(jsonObject);
                         }
                     }
@@ -537,7 +537,7 @@ public class GameUtils {
                                 continue;
                             }
                         } else if (compare.equals("<")) {
-                            if (userValue >= value) {
+                            if (userValue > value) {
                                 continue;
                             }
                         }

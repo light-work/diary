@@ -33,4 +33,7 @@ public interface AppUserClothesStore {
 
     void delete(AppUserClothes appUserClothes) throws StoreException;
 
+
+    void delete(List<AppUserClothes> appUserClothesList) throws StoreException;
+
 }

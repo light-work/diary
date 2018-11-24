@@ -82,4 +82,10 @@ public class AppUserClothesService extends HQuery implements AppUserClothesStore
         this.appUserLadyService.save(appUserLady, Persistent.UPDATE);
         appUserLimitService.save(appUserLimit,Persistent.SAVE);
     }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(List<AppUserClothes> appUserClothesList) throws StoreException {
+        $(appUserClothesList).delete();
+    }
 }

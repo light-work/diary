@@ -28,6 +28,8 @@ public interface UserBiz {
 
     String report(Long userId) throws BizException;
 
+    String myReport(Long userId) throws BizException;
+
     String rankings(Long userId,Integer start, Integer limit) throws BizException;
 
     String replay(Long userId) throws BizException;

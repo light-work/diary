@@ -54,7 +54,7 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                 List<Selector> selectorList = new ArrayList<>();
                 selectorList.add(SelectorUtils.$eq("gender", appUser.getGender()));
                 selectorList.add(SelectorUtils.$eq("source", "RANDOM"));
-
+                selectorList.add(SelectorUtils.$eq("useYn", "Y"));
                 GameUtils.randSelector(selectorList);
                 Page<ResEvent> resEventPage = resEventStore.getPageList(0, 50, selectorList);
                 if (resEventPage != null) {
@@ -170,7 +170,6 @@ public class UserEventBizImp extends BaseBiz implements UserEventBiz {
                         }
                         resultObj.put("result", 0);
                         resultObj.put("resultArray", resultArray);
-                        System.out.println(resultObj.toString());
                     }
                 }
             }

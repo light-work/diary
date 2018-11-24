@@ -91,12 +91,33 @@ public class AppUserLadyStoreImpl implements AppUserLadyStore {
         }
     }
 
+    @Override
+    @ConnectManager
+    public void saveDone(AppUserLady appUserLady, Persistent persistent, AppUser appUser, AppUserLadyHist appUserLadyHist, Persistent persistentHist) throws StoreException {
+        try {
+            this.appUserLadyService.saveDone(appUserLady, persistent, appUser, appUserLadyHist, persistentHist);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
 
     @Override
     @ConnectManager
     public void nextDay(AppUserLady appUserLady, Persistent persistent, List<AppUserFund> appUserFunds, List<AppUserFundDetail> appUserFundDetails, List<AppUserFundMarket> appUserFundMarkets) throws StoreException {
         try {
             this.appUserLadyService.nextDay(appUserLady, persistent, appUserFunds, appUserFundDetails, appUserFundMarkets);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
+    public void delete(AppUserLady appUserLady, List<AppUserLimit> userLimitList, AppUserJob userJob, List<AppUserClothes> userClothesList, List<AppUserLuxury> userLuxuryList, AppUserCouple userCouple, List<AppUserFund> userFundList, List<AppUserFundMarket> userFundMarketList, List<AppUserFundDetail> userFundDetailList, List<AppUserLuck> userLuckList, List<AppUserPlan> userPlanList) throws StoreException {
+        try {
+            this.appUserLadyService.delete(appUserLady, userLimitList, userJob, userClothesList, userLuxuryList, userCouple, userFundList, userFundMarketList, userFundDetailList, userLuckList, userPlanList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

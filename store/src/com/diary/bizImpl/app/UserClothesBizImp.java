@@ -7,6 +7,7 @@ import com.diary.entity.app.AppUserClothes;
 import com.diary.entity.app.AppUserLady;
 import com.diary.entity.app.AppUserLimit;
 import com.diary.entity.res.ResClothes;
+import com.diary.entity.res.ResClothesEffect;
 import com.diary.entity.utils.DrdsIDUtils;
 import com.diary.entity.utils.DrdsTable;
 import com.diary.entity.utils.GameUtils;
@@ -15,6 +16,7 @@ import com.diary.providers.store.app.AppUserClothesStore;
 import com.diary.providers.store.app.AppUserLadyStore;
 import com.diary.providers.store.app.AppUserLimitStore;
 import com.diary.providers.store.app.AppUserStore;
+import com.diary.providers.store.res.ResClothesEffectStore;
 import com.diary.providers.store.res.ResClothesStore;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
@@ -47,8 +49,10 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
             AppUserLadyStore appUserLadyStore = hsfServiceFactory.consumer(AppUserLadyStore.class);
             AppUserClothesStore appUserClothesStore = hsfServiceFactory.consumer(AppUserClothesStore.class);
             ResClothesStore resClothesStore = hsfServiceFactory.consumer(ResClothesStore.class);
+            ResClothesEffectStore resClothesEffectStore = hsfServiceFactory.consumer(ResClothesEffectStore.class);
             AppUserLimitStore appUserLimitStore = hsfServiceFactory.consumer(AppUserLimitStore.class);
-            if (appUserStore != null && appUserLadyStore != null && appUserClothesStore != null && resClothesStore != null && appUserLimitStore != null) {
+            if (appUserStore != null && appUserLadyStore != null && appUserClothesStore != null && resClothesStore != null && appUserLimitStore != null
+                    &&resClothesEffectStore!=null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     String resultText = null;
@@ -63,10 +67,10 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                             Integer clothesLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "CLOTHES");
 
                             if (clothesLimit == 0) {
+                                Integer currentBuyPrice = GameUtils.dynamicPrice(appUserLady.getDays(), resClothes.getBuyPrice(), resClothes.getOffsetBuy());
 
-
-                                if (appUserLady.getMoney() >= resClothes.getBuyPrice()) {
-
+                                if (appUserLady.getMoney() >= currentBuyPrice) {
+                                    List<ResClothesEffect> clothesEffectList = resClothesEffectStore.getListByClothesId(clothesId);
                                     AppUserLimit appUserLimit = new AppUserLimit();
                                     appUserLimit.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                     appUserLimit.setUserId(appUser);
@@ -82,13 +86,13 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                                     appUserClothes.setUseYn("Y");
                                     bind(appUserClothes, userId);
                                     AppUserLady oldLady = (AppUserLady) appUserLady.clone();
-                                    appUserLady.setMoney(appUserLady.getMoney() - resClothes.getBuyPrice());
+                                    appUserLady.setMoney(appUserLady.getMoney() - currentBuyPrice);
+                                    GameUtils.useEffect(clothesEffectList, appUserLady);
                                     effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                    //GameUtils.useHour(appUserLady);
                                     bind(appUserLady, userId);
                                     appUserClothesStore.buy(appUserClothes, Persistent.SAVE, appUserLady, appUserLimit);
 
-                                    GameUtils.addResultArray(resultArray, "恭喜你,穿上了:" + resClothes.getTitle() + "，我怎么这么好看，这么好看怎么办！", null);
+                                    GameUtils.addResultArray(resultArray, "恭喜你,穿上了:" + resClothes.getTitle() , null);
                                     GameUtils.addResultArray(resultArray, "最终:", effectArray);
                                     result = 0;
                                 } else {
@@ -150,10 +154,11 @@ public class UserClothesBizImp extends BaseBiz implements UserClothesBiz {
                                     if (appUserClothes != null) {
                                         ResClothes resClothes = appUserClothes.getClothesId();
                                         if (resClothes != null) {
+                                            Integer currentSellPrice = GameUtils.dynamicPrice(appUserLady.getDays(), resClothes.getSellPrice(), resClothes.getOffsetSell());
+
                                             AppUserLady oldLady = (AppUserLady) appUserLady.clone();
-                                            appUserLady.setMoney(appUserLady.getMoney() + resClothes.getSellPrice());
+                                            appUserLady.setMoney(appUserLady.getMoney() + currentSellPrice);
                                             effectArray = GameUtils.diffEffectLady(oldLady, appUserLady);
-                                           // GameUtils.useHour(appUserLady);
                                             bind(appUserLady, userId);
                                             appUserClothesStore.sell(appUserClothes, appUserLady, appUserLimit);
                                             GameUtils.addResultArray(resultArray, "已将不想要的" + resClothes.getTitle() + "衣服出售，这身衣服过时了！", null);

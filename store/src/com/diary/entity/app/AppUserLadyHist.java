@@ -27,6 +27,8 @@ public class AppUserLadyHist extends IdEntity implements Tracker, Cloneable {
 
     private Integer money;
 
+    private Integer fundMoney;
+
     private Integer ability;
 
 
@@ -46,6 +48,17 @@ public class AppUserLadyHist extends IdEntity implements Tracker, Cloneable {
     private Integer score;
 
     private String comment;
+
+    private String commentText;
+
+
+    private String jobTitle;
+
+    private String coupleTitle;
+
+    private String clothesTitle;
+
+    private String luxuryTitle;
 
     private Date created;
 
@@ -177,6 +190,60 @@ public class AppUserLadyHist extends IdEntity implements Tracker, Cloneable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Column(name = "FUND_MONEY")
+    public Integer getFundMoney() {
+        return fundMoney;
+    }
+
+    public void setFundMoney(Integer fundMoney) {
+        this.fundMoney = fundMoney;
+    }
+
+    @Column(name = "COMMENT_TEXT")
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    @Column(name = "JOB_TITLE")
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    @Column(name = "COUPLE_TITLE")
+    public String getCoupleTitle() {
+        return coupleTitle;
+    }
+
+    public void setCoupleTitle(String coupleTitle) {
+        this.coupleTitle = coupleTitle;
+    }
+
+    @Column(name = "CLOTHES_TITLE")
+    public String getClothesTitle() {
+        return clothesTitle;
+    }
+
+    public void setClothesTitle(String clothesTitle) {
+        this.clothesTitle = clothesTitle;
+    }
+
+    @Column(name = "LUXURY_TITLE")
+    public String getLuxuryTitle() {
+        return luxuryTitle;
+    }
+
+    public void setLuxuryTitle(String luxuryTitle) {
+        this.luxuryTitle = luxuryTitle;
     }
 
     @Column(name = "CREATED", updatable = false)

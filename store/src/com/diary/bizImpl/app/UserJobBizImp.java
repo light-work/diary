@@ -142,7 +142,7 @@ public class UserJobBizImp extends BaseBiz implements UserJobBiz {
                             }
                             appUserLimitStore.save(appUserLimit,Persistent.SAVE);
                             GameUtils.addResultArray(resultArray, "你卖力的表现了下自己，但是面试官觉得你的能力无法胜任这份工作！", null);
-                            GameUtils.addResultArray(resultArray, "原因：", failAttrName);
+                            GameUtils.addResultArray(resultArray, "要求：", failAttrName);
                         }
                         resultObj.put("result", 1);
                         resultObj.put("resultArray", resultArray);

@@ -33,4 +33,8 @@ public interface AppUserLuxuryStore {
 
     void delete(AppUserLuxury appUserLuxury) throws StoreException;
 
+
+    void delete(List<AppUserLuxury> appUserLuxuryList) throws StoreException;
+
+
 }
