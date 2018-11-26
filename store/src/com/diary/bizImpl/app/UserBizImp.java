@@ -16,6 +16,7 @@ import net.sf.json.JSONObject;
 import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.OKHttpUtil;
 import org.guiceside.commons.Page;
+import org.guiceside.commons.lang.DateFormatUtil;
 import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
@@ -40,15 +41,13 @@ public class UserBizImp extends BaseBiz implements UserBiz {
     @Inject
     private HSFServiceFactory hsfServiceFactory;
 
-    static String appId = "wxadc0c22656d6c116";
-    static String secret = "890342da41f48c2dbbd1b4038060b056";
-
     @Override
     public String login(String code, Long userId, String nickName, String avatarUrl,
                         Integer gender,
                         String city, String province, String country) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
+        System.out.println(System.currentTimeMillis() + " userId=" + userId + "code=" + code);
         try {
             AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
             AppUserManStore appUserManStore = hsfServiceFactory.consumer(AppUserManStore.class);
@@ -61,6 +60,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                 if (gender == 0) {
                     gender = 1;
                 }
+                nickName = GameUtils.filterNickName(nickName);
                 if (appUser != null) {
                     appUser.setNickName(nickName);
                     appUser.setGender(gender);
@@ -68,15 +68,18 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     appUser.setCity(city);
                     appUser.setProvince(province);
                     appUser.setCountry(country);
-                    bind(appUser, 1l);
+                    if (userId != null) {
+                        bind(appUser, userId);
+                    }
                     appUserStore.save(appUser, Persistent.UPDATE);
                 } else {
                     Map<String, String> paramMap = new HashMap<>();
-                    paramMap.put("appid", appId);
-                    paramMap.put("secret", secret);
+                    paramMap.put("appid", GameUtils.appId);
+                    paramMap.put("secret", GameUtils.secret);
                     paramMap.put("js_code", code);
                     paramMap.put("grant_type", "authorization_code");
                     String resultWX = OKHttpUtil.get("https://api.weixin.qq.com/sns/jscode2session", paramMap);
+                    System.out.println(resultWX);
                     if (StringUtils.isNotBlank(resultWX)) {
                         JSONObject wxObj = JSONObject.fromObject(resultWX);
                         if (wxObj != null) {
@@ -159,8 +162,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     appUser = appUserStore.getById(userId);
                 } else if (StringUtils.isNotBlank(code)) {
                     Map<String, String> paramMap = new HashMap<>();
-                    paramMap.put("appid", appId);
-                    paramMap.put("secret", secret);
+                    paramMap.put("appid", GameUtils.appId);
+                    paramMap.put("secret", GameUtils.secret);
                     paramMap.put("js_code", code);
                     paramMap.put("grant_type", "authorization_code");
                     String resultWX = OKHttpUtil.get("https://api.weixin.qq.com/sns/jscode2session", paramMap);
@@ -496,6 +499,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 appUser.setPlayNumber(appUser.getPlayNumber() + 1);
                                 appUser.setLastScore(0);
                                 appUser.setLastComment(null);
+                                days = appUserMan.getDays();
                             }
                             bind(appUser, userId);
                             appUserStore.save(appUser, Persistent.UPDATE);
@@ -530,6 +534,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 appUser.setPlayNumber(appUser.getPlayNumber() + 1);
                                 appUser.setLastScore(0);
                                 appUser.setLastComment(null);
+                                days = appUserLady.getDays();
                             }
                             bind(appUser, userId);
                             appUserStore.save(appUser, Persistent.UPDATE);
@@ -925,7 +930,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 List<AppUserClothes> appUserClothesList = appUserClothesStore.getByUserId(userId);
                                 List<AppUserLuxury> appUserLuxuryList = appUserLuxuryStore.getByUserId(userId);
                                 if (appUserJob == null && appUserClothesList.isEmpty() && appUserLuxuryList.isEmpty()) {
-                                    resultText += "你又没工作，又没衣服，又没饰品，哎，仅仅做了个梦！";
+                                    resultText += "你又没工作，又没衣服穿，也不化妆，哎，仅仅做了个梦！";
                                     GameUtils.addResultArray(resultArray, resultText, null);
                                 } else {
                                     resultText += "因为你";
@@ -1015,6 +1020,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     }
                     AppUserMan appUserMan = null;
                     AppUserLady appUserLady = null;
+                    AppUserManHist appUserManHist = null;
+                    AppUserLadyHist appUserLadyHist = null;
                     Integer score = 0;
                     String comment = "";
                     boolean flagRanking = true;
@@ -1024,13 +1031,15 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
                             if (StringUtils.isNotBlank(appUserMan.getComment()) && appUserMan.getScore() != 0) {
+                                //结束了。没有重新玩
                                 resultObj.put("comment", appUserMan.getComment());
                                 flagRanking = false;
                             } else {
+                                //重新玩
+                                flagRanking = false;
                                 day = appUserMan.getDays();
                                 hour = appUserMan.getHours();
                                 if (day == 0 && hour == 0) {
-
                                     String jobTitle = "无";
 
                                     String coupleTitle = "无";
@@ -1042,7 +1051,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     JSONArray commentText = null;
 
                                     score += GameUtils.getScoreAttr(appUserMan.getHealth(), "Health", appUser.getGender());
-                                    if (score > 140) {
+                                    if (score >= 150) {
                                         score += 200 * appUserMan.getHealth();
                                     } else if (score > 100) {
                                         score += 150 * appUserMan.getHealth();
@@ -1069,7 +1078,11 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         baseFundMoney = 0;
                                     }
                                     Integer diffFundMoney = fundMoney - baseFundMoney;
-
+                                    if (diffFundMoney < 0) {
+                                        score -= 50000;
+                                    } else if (diffFundMoney > 0) {
+                                        score += 50000;
+                                    }
                                     score += GameUtils.getScoreMoney(appUserMan.getMoney());
                                     score += GameUtils.getScoreMoney(fundMoney);
 
@@ -1213,13 +1226,13 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         if (fundMoney > 0) {
                                             List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
                                             if (appUserFundList != null && !appUserFundList.isEmpty()) {
-                                                commentText.add("你在北京投资了" + fundMoney + "，其中:");
-                                                String fundDetail = "";
-                                                for (AppUserFund appUserFund : appUserFundList) {
-                                                    fundDetail = appUserFund.getFundId().getTitle() + "总共投资了:" + appUserFund.getBuy() + ",投资回报:" +
-                                                            GameUtils.calProfit(appUserFund.getMoney(), appUserFund.getBuy()) + "。";
-                                                    commentText.add(fundDetail);
-                                                }
+                                                commentText.add("你在北京投资了" + fundMoney + "，其中本金:" + baseFundMoney + "最终赚了:" + diffFundMoney);
+//                                                String fundDetail = "";
+//                                                for (AppUserFund appUserFund : appUserFundList) {
+//                                                    fundDetail = appUserFund.getFundId().getTitle() + "总共投资了:" + appUserFund.getBuy() + ",投资回报:" +
+//                                                            GameUtils.calProfit(appUserFund.getMoney(), appUserFund.getBuy()) + "。";
+//                                                    commentText.add(fundDetail);
+//                                                }
                                                 commentText.add(fundComment);
                                             }
 
@@ -1389,7 +1402,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     appUserMan.setScore(score);
                                     appUserMan.setComment(comment);
 
-                                    AppUserManHist appUserManHist = appUserManHistStore.getByUserId(userId);
+                                    appUserManHist = appUserManHistStore.getByUserId(userId);
                                     Persistent persistentHist = Persistent.UPDATE;
                                     boolean updateFlag = false;
                                     if (appUserManHist == null) {
@@ -1399,8 +1412,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         appUserManHist.setUserId(appUser);
                                         updateFlag = true;
                                     } else {
-                                        if (appUserMan.getScore() > appUserManHist.getScore()) {
-                                            updateFlag = true;
+                                        if (appUserManHist.getScore() != null) {
+                                            if (appUserMan.getScore() > appUserManHist.getScore()) {
+                                                updateFlag = true;
+                                            }
                                         }
                                     }
                                     if (updateFlag) {
@@ -1421,8 +1436,9 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         appUserManHist.setCarTitle(carTitle != null ? carTitle.toString() : null);
                                         appUserManHist.setHouseTitle(houseTitle != null ? houseTitle.toString() : null);
                                         appUserManHist.setCommentText(commentText != null ? commentText.toString() : null);
-                                        appUserManHist.setUseYn("Y");
+                                        flagRanking = true;
                                     }
+                                    appUserManHist.setUseYn("Y");
                                     bind(appUserManHist, userId);
                                     appUserMan.setJobTitle(jobTitle);
                                     appUserMan.setCoupleTitle(coupleTitle);
@@ -1437,9 +1453,12 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     bind(appUser, userId);
                                     appUserManStore.saveDone(appUserMan, Persistent.UPDATE, appUser, appUserManHist, persistentHist);
                                 } else {
-                                    if (StringUtils.isNotBlank(appUser.getLastComment()) && appUser.getLastScore() != 0) {
-                                        resultObj.put("comment", appUser.getLastComment());
-                                        flagRanking = false;
+                                    flagRanking = false;
+                                    appUserManHist = appUserManHistStore.getByUserId(userId);
+                                    if (appUserManHist != null) {
+                                        if (StringUtils.isNotBlank(appUserManHist.getComment()) && appUserManHist.getScore() != 0) {
+                                            resultObj.put("comment", appUserManHist.getComment());
+                                        }
                                     }
                                 }
                             }
@@ -1454,7 +1473,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 day = appUserLady.getDays();
                                 hour = appUserLady.getHours();
                                 if (day == 0 && hour == 0) {
-
+                                    flagRanking = false;
                                     String jobTitle = "无";
 
                                     String coupleTitle = "无";
@@ -1639,13 +1658,13 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         if (fundMoney > 0) {
                                             List<AppUserFund> appUserFundList = appUserFundStore.getByUserId(userId);
                                             if (appUserFundList != null && !appUserFundList.isEmpty()) {
-                                                commentText.add("你在北京投资了" + fundMoney + "，其中:");
-                                                String fundDetail = "";
-                                                for (AppUserFund appUserFund : appUserFundList) {
-                                                    fundDetail = appUserFund.getFundId().getTitle() + "总共投资了:" + appUserFund.getBuy() + ",投资回报:" +
-                                                            GameUtils.calProfit(appUserFund.getMoney(), appUserFund.getBuy()) + "。";
-                                                    commentText.add(fundDetail);
-                                                }
+                                                commentText.add("你在北京投资了" + fundMoney + "，其中本金:" + baseFundMoney + "最终赚了:" + diffFundMoney);
+//                                                String fundDetail = "";
+//                                                for (AppUserFund appUserFund : appUserFundList) {
+//                                                    fundDetail = appUserFund.getFundId().getTitle() + "总共投资了:" + appUserFund.getBuy() + ",投资回报:" +
+//                                                            GameUtils.calProfit(appUserFund.getMoney(), appUserFund.getBuy()) + "。";
+//                                                    commentText.add(fundDetail);
+//                                                }
                                                 commentText.add(fundComment);
                                             }
 
@@ -1815,7 +1834,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     appUserLady.setScore(score);
                                     appUserLady.setComment(comment);
 
-                                    AppUserLadyHist appUserLadyHist = appUserLadyHistStore.getByUserId(userId);
+                                    appUserLadyHist = appUserLadyHistStore.getByUserId(userId);
                                     Persistent persistentHist = Persistent.UPDATE;
                                     boolean updateFlag = false;
                                     if (appUserLadyHist == null) {
@@ -1825,8 +1844,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         appUserLadyHist.setUserId(appUser);
                                         updateFlag = true;
                                     } else {
-                                        if (appUserLady.getScore() > appUserLadyHist.getScore()) {
-                                            updateFlag = true;
+                                        if (appUserLadyHist != null) {
+                                            if (appUserLady.getScore() > appUserLadyHist.getScore()) {
+                                                updateFlag = true;
+                                            }
                                         }
                                     }
                                     if (updateFlag) {
@@ -1847,14 +1868,15 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         appUserLadyHist.setClothesTitle(clothesTitle != null ? clothesTitle.toString() : null);
                                         appUserLadyHist.setLuxuryTitle(luxuryTitle != null ? luxuryTitle.toString() : null);
                                         appUserLadyHist.setCommentText(commentText != null ? commentText.toString() : null);
-                                        appUserLadyHist.setUseYn("Y");
+                                        flagRanking = true;
+
                                     }
                                     appUserLady.setJobTitle(jobTitle);
                                     appUserLady.setCoupleTitle(coupleTitle);
                                     appUserLady.setClothesTitle(clothesTitle != null ? clothesTitle.toString() : null);
                                     appUserLady.setLuxuryTitle(luxuryTitle != null ? luxuryTitle.toString() : null);
                                     appUserLady.setCommentText(commentText != null ? commentText.toString() : null);
-
+                                    appUserLadyHist.setUseYn("Y");
                                     bind(appUserLadyHist, userId);
                                     resultObj.put("comment", appUserLady.getComment());
                                     bind(appUserLady, userId);
@@ -1863,9 +1885,12 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     bind(appUser, userId);
                                     appUserLadyStore.saveDone(appUserLady, Persistent.UPDATE, appUser, appUserLadyHist, persistentHist);
                                 } else {
-                                    if (StringUtils.isNotBlank(appUser.getLastComment()) && appUser.getLastScore() != 0) {
-                                        resultObj.put("comment", appUser.getLastComment());
-                                        flagRanking = false;
+                                    flagRanking = false;
+                                    appUserLadyHist = appUserLadyHistStore.getByUserId(userId);
+                                    if (appUserLadyHist != null) {
+                                        if (StringUtils.isNotBlank(appUserLadyHist.getComment()) && appUserLadyHist.getScore() != 0) {
+                                            resultObj.put("comment", appUserLadyHist.getComment());
+                                        }
                                     }
                                 }
                             }
@@ -1902,7 +1927,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
 
 
     @Override
-    public String rankings(Long userId, Integer start, Integer limit) throws BizException {
+    public String rankings(Long userId, Integer start, Integer limit, Integer gender) throws BizException {
         JSONObject resultObj = new JSONObject();
         resultObj.put("result", -1);
         try {
@@ -1910,54 +1935,72 @@ public class UserBizImp extends BaseBiz implements UserBiz {
             AppUserRankingsStore appUserRankingsStore = hsfServiceFactory.consumer(AppUserRankingsStore.class);
             if (appUserStore != null && appUserRankingsStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
-                if (appUser != null) {
-                    List<Selector> selectorList = new ArrayList<>();
-                    selectorList.add(SelectorUtils.$alias("userId", "userId"));
-                    selectorList.add(SelectorUtils.$order("score", false));
-                    Page<AppUserRankings> appUserRankingsPage = appUserRankingsStore.getPageList(start, limit, selectorList);
-                    JSONArray rankingsArray = new JSONArray();
-                    String mySeq = limit + "+";
-                    if (appUserRankingsPage != null) {
-                        List<AppUserRankings> appUserRankingsList = appUserRankingsPage.getResultList();
-                        if (appUserRankingsList != null && !appUserRankingsList.isEmpty()) {
-                            int seqIndex = 1;
-                            for (AppUserRankings appUserRankings : appUserRankingsList) {
-                                AppUser rankingsUser = appUserRankings.getUserId();
-                                if (rankingsUser != null) {
-                                    if (rankingsUser.getId().equals(userId)) {
-                                        mySeq = seqIndex + "";
-                                    }
-                                    JSONObject userObj = JsonUtils.formIdEntity(rankingsUser, 0);
-                                    if (userObj != null) {
-                                        userObj.put("score", appUserRankings.getScore());
-                                        userObj.put("comment", appUserRankings.getComment());
-                                        GameUtils.minish(userObj);
-                                        rankingsArray.add(userObj);
-                                    }
-                                    seqIndex++;
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$alias("userId", "userId"));
+                selectorList.add(SelectorUtils.$order("score", false));
+                if (gender != null) {
+                    selectorList.add(SelectorUtils.$eq("userId.gender", gender));
+                }
+                Page<AppUserRankings> appUserRankingsPage = appUserRankingsStore.getPageList(start, limit, selectorList);
+                JSONArray rankingsArray = new JSONArray();
+                String mySeq = limit + "+";
+                if (appUserRankingsPage != null) {
+                    List<AppUserRankings> appUserRankingsList = appUserRankingsPage.getResultList();
+                    if (appUserRankingsList != null && !appUserRankingsList.isEmpty()) {
+                        int seqIndex = 1;
+                        for (AppUserRankings appUserRankings : appUserRankingsList) {
+                            AppUser rankingsUser = appUserRankings.getUserId();
+                            if (rankingsUser != null) {
+                                if (rankingsUser.getId().equals(userId)) {
+                                    mySeq = seqIndex + "";
                                 }
-
+                                JSONObject userObj = JsonUtils.formIdEntity(rankingsUser, 0);
+                                if (userObj != null) {
+                                    userObj.put("score", appUserRankings.getScore());
+                                    userObj.put("comment", appUserRankings.getComment());
+                                    GameUtils.minish(userObj);
+                                    rankingsArray.add(userObj);
+                                }
+                                seqIndex++;
                             }
+
                         }
-                    }
-                    JSONObject userObj = JsonUtils.formIdEntity(appUser, 0);
-                    if (userObj != null) {
-                        GameUtils.minish(userObj);
-                        AppUserRankings appUserRankings = appUserRankingsStore.getByUserId(userId);
-                        if (appUserRankings != null) {
-                            userObj.put("score", appUserRankings.getScore());
-                            userObj.put("comment", appUserRankings.getComment());
-                            userObj.put("seq", mySeq);
-                        } else {
-                            userObj.put("seq", "暂无");
-                            userObj.put("score", 0);
-                            userObj.put("comment", appUser.getLastComment());
-                        }
-                        resultObj.put("list", rankingsArray);
-                        resultObj.put("myData", userObj);
-                        resultObj.put("result", 0);
                     }
                 }
+                JSONObject userObj = null;
+                if (appUser != null) {
+                    userObj = JsonUtils.formIdEntity(appUser, 0);
+                }
+                if (userObj != null) {
+                    GameUtils.minish(userObj);
+                }
+                AppUserRankings appUserRankings = appUserRankingsStore.getByUserId(userId);
+                if (appUserRankings != null) {
+                    userObj.put("score", appUserRankings.getScore());
+                    userObj.put("comment", appUserRankings.getComment());
+                    userObj.put("seq", mySeq);
+                } else {
+                    if (userObj == null) {
+                        userObj = new JSONObject();
+                    }
+                    userObj.put("seq", "暂无");
+                    userObj.put("score", 0);
+                    if(appUser!=null){
+                        userObj.put("comment", appUser.getLastComment());
+                    }
+
+                }
+                resultObj.put("list", rankingsArray);
+                if (gender != null) {
+                    if(appUser!=null){
+                        if (appUser.getGender() == gender) {
+                            resultObj.put("myData", userObj);
+                        }
+                    }
+                } else {
+                    resultObj.put("myData", userObj);
+                }
+                resultObj.put("result", 0);
             }
         } catch (Exception ex) {
             if (ex instanceof StoreException) {
@@ -2169,6 +2212,114 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     }
                 }
 
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public byte[] QRCode(Long userId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            ResAccessTokenStore resAccessTokenStore = hsfServiceFactory.consumer(ResAccessTokenStore.class);
+            if (appUserStore != null && resAccessTokenStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    List<Selector> selectorList = new ArrayList<>();
+                    selectorList.add(SelectorUtils.$order("id", false));
+                    Page<ResAccessToken> accessTokenPage = resAccessTokenStore.getPageList(0, 1, selectorList);
+                    if (accessTokenPage != null) {
+                        List<ResAccessToken> accessTokenList = accessTokenPage.getResultList();
+                        if (accessTokenList != null && !accessTokenList.isEmpty()) {
+                            ResAccessToken resAccessToken = accessTokenList.get(0);
+                            if (resAccessToken != null) {
+                                JSONObject parMap = new JSONObject();
+                                parMap.put("scene", userId);
+                                parMap.put("page", "pages/index/index");
+                                String url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + resAccessToken.getTokenValue();
+                                byte[] r = OKHttpUtil.postByte(url, parMap.toString());
+                                return r;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String accessToken(Long userId) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserStore appUserStore = hsfServiceFactory.consumer(AppUserStore.class);
+            ResAccessTokenStore resAccessTokenStore = hsfServiceFactory.consumer(ResAccessTokenStore.class);
+            if (appUserStore != null && resAccessTokenStore != null) {
+                AppUser appUser = appUserStore.getById(userId);
+                if (appUser != null) {
+                    List<Selector> selectorList = new ArrayList<>();
+                    selectorList.add(SelectorUtils.$order("id", false));
+                    Page<ResAccessToken> accessTokenPage = resAccessTokenStore.getPageList(0, 1, selectorList);
+                    if (accessTokenPage != null) {
+                        List<ResAccessToken> accessTokenList = accessTokenPage.getResultList();
+                        if (accessTokenList != null && !accessTokenList.isEmpty()) {
+                            ResAccessToken resAccessToken = accessTokenList.get(0);
+                            if (resAccessToken != null) {
+                                resultObj.put("accessToken", resAccessToken.getTokenValue());
+                                resultObj.put("result", 0);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+
+    @Override
+    public String help() throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResTipStore resTipStore = hsfServiceFactory.consumer(ResTipStore.class);
+            if (resTipStore != null) {
+                JSONArray tipArray = new JSONArray();
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$eq("useYn", "Y"));
+                List<ResTip> tipList = resTipStore.getList(selectorList);
+                if (tipList != null && !tipList.isEmpty()) {
+                    for (ResTip resTip : tipList) {
+                        JSONObject tipObj = JsonUtils.formIdEntity(resTip, 0);
+                        if (tipObj != null) {
+                            GameUtils.minish(tipObj);
+                            tipArray.add(tipObj);
+                        }
+                    }
+                    resultObj.put("tipArray", tipArray);
+                }
+                resultObj.put("result", 0);
             }
         } catch (Exception ex) {
             if (ex instanceof StoreException) {

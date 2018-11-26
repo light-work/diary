@@ -382,6 +382,14 @@
         </provider>
 
 
+        <service id="resAccessTokenStore" class="com.diary.storeImpl.res.ResAccessTokenStoreImpl"/>
+        <provider id="resAccessTokenStoreProvider"
+                  interface="com.diary.providers.store.res.ResAccessTokenStore"
+                  ref="resAccessTokenStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
         <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
         <provider id="commonBizProvider"
                   interface="com.diary.providers.biz.res.CommonBiz"

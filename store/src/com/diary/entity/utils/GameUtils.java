@@ -3,6 +3,9 @@ package com.diary.entity.utils;
 import com.diary.entity.app.AppUserLady;
 import com.diary.entity.app.AppUserMan;
 import com.diary.entity.res.ResEventResult;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import ognl.NoSuchPropertyException;
@@ -16,8 +19,11 @@ import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
+
+import static org.guiceside.commons.OKHttpUtil.JSON;
 
 public class GameUtils {
 
@@ -26,6 +32,9 @@ public class GameUtils {
     public static final int intDays = 6;
 
     public static final int intHours = 6;
+
+    public static final String appId = "wxadc0c22656d6c116";
+    public static final String secret = "890342da41f48c2dbbd1b4038060b056";
 
     public static double fundMarket(List<Double> doubleList, Double minNum, Double maxNum) {
         Random r = new Random();
@@ -142,13 +151,37 @@ public class GameUtils {
 //        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
         Map<String, String> parMap = new HashMap<>();
-        parMap.put("userId", "6465580136151400448");
+        parMap.put("userId", "6472431803498135552");
         String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
-
         System.out.println(r);
-
+//        JSONObject parMap = new JSONObject();
+//        parMap.put("userId", "6472372181458386944");
+////        parMap.put("page", "pages/index/report");
+////        String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=";
+////        url+="16_HDw2f4YYcpV6lrU2s-3olzejdLwsk79elbTm4Qbec5i2Pvq-EwRHSwC7ln3EhW3vj18fsc43zONpRX4XQ_6_-HT9ao_5lkUFs9SuGYcKD_HcRSiNqMBiyHEY5MxXrOtjxdQytrAmz3kXSpQPXTVbAIAEAC";
+//        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/accessToken",parMap);
+//        System.out.println(r);
+//        String responseStr = null;
+//        RequestBody body = RequestBody.create(JSON, jsonData);
+//        Request request = (new Request.Builder()).url(url).post(body).build();
+//        Response response = okHttpClient.newCall(request).execute();
+//        if (response.isSuccessful()) {
+//            responseStr = response.body().string();
+//            return responseStr;
+//        } else {
+//            throw new IOException("Unexpected code " + response);
+//        }
 
     }
+
+    public static String filterNickName(String str) {
+        if (str == null) {
+            return null;
+        }
+        str = str.replaceAll("[^\\u0000-\\uFFFF]", "");
+        return str;
+    }
+
 
     public static Integer dynamicPrice(Integer day, Integer price, Integer offset) throws Exception {
         offset = offset * currentDay(day);
@@ -310,7 +343,7 @@ public class GameUtils {
                 attrName = "快乐";
                 break;
             case "POSITIVE":
-                attrName = "正义";
+                attrName = "正气";
                 break;
             case "CONNECTIONS":
                 attrName = "人脉";
@@ -511,7 +544,7 @@ public class GameUtils {
                             } else {
                                 jsonObject.put("attrName", getAttrNameLady(requireKey));
                             }
-                            jsonObject.put("value",  requireValue);
+                            jsonObject.put("value", requireValue);
                             failArray.add(jsonObject);
                         }
                     }

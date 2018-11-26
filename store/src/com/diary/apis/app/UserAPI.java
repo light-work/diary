@@ -8,6 +8,7 @@ import org.guiceside.commons.lang.StringUtils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by gbcp on 16/8/8.
@@ -764,7 +765,7 @@ public class UserAPI extends BaseAPI {
     @Path("/rankings/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response rankings(@PathParam("userId") Long userId) {
+    public Response rankings(@PathParam("userId") Long userId, @QueryParam("gender") Integer gender) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -775,7 +776,7 @@ public class UserAPI extends BaseAPI {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
-                    bizResult = userBiz.rankings(userId, 0, 200);
+                    bizResult = userBiz.rankings(userId, 0, 100, gender);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -866,4 +867,79 @@ public class UserAPI extends BaseAPI {
         result = buildResult(result, errorBuilder, bizResult);
         return Response.ok().entity(result.toString()).build();
     }
+
+    @Path("/QRCode/{userId}")
+    @GET
+    @Produces("image/png")
+    public Response userQRCode(@PathParam("userId") Long userId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    byte[] b= userBiz.QRCode(userId);
+                    if (b!=null) {
+                        return Response.ok(b).build();
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/accessToken")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes("application/x-www-form-urlencoded")
+    public Response accessToken(@FormParam("userId") Long userId) {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (userId == null) {
+            errorBuilder.append("userId was null.");
+        }
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.accessToken(userId);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+
+    @Path("/help")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response help() {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.help();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
 }

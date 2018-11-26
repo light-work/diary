@@ -263,6 +263,10 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resAccessTokenStoreConsumer"
+                  interface="com.diary.providers.store.res.ResAccessTokenStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
 
 
         <consumer id="commonBizConsumer"
