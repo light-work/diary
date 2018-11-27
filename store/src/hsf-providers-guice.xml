@@ -171,7 +171,6 @@
         </provider>
 
 
-
         <service id="resClothesStore" class="com.diary.storeImpl.res.ResClothesStoreImpl"/>
         <provider id="resClothesStoreProvider"
                   interface="com.diary.providers.store.res.ResClothesStore"
@@ -335,7 +334,6 @@
         </provider>
 
 
-
         <service id="resEventResultEffectStore" class="com.diary.storeImpl.res.ResEventResultEffectStoreImpl"/>
         <provider id="resEventResultEffectStoreProvider"
                   interface="com.diary.providers.store.res.ResEventResultEffectStore"
@@ -358,11 +356,17 @@
         </provider>
 
 
-
         <service id="resTipStore" class="com.diary.storeImpl.res.ResTipStoreImpl"/>
         <provider id="resTipStoreProvider"
                   interface="com.diary.providers.store.res.ResTipStore"
                   ref="resTipStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resShareStore" class="com.diary.storeImpl.res.ResShareStoreImpl"/>
+        <provider id="resShareStoreProvider"
+                  interface="com.diary.providers.store.res.ResShareStore"
+                  ref="resShareStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
 
@@ -454,7 +458,6 @@
                   enableTXC="true">
         </provider>
 
-        
 
         <service id="luckBiz" class="com.diary.bizImpl.res.LuckBizImp"/>
         <provider id="luckBizProvider"

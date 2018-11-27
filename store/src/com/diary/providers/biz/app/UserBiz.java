@@ -40,5 +40,8 @@ public interface UserBiz {
 
     String help() throws BizException;
 
+    String share(Integer gender) throws BizException;
+
+
 
 }

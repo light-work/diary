@@ -1985,14 +1985,14 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     }
                     userObj.put("seq", "暂无");
                     userObj.put("score", 0);
-                    if(appUser!=null){
+                    if (appUser != null) {
                         userObj.put("comment", appUser.getLastComment());
                     }
 
                 }
                 resultObj.put("list", rankingsArray);
                 if (gender != null) {
-                    if(appUser!=null){
+                    if (appUser != null) {
                         if (appUser.getGender() == gender) {
                             resultObj.put("myData", userObj);
                         }
@@ -2242,7 +2242,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             ResAccessToken resAccessToken = accessTokenList.get(0);
                             if (resAccessToken != null) {
                                 JSONObject parMap = new JSONObject();
-                                parMap.put("scene", userId);
+                                parMap.put("scene", userId + "");
                                 parMap.put("page", "pages/index/index");
                                 String url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + resAccessToken.getTokenValue();
                                 byte[] r = OKHttpUtil.postByte(url, parMap.toString());
@@ -2318,6 +2318,34 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                         }
                     }
                     resultObj.put("tipArray", tipArray);
+                }
+                resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String share(Integer gender) throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            ResShareStore resShareStore = hsfServiceFactory.consumer(ResShareStore.class);
+            if (resShareStore != null) {
+
+                ResShare resShare = resShareStore.getByGenderId(gender);
+                if (resShare != null) {
+                    JSONObject shareObj = JsonUtils.formIdEntity(resShare, 0);
+                    if (shareObj != null) {
+                        GameUtils.minish(shareObj);
+                    }
+                    resultObj.put("share", shareObj);
                 }
                 resultObj.put("result", 0);
             }

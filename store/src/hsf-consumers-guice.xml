@@ -252,6 +252,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resShareStoreConsumer"
+                  interface="com.diary.providers.store.res.ResShareStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
 
         <consumer id="resCommentStoreConsumer"
                   interface="com.diary.providers.store.res.ResCommentStore"

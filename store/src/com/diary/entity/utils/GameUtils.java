@@ -151,7 +151,7 @@ public class GameUtils {
 //        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
         Map<String, String> parMap = new HashMap<>();
-        parMap.put("userId", "6472431803498135552");
+        parMap.put("userId", "6473068352047239168");
         String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
         System.out.println(r);
 //        JSONObject parMap = new JSONObject();
