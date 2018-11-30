@@ -15,6 +15,8 @@ public interface ResClothesStore {
 
     ResClothes getById(Long id, Selector... selectors) throws StoreException;
 
+    ResClothes getByTitle(String title) throws StoreException;
+
     Page<ResClothes> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 

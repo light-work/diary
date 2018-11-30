@@ -21,9 +21,14 @@ public class ResLuxuryService extends HQuery implements ResLuxuryStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResLuxury getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResLuxury.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResLuxury getByTitle(String title) throws StoreException {
+        return $($eq("title",title)).get(ResLuxury.class);
     }
 
     @Override

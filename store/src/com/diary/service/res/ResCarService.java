@@ -21,9 +21,14 @@ public class ResCarService extends HQuery implements ResCarStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResCar getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResCar.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResCar getByTitle(String title) throws StoreException {
+        return $($eq("title",title)).get(ResCar.class);
     }
 
     @Override

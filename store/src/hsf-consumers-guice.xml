@@ -102,6 +102,11 @@
                   interface="com.diary.providers.store.app.AppUserFormStore"
                   version="for-dev" clientTimeout="5000">
         </consumer>
+
+        <consumer id="appUserFormLastStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserFormLastStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
         <!--      res   -->
 
         <consumer id="resCarStoreConsumer"

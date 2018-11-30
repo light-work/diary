@@ -30,6 +30,8 @@ public class ResShare extends IdEntity implements Tracker {
 
     private Integer gender;
 
+    private String qrCodeTitle;
+
     private Date created;
 
     private String createdBy;
@@ -47,6 +49,16 @@ public class ResShare extends IdEntity implements Tracker {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    @Column(name = "QRCODE_TITLE")
+    public String getQrCodeTitle() {
+        return qrCodeTitle;
+    }
+
+    public void setQrCodeTitle(String qrCodeTitle) {
+        this.qrCodeTitle = qrCodeTitle;
     }
 
     @Column(name = "TITLE")

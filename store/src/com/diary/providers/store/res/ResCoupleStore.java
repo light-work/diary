@@ -15,6 +15,8 @@ public interface ResCoupleStore {
 
     ResCouple getById(Long id, Selector... selectors) throws StoreException;
 
+    ResCouple getByTitle(String title) throws StoreException;
+
     Page<ResCouple> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 

@@ -21,9 +21,14 @@ public class ResHouseService extends HQuery implements ResHouseStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResHouse getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResHouse.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResHouse getByTitle(String title) throws StoreException {
+        return $($eq("title",title)).get(ResHouse.class);
     }
 
     @Override

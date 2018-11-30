@@ -146,6 +146,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserFormLastStore" class="com.diary.storeImpl.app.AppUserFormLastStoreImpl"/>
+        <provider id="appUserFormLastStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFormLastStore"
+                  ref="appUserFormLastStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
         <!--      res   -->
 
         <service id="resCarStore" class="com.diary.storeImpl.res.ResCarStoreImpl"/>

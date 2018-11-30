@@ -32,6 +32,8 @@ public class AppUserForm extends IdEntity implements Tracker {
 
     private Integer day;
 
+    private String action;
+
     private Date created;
 
     private String createdBy;
@@ -99,6 +101,14 @@ public class AppUserForm extends IdEntity implements Tracker {
         this.day = day;
     }
 
+    @Column(name = "action")
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {

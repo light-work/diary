@@ -17,6 +17,8 @@ public interface AppUserFormStore {
 
     void save(AppUserForm appUserForm, Persistent persistent) throws StoreException;
 
+    void save(AppUserForm appUserForm, Persistent persistent,AppUserFormLast appUserFormLast, Persistent persistentLast) throws StoreException;
+
     void save(List<AppUserForm> appUserForms, Persistent persistent) throws StoreException;
 
     void delete(List<AppUserForm> appUserFormList) throws StoreException;

@@ -15,6 +15,9 @@ public interface ResHouseStore {
 
     ResHouse getById(Long id, Selector... selectors) throws StoreException;
 
+    ResHouse getByTitle(String title) throws StoreException;
+
+
     Page<ResHouse> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 

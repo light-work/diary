@@ -37,6 +37,17 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
+    public ResLuxury getByTitle(String title) throws StoreException {
+        try {
+            return this.resLuxuryService.getByTitle(title);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResLuxury> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resLuxuryService.getPageList(start, limit, selectorList);

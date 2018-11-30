@@ -12,9 +12,7 @@ import com.diary.entity.utils.GameUtils;
 import com.diary.providers.biz.app.UserCarBiz;
 import com.diary.providers.biz.app.UserCoupleBiz;
 import com.diary.providers.store.app.*;
-import com.diary.providers.store.res.ResCarStore;
-import com.diary.providers.store.res.ResCoupleRequireStore;
-import com.diary.providers.store.res.ResCoupleStore;
+import com.diary.providers.store.res.*;
 import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -52,13 +50,20 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
             ResCoupleStore resCoupleStore = hsfServiceFactory.consumer(ResCoupleStore.class);
             AppUserCarStore appUserCarStore = hsfServiceFactory.consumer(AppUserCarStore.class);
             AppUserHouseStore appUserHouseStore = hsfServiceFactory.consumer(AppUserHouseStore.class);
+            AppUserManHistStore appUserManHistStore = hsfServiceFactory.consumer(AppUserManHistStore.class);
+            AppUserLadyHistStore appUserLadyHistStore = hsfServiceFactory.consumer(AppUserLadyHistStore.class);
+            ResCarStore resCarStore = hsfServiceFactory.consumer(ResCarStore.class);
+            ResHouseStore resHouseStore = hsfServiceFactory.consumer(ResHouseStore.class);
+            ResClothesStore resClothesStore = hsfServiceFactory.consumer(ResClothesStore.class);
+            ResLuxuryStore resLuxuryStore = hsfServiceFactory.consumer(ResLuxuryStore.class);
             if (appUserManStore != null && appUserLadyStore != null && appUserStore != null
                     && resCoupleRequireStore != null && appUserCoupleStore != null && resCoupleStore != null && appUserLimitStore != null
                     && appUserCarStore != null && appUserHouseStore != null) {
                 AppUser appUser = appUserStore.getById(userId);
                 if (appUser != null) {
                     List<ResCoupleRequire> requireList = resCoupleRequireStore.getListByCoupleId(coupleId);
-                    boolean pass = true;
+                    boolean pass = false;
+                    Integer fireValue = 0;
                     Integer coupleLimit = 1;
                     Integer day = -1;
                     AppUserMan appUserMan = null;
@@ -68,22 +73,38 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                     if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
-                            Integer carMaxLevel = appUserCarStore.getMaxLevelByUserId(userId);
-                            if (carMaxLevel == null || carMaxLevel < 1) {
-                                carMaxLevel = 0;
+                            Integer userCarLevel = 0;
+                            List<AppUserCar> appUserCarList = appUserCarStore.getByUserId(appUser.getId());
+                            if (appUserCarList != null && !appUserCarList.isEmpty()) {
+                                for (AppUserCar appUserCar : appUserCarList) {
+                                    userCarLevel += appUserCar.getCarId().getLevel();
+                                }
                             }
-                            appUserMan.setCar(carMaxLevel);
-
-                            Integer houseMaxLevel = appUserHouseStore.getMaxLevelByUserId(userId);
-                            if (houseMaxLevel == null || houseMaxLevel < 1) {
-                                houseMaxLevel = 0;
+                            appUserMan.setCar(userCarLevel);
+                            Integer userHouseLevel = 0;
+                            List<AppUserHouse> appUserHouseList = appUserHouseStore.getByUserId(appUser.getId());
+                            if (appUserHouseList != null && !appUserHouseList.isEmpty()) {
+                                for (AppUserHouse appUserHouse : appUserHouseList) {
+                                    userHouseLevel += appUserHouse.getHouseId().getLevel();
+                                }
                             }
-                            appUserMan.setHouse(houseMaxLevel);
+                            appUserMan.setHours(userHouseLevel);
 
                             day = appUserMan.getDays();
                             coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserMan.getDays(), "COUPLE");
                             if (requireList != null && !requireList.isEmpty()) {
                                 pass = GameUtils.requirePass(requireList, appUserMan);
+                                if (pass) {
+                                    for (ResCoupleRequire coupleRequire : requireList) {
+                                        String requireKey = coupleRequire.getAttrKey().toLowerCase();
+                                        if (StringUtils.isNotBlank(requireKey)) {
+                                            Integer userValue = BeanUtils.getValue(appUserMan, requireKey, Integer.class);
+                                            if (userValue != null) {
+                                                fireValue = userValue;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     } else if (appUser.getGender() == 2) {
@@ -93,6 +114,17 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                             coupleLimit = appUserLimitStore.getCountByUserIdDayAction(userId, appUserLady.getDays(), "COUPLE");
                             if (requireList != null && !requireList.isEmpty()) {
                                 pass = GameUtils.requirePass(requireList, appUserLady);
+                                if (pass) {
+                                    for (ResCoupleRequire coupleRequire : requireList) {
+                                        String requireKey = coupleRequire.getAttrKey().toLowerCase();
+                                        if (StringUtils.isNotBlank(requireKey)) {
+                                            Integer userValue = BeanUtils.getValue(appUserLady, requireKey, Integer.class);
+                                            if (userValue != null) {
+                                                fireValue = userValue;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -145,6 +177,7 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                     appUserCouple.setId(DrdsIDUtils.getID(DrdsTable.APP));
                                     appUserCouple.setUserId(appUser);
                                     appUserCouple.setCoupleId(resCouple);
+                                    appUserCouple.setValue(fireValue);
                                     appUserCouple.setUseYn("Y");
                                     bind(appUserCouple, userId);
                                     if (appUser.getGender() == 1) {
@@ -165,58 +198,51 @@ public class UserCoupleBizImp extends BaseBiz implements UserCoupleBiz {
                                     //如果对象有人
                                     AppUser coupleUser = appUserCouple.getUserId();
                                     if (coupleUser != null) {
+                                        Integer currentMaxValue = appUserCouple.getValue();
+                                        Object appUserObj = null;
                                         if (appUser.getGender() == 1) {
-                                            AppUserMan coupleUserMan = appUserManStore.getByUserId(coupleUser.getId());
-                                            if (coupleUserMan != null) {
-                                                Integer coupleUserCarMaxLevel = appUserCarStore.getMaxLevelByUserId(coupleUser.getId());
-                                                if (coupleUserCarMaxLevel == null || coupleUserCarMaxLevel < 1) {
-                                                    coupleUserCarMaxLevel = 0;
-                                                }
-                                                coupleUserMan.setCar(coupleUserCarMaxLevel);
+                                            appUserObj = appUserMan;
 
-                                                Integer coupleUserHouseMaxLevel = appUserHouseStore.getMaxLevelByUserId(coupleUser.getId());
-                                                if (coupleUserHouseMaxLevel == null || coupleUserHouseMaxLevel < 1) {
-                                                    coupleUserHouseMaxLevel = 0;
-                                                }
-                                                coupleUserMan.setHouse(coupleUserHouseMaxLevel);
-                                                boolean fire = true;
-                                                if (requireList != null && !requireList.isEmpty()) {
-                                                    for (ResCoupleRequire coupleRequire : requireList) {
-                                                        String requireKey = coupleRequire.getAttrKey().toLowerCase();
-                                                        if (StringUtils.isNotBlank(requireKey)) {
-                                                            Integer userValue = BeanUtils.getValue(appUserMan, requireKey, Integer.class);
-                                                            Integer coupleUserValue = BeanUtils.getValue(coupleUserMan, requireKey, Integer.class);
-                                                            if (userValue != null && coupleUserValue != null) {
-                                                                if (userValue <= coupleUserValue) {
-                                                                    fire = false;
-                                                                }
-                                                            }
+                                        } else if (appUser.getGender() == 2) {
+                                            appUserObj = appUserLady;
+                                        }
+
+                                        boolean fire = false;
+                                        fireValue = 0;
+                                        if (requireList != null && !requireList.isEmpty()) {
+                                            for (ResCoupleRequire coupleRequire : requireList) {
+                                                String requireKey = coupleRequire.getAttrKey().toLowerCase();
+                                                if (StringUtils.isNotBlank(requireKey)) {
+                                                    Integer userValue = BeanUtils.getValue(appUserObj, requireKey, Integer.class);
+                                                    if (userValue != null) {
+                                                        if (userValue > currentMaxValue) {
+                                                            fireValue = userValue;
+                                                            fire = true;
                                                         }
                                                     }
                                                 }
-                                                if (fire) {
-                                                    //抢成功
-                                                    AppUserCouple appUserCoupleFire = new AppUserCouple();
-                                                    appUserCoupleFire.setId(DrdsIDUtils.getID(DrdsTable.APP));
-                                                    appUserCoupleFire.setUserId(appUser);
-                                                    appUserCoupleFire.setCoupleId(resCouple);
-                                                    appUserCoupleFire.setUseYn("Y");
-                                                    bind(appUserCoupleFire, userId);
-
-                                                    appUserCoupleStore.deleteFire(appUserCoupleFire,appUserCouple,  appUserMan, appUserLimit);
-                                                    GameUtils.addResultArray(resultArray, "你各方面碾压" + coupleUser.getNickName() + "，抱得美人归！", null);
-                                                    resultObj.put("result", 0);
-                                                    resultObj.put("resultArray", resultArray);
-                                                } else {
-                                                    //抢失败
-                                                    appUserLimitStore.save(appUserLimit, Persistent.SAVE);
-                                                    GameUtils.addResultArray(resultArray, "你各方面都不如" + coupleUser.getNickName() + "，灰头土脸的回来了！", null);
-                                                    resultObj.put("result", 1);
-                                                    resultObj.put("resultArray", resultArray);
-                                                }
                                             }
-                                        } else if (appUser.getGender() == 2) {
+                                        }
+                                        if (fire) {
+                                            //抢成功
+                                            AppUserCouple appUserCoupleFire = new AppUserCouple();
+                                            appUserCoupleFire.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                            appUserCoupleFire.setUserId(appUser);
+                                            appUserCoupleFire.setCoupleId(resCouple);
+                                            appUserCoupleFire.setValue(fireValue);
+                                            appUserCoupleFire.setUseYn("Y");
+                                            bind(appUserCoupleFire, userId);
 
+                                            appUserCoupleStore.deleteFire(appUserCoupleFire, appUserCouple, appUserMan, appUserLimit);
+                                            GameUtils.addResultArray(resultArray, "你各方面碾压" + coupleUser.getNickName() + "，挖墙脚成功！", null);
+                                            resultObj.put("result", 0);
+                                            resultObj.put("resultArray", resultArray);
+                                        } else {
+                                            //抢失败
+                                            appUserLimitStore.save(appUserLimit, Persistent.SAVE);
+                                            GameUtils.addResultArray(resultArray, "你各方面都不如" + coupleUser.getNickName() + "，去排行版了解下敌情吧！", null);
+                                            resultObj.put("result", 1);
+                                            resultObj.put("resultArray", resultArray);
                                         }
                                     }
                                 }

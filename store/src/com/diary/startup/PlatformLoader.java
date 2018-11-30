@@ -71,7 +71,7 @@ public class PlatformLoader {
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap.put("injector", injector);
 
-            String timeStart="0 0/2 * * * ?";
+            String timeStart="0 0/1 * * * ?";
 
             JobDetail jobAccessTokenTask= newJob(AccessTokenTask.class).withIdentity("jobAccessTokenTask", "groupJobAccessTokenTask")
                     .usingJobData(jobDataMap).build();

@@ -119,10 +119,10 @@ public class AccessTokenTask implements Job {
                             List<ResAccessToken> accessTokenList = accessTokenPage.getResultList();
                             if (accessTokenList != null && !accessTokenList.isEmpty()) {
                                 ResAccessToken resAccessToken = accessTokenList.get(0);
-                                Date cud=DateFormatUtil.addHours(resAccessToken.getCreated(),2);
+                                Date cud=DateFormatUtil.addMinute(resAccessToken.getCreated(),15);
                                 long diff = DateFormatUtil.calendarMinutePlus(cudDate,cud);
                                 System.out.println("access_token diff="+diff);
-                                if (diff <= 5) {
+                                if (diff == 5) {
                                     buildAccessToken(resAccessTokenStore);
                                 }else{
                                     System.out.println("current  access_token effective");

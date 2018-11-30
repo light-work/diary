@@ -762,21 +762,45 @@ public class UserAPI extends BaseAPI {
         return Response.ok().entity(result.toString()).build();
     }
 
+    @Path("/coupleRankings")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response coupleRankings() {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.coupleRankings();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
     @Path("/rankings/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response rankings(@PathParam("userId") Long userId, @QueryParam("gender") Integer gender) {
+    public Response rankings(@PathParam("userId") Long userId,@QueryParam("orderType") String orderType, @QueryParam("gender") Integer gender) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
         if (userId == null) {
             errorBuilder.append("userId was null.");
         }
+        if(orderType==null){
+            orderType="score";
+        }
         if (errorBuilder.length() == 0) {
             try {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
-                    bizResult = userBiz.rankings(userId, 0, 100, gender);
+                    bizResult = userBiz.rankings(userId, 0, 100, orderType,gender);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -842,7 +866,8 @@ public class UserAPI extends BaseAPI {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes("application/x-www-form-urlencoded")
-    public Response submit(@FormParam("userId") Long userId, @FormParam("formId") String formId) {
+    public Response submit(@FormParam("userId") Long userId, @FormParam("formId") String formId,
+                           @FormParam("action") String action) {
         JSONObject result = new JSONObject();
         String bizResult = null;
         StringBuilder errorBuilder = new StringBuilder();
@@ -852,12 +877,15 @@ public class UserAPI extends BaseAPI {
         if (StringUtils.isBlank(formId)) {
             errorBuilder.append("formId was null.");
         }
+        if (StringUtils.isBlank(action)) {
+            errorBuilder.append("action was null.");
+        }
 
         if (errorBuilder.length() == 0) {
             try {
                 UserFormBiz userFormBiz = hsfServiceFactory.consumer(UserFormBiz.class);
                 if (userFormBiz != null) {
-                    bizResult = userFormBiz.submit(userId, formId);
+                    bizResult = userFormBiz.submit(userId, formId,action);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -957,6 +985,28 @@ public class UserAPI extends BaseAPI {
                 UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
                 if (userBiz != null) {
                     bizResult = userBiz.share(gender);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        result = buildResult(result, errorBuilder, bizResult);
+        return Response.ok().entity(result.toString()).build();
+    }
+
+    @Path("/refreshRankings")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response refreshRankings() {
+        JSONObject result = new JSONObject();
+        String bizResult = null;
+        StringBuilder errorBuilder = new StringBuilder();
+
+        if (errorBuilder.length() == 0) {
+            try {
+                UserBiz userBiz = hsfServiceFactory.consumer(UserBiz.class);
+                if (userBiz != null) {
+                    bizResult = userBiz.refreshRankings();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

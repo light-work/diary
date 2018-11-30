@@ -19,6 +19,9 @@ public interface AppUserRankingsStore {
 
     Integer getCount() throws StoreException;
 
+    Integer getCountByLtAsset(Integer asset) throws StoreException;
+
+
     Integer getMin() throws StoreException;
 
     Page<AppUserRankings> getPageList(int start,

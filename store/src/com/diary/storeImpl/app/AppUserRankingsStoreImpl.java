@@ -37,6 +37,17 @@ public class AppUserRankingsStoreImpl implements AppUserRankingsStore {
 
     @Override
     @ConnectManager
+    public Integer getCountByLtAsset(Integer asset) throws StoreException {
+        try {
+            return this.appUserRankingsService.getCountByLtAsset(asset);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public AppUserRankings getByUserId(Long userId) throws StoreException {
         try {
             return this.appUserRankingsService.getByUserId(userId);

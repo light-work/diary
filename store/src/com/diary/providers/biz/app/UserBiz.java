@@ -30,7 +30,7 @@ public interface UserBiz {
 
     String myReport(Long userId) throws BizException;
 
-    String rankings(Long userId,Integer start, Integer limit,Integer gender) throws BizException;
+    String rankings(Long userId,Integer start, Integer limit,String orderType,Integer gender) throws BizException;
 
     String replay(Long userId) throws BizException;
 
@@ -41,6 +41,10 @@ public interface UserBiz {
     String help() throws BizException;
 
     String share(Integer gender) throws BizException;
+
+    String refreshRankings() throws BizException;
+
+    String coupleRankings() throws BizException;
 
 
 

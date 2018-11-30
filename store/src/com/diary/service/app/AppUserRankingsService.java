@@ -33,6 +33,12 @@ public class AppUserRankingsService extends HQuery implements AppUserRankingsSto
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
+    public Integer getCountByLtAsset(Integer asset) throws StoreException {
+        return $($lt("asset",asset),$count("id")).value(AppUserRankings.class,Integer.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
     public Integer getCount() throws StoreException {
         return $($count("id")).value(AppUserRankings.class,Integer.class);
     }

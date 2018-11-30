@@ -2,7 +2,9 @@ package com.diary.service.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserForm;
+import com.diary.entity.app.AppUserFormLast;
 import com.diary.providers.store.app.AppUserFormStore;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.persistence.TransactionType;
 import org.guiceside.persistence.Transactional;
@@ -18,6 +20,8 @@ import java.util.List;
 @Singleton
 public class AppUserFormService extends HQuery implements AppUserFormStore {
 
+    @Inject
+    private AppUserFormLastService appUserFormLastService;
 
 
     @Transactional(type = TransactionType.READ_ONLY)
@@ -42,6 +46,15 @@ public class AppUserFormService extends HQuery implements AppUserFormStore {
     public void save(AppUserForm appUserForm, Persistent persistent) throws StoreException {
         $(appUserForm).save(persistent);
 
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserForm appUserForm, Persistent persistent, AppUserFormLast appUserFormLast, Persistent persistentLast) throws StoreException {
+        $(appUserForm).save(persistent);
+        if(appUserFormLast!=null){
+            this.appUserFormLastService.save(appUserFormLast,persistentLast);
+        }
     }
 
     @Override

@@ -55,6 +55,13 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private String commentText;
 
+    private Integer asset;
+
+    private Integer carAsset;
+
+    private Integer houseAsset;
+
+    private Integer attrScore;
 
     private String jobTitle;
 
@@ -211,6 +218,41 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
         this.comment = comment;
     }
 
+    @Column(name = "ASSET")
+    public Integer getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Integer asset) {
+        this.asset = asset;
+    }
+
+    @Column(name = "CAR_ASSET")
+    public Integer getCarAsset() {
+        return carAsset;
+    }
+
+    public void setCarAsset(Integer carAsset) {
+        this.carAsset = carAsset;
+    }
+
+    @Column(name = "HOUSE_ASSET")
+    public Integer getHouseAsset() {
+        return houseAsset;
+    }
+
+    public void setHouseAsset(Integer houseAsset) {
+        this.houseAsset = houseAsset;
+    }
+
+    @Column(name = "ATTR_SCORE")
+    public Integer getAttrScore() {
+        return attrScore;
+    }
+
+    public void setAttrScore(Integer attrScore) {
+        this.attrScore = attrScore;
+    }
 
     @Column(name = "COMMENT_TEXT")
     public String getCommentText() {

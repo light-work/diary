@@ -15,6 +15,8 @@ public interface ResCarStore {
 
     ResCar getById(Long id, Selector... selectors) throws StoreException;
 
+    ResCar getByTitle(String title) throws StoreException;
+
     Page<ResCar> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 

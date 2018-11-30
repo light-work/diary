@@ -96,6 +96,7 @@ public class GameUtils {
     }
 
     public static void main(String[] args) throws Exception {
+        System.out.println(new Date(1543567649722l));
         JSONObject a = new JSONObject();
         a.put("id", "6453477704225898442");
         System.out.println(a.getLong("id") + "");
@@ -150,17 +151,17 @@ public class GameUtils {
 //
 //        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
 
-        Map<String, String> parMap = new HashMap<>();
-        parMap.put("userId", "6473068352047239168");
-        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
-        System.out.println(r);
-//        JSONObject parMap = new JSONObject();
-//        parMap.put("userId", "6472372181458386944");
-////        parMap.put("page", "pages/index/report");
-////        String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=";
-////        url+="16_HDw2f4YYcpV6lrU2s-3olzejdLwsk79elbTm4Qbec5i2Pvq-EwRHSwC7ln3EhW3vj18fsc43zONpRX4XQ_6_-HT9ao_5lkUFs9SuGYcKD_HcRSiNqMBiyHEY5MxXrOtjxdQytrAmz3kXSpQPXTVbAIAEAC";
-//        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/accessToken",parMap);
+//        Map<String, String> parMap = new HashMap<>();
+//        parMap.put("userId", "6473068352047239168");
+//        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
 //        System.out.println(r);
+        JSONObject parMap = new JSONObject();
+        parMap.put("scene", "6472372181458386944");
+        parMap.put("page", "pages/index/report");
+        String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=";
+        url+="16_ShvGreYnGjz5VyB_O9yM3pICyZIE6OWEQf0o2tSJD2asbAM3_PEmrQOmas4EGdE6zTI1XNgq5zf41Ngq05ldu48UuiL0Aqj267z88ZZUEvE8fRB3O_rzvr7el9Q6vIMyG18Yl38qnHEIUcJNTENdADAEPY";
+        String r = OKHttpUtil.post(url,parMap.toString());
+        System.out.println(r);
 //        String responseStr = null;
 //        RequestBody body = RequestBody.create(JSON, jsonData);
 //        Request request = (new Request.Builder()).url(url).post(body).build();
@@ -171,6 +172,57 @@ public class GameUtils {
 //        } else {
 //            throw new IOException("Unexpected code " + response);
 //        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Health", 81);
+        jsonObject.put("Ability", 382);
+        jsonObject.put("Experience", 370);
+        jsonObject.put("Happy", 328);
+        jsonObject.put("Positive", 313);
+        jsonObject.put("Connections", 315);
+        jsonObject.put("Money", 2610514);
+        jsonObject.put("fundMoney", 20364);
+
+
+        Integer HealthScore = GameUtils.getScoreAttr(jsonObject.getInt("Health"), "Health", 1);
+        if (HealthScore >= 150) {
+            HealthScore += 200 * jsonObject.getInt("Health");
+        } else if (HealthScore > 100) {
+            HealthScore += 150 * jsonObject.getInt("Health");
+        } else if (HealthScore > 80) {
+            HealthScore += 100 * jsonObject.getInt("Health");
+        }
+
+        Integer AbilityScore = GameUtils.getScoreAttr(jsonObject.getInt("Ability"), "Ability", 1);
+
+        Integer ExperienceScore = GameUtils.getScoreAttr(jsonObject.getInt("Experience"), "Experience", 1);
+
+        Integer HappyScore = GameUtils.getScoreAttr(jsonObject.getInt("Happy"), "Happy", 1);
+
+        Integer PositiveScore = GameUtils.getScoreAttr(jsonObject.getInt("Positive"), "Positive", 1);
+
+        Integer ConnectionsScore = GameUtils.getScoreAttr(jsonObject.getInt("Connections"), "Connections", 1);
+
+        Integer MoneyScore = GameUtils.getScoreMoney(jsonObject.getInt("Money"));
+
+        Integer fundMoneyScore = GameUtils.getScoreMoney(jsonObject.getInt("fundMoney"));
+
+        Integer sum = HealthScore + AbilityScore + ExperienceScore + HappyScore + PositiveScore + ConnectionsScore + MoneyScore + fundMoneyScore;
+        System.out.println("Health 占比" + NumberUtils.multiply(NumberUtils.divide(HealthScore, sum, 2), 100, 0) + "%");
+        System.out.println("Ability 占比" + NumberUtils.multiply(NumberUtils.divide(AbilityScore, sum, 2), 100, 0) + "%");
+
+        System.out.println("Experience 占比" + NumberUtils.multiply(NumberUtils.divide(ExperienceScore, sum, 2), 100, 0) + "%");
+
+        System.out.println("Happy 占比" + NumberUtils.multiply(NumberUtils.divide(HappyScore, sum, 2), 100, 0) + "%");
+
+        System.out.println("Positive 占比" + NumberUtils.multiply(NumberUtils.divide(PositiveScore, sum, 2), 100, 0) + "%");
+
+        System.out.println("Connections 占比" + NumberUtils.multiply(NumberUtils.divide(ConnectionsScore, sum, 2), 100, 0) + "%");
+
+        System.out.println("Money 占比" + NumberUtils.multiply(NumberUtils.divide(MoneyScore, sum, 2), 100, 0) + "%");
+
+        System.out.println("fundMoney 占比" + NumberUtils.multiply(NumberUtils.divide(fundMoneyScore, sum, 2), 100, 0) + "%");
+
 
     }
 
@@ -387,6 +439,62 @@ public class GameUtils {
         return base;
     }
 
+    public static void attributeMan(JSONObject jsonObject) {
+
+        addAttribute(jsonObject,getAttrNameMan("health"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("health"), 160, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameMan("ability"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("ability"), 460, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameMan("experience"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("experience"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameMan("happy"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("happy"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameMan("positive"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("positive"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameMan("connections"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("connections"), 460, 2), 100, 0));
+
+    }
+
+    public static void addAttribute(JSONObject jsonObject, String title, Object value) {
+        if(value instanceof Integer){
+            if ((Integer) value > 100) {
+                value = 100;
+            }
+        }else if(value instanceof Double){
+            if ((Double) value > 100) {
+                value = 100;
+            }
+        }
+        JSONArray attribute = new JSONArray();
+        attribute.add(title);
+        attribute.add(value);
+        if(!jsonObject.containsKey("attribute")){
+            jsonObject.put("attribute",new JSONArray());
+        }
+        jsonObject.getJSONArray("attribute").add(attribute);
+    }
+
+    public static void attributeLady(JSONObject jsonObject)  {
+        addAttribute(jsonObject,getAttrNameLady("health"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("health"), 160, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameLady("ability"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("ability"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameLady("wisdom"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("wisdom"), 460, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameLady("happy"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("happy"), 460, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameLady("beauty"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("beauty"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameLady("popularity"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("popularity"), 460, 2), 100, 0));
+
+
+    }
+
     public static String getAttrNameLady(String attrKey) {
         String attrName = null;
         attrKey = attrKey.toUpperCase();
@@ -414,6 +522,35 @@ public class GameUtils {
                 break;
         }
         return attrName;
+    }
+
+    public static void addAttrAsset(JSONArray jsonArray, Integer gender) {
+        JSONObject operationASSET = new JSONObject();
+        operationASSET.put("text", "资产总额");
+        operationASSET.put("value", "asset");
+        jsonArray.add(operationASSET);
+        if (gender == 1) {
+            JSONObject operationCarASSET = new JSONObject();
+            operationCarASSET.put("text", "车辆估值");
+            operationCarASSET.put("value", "carAsset");
+            jsonArray.add(operationCarASSET);
+
+            JSONObject operationHouseASSET = new JSONObject();
+            operationHouseASSET.put("text", "房屋估值");
+            operationHouseASSET.put("value", "houseAsset");
+            jsonArray.add(operationHouseASSET);
+        } else if (gender == 2) {
+            JSONObject operationClothesASSET = new JSONObject();
+            operationClothesASSET.put("text", "衣品估值");
+            operationClothesASSET.put("value", "clothesAsset");
+            jsonArray.add(operationClothesASSET);
+
+            JSONObject operationLuxuryASSET = new JSONObject();
+            operationLuxuryASSET.put("text", "妆备估值");
+            operationLuxuryASSET.put("value", "luxuryAsset");
+            jsonArray.add(operationLuxuryASSET);
+        }
+
     }
 
     public static void attrList(JSONArray jsonArray, Integer gender, Integer isManage) {
