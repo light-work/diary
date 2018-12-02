@@ -17,6 +17,7 @@ import org.guiceside.commons.JsonUtils;
 import org.guiceside.commons.OKHttpUtil;
 import org.guiceside.commons.Page;
 import org.guiceside.commons.lang.BeanUtils;
+import org.guiceside.commons.lang.DateFormatUtil;
 import org.guiceside.commons.lang.NumberUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.search.SelectorUtils;
@@ -493,7 +494,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             bind(appUser, userId);
                             appUserManStore.save(appUserMan, Persistent.SAVE, appUser);
                         } else {
-                            if (appUserMan.getScore() > 0 && StringUtils.isNotBlank(appUserMan.getComment())) {
+                            if (appUserMan.getScore() != 0 && StringUtils.isNotBlank(appUserMan.getComment())) {
                                 replay(userId);
                                 newGame = true;
                                 appUser.setPlayNumber(appUser.getPlayNumber() + 1);
@@ -528,7 +529,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserLadyStore.save(appUserLady, Persistent.SAVE, appUser);
                             newGame = true;
                         } else {
-                            if (appUserLady.getScore() > 0 && StringUtils.isNotBlank(appUserLady.getComment())) {
+                            if (appUserLady.getScore() != 0 && StringUtils.isNotBlank(appUserLady.getComment())) {
                                 replay(userId);
                                 newGame = true;
                                 appUser.setPlayNumber(appUser.getPlayNumber() + 1);
@@ -1023,6 +1024,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     AppUserManHist appUserManHist = null;
                     AppUserLadyHist appUserLadyHist = null;
                     Integer score = 0;
+                    Integer assetRanking = 0;
+                    Integer attrScoreRanking = 0;
                     String comment = "";
                     boolean flagRanking = true;
                     int day = 0;
@@ -1402,6 +1405,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     appUserMan.setHouseTitle(houseTitle != null ? houseTitle.toString() : null);
                                     appUserMan.setCommentText(commentText != null ? commentText.toString() : null);
                                     bind(appUserMan, userId);
+                                    appUserMan.setFundMoney(fundMoney);
                                     totalDataMan(appUserMan);
 
                                     appUserManHist = appUserManHistStore.getByUserId(userId);
@@ -1444,6 +1448,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         appUserManHist.setCarAsset(appUserMan.getCarAsset());
                                         appUserManHist.setHouseAsset(appUserMan.getHouseAsset());
                                         appUserManHist.setAttrScore(appUserMan.getAttrScore());
+                                        assetRanking = appUserManHist.getAsset();
+                                        attrScoreRanking = appUserManHist.getAttrScore();
                                         flagRanking = true;
                                     }
                                     appUserManHist.setUseYn("Y");
@@ -1839,6 +1845,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                     appUserLady.setCommentText(commentText != null ? commentText.toString() : null);
 
                                     bind(appUserLady, userId);
+                                    appUserLady.setFundMoney(fundMoney);
                                     totalDataLady(appUserLady);
 
                                     appUserLadyHist = appUserLadyHistStore.getByUserId(userId);
@@ -1880,6 +1887,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                         appUserLadyHist.setClothesAsset(appUserLady.getClothesAsset());
                                         appUserLadyHist.setLuxuryAsset(appUserLady.getLuxuryAsset());
                                         appUserLadyHist.setAttrScore(appUserLady.getAttrScore());
+                                        assetRanking = appUserLadyHist.getAsset();
+                                        attrScoreRanking = appUserLadyHist.getAttrScore();
                                         flagRanking = true;
 
                                     }
@@ -1914,6 +1923,8 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                             appUserRankings.setId(DrdsIDUtils.getID(DrdsTable.APP));
                             appUserRankings.setUserId(appUser);
                         }
+                        appUserRankings.setAttrScore(attrScoreRanking);
+                        appUserRankings.setAsset(assetRanking);
                         appUserRankings.setScore(score);
                         appUserRankings.setComment(comment);
                         appUserRankings.setUseYn("Y");
@@ -1960,7 +1971,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                                 List<ResCoupleRequire> coupleRequireList = resCoupleRequireStore.getListByCoupleId(resCouple.getId());
                                 if (coupleRequireList != null && !coupleRequireList.isEmpty()) {
                                     JSONObject userObj = JsonUtils.formIdEntity(appUser, 0);
-                                    if(userObj!=null){
+                                    if (userObj != null) {
                                         ResCoupleRequire coupleRequire = coupleRequireList.get(0);
                                         if (userObj != null && coupleRequire != null) {
                                             userObj.put("coupleName", resCouple.getTitle());
@@ -2116,10 +2127,10 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     if (appUser.getGender() == 1) {
                         appUserMan = appUserManStore.getByUserId(userId);
                         if (appUserMan != null) {
+                            appUserMan.setFundMoney(fundMoney);
                             infoObj = JsonUtils.formIdEntity(appUserMan, 0);
                             if (infoObj != null) {
                                 infoObj.put("gender", appUser.getGender());
-                                infoObj.put("fundMoney", fundMoney);
                                 GameUtils.minish(infoObj);
                                 GameUtils.attributeMan(infoObj);
                                 reportCal(infoObj);
@@ -2128,6 +2139,7 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     } else if (appUser.getGender() == 2) {
                         appUserLady = appUserLadyStore.getByUserId(userId);
                         if (appUserLady != null) {
+                            appUserLady.setFundMoney(fundMoney);
                             infoObj = JsonUtils.formIdEntity(appUserLady, 0);
                             if (infoObj != null) {
                                 infoObj.put("gender", appUser.getGender());
@@ -2828,6 +2840,367 @@ public class UserBizImp extends BaseBiz implements UserBiz {
                     }
                 }
                 resultObj.put("result", 0);
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+
+    @Override
+    public String pushRankings() throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserRankingsStore appUserRankingsStore = hsfServiceFactory.consumer(AppUserRankingsStore.class);
+            ResAccessTokenStore resAccessTokenStore = hsfServiceFactory.consumer(ResAccessTokenStore.class);
+            AppUserFormStore appUserFormStore = hsfServiceFactory.consumer(AppUserFormStore.class);
+            AppUserPushStore appUserPushStore=hsfServiceFactory.consumer(AppUserPushStore.class);
+            if (appUserRankingsStore != null && resAccessTokenStore != null && appUserFormStore != null&&appUserPushStore!=null) {
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$order("id", false));
+                Page<ResAccessToken> accessTokenPage = resAccessTokenStore.getPageList(0, 1, selectorList);
+                String accessToken = null;
+                if (accessTokenPage != null) {
+                    List<ResAccessToken> accessTokenList = accessTokenPage.getResultList();
+                    if (accessTokenList != null && !accessTokenList.isEmpty()) {
+                        ResAccessToken resAccessToken = accessTokenList.get(0);
+                        if (resAccessToken != null) {
+                            accessToken = resAccessToken.getTokenValue();
+                        }
+                    }
+                }
+                if (StringUtils.isNotBlank(accessToken)) {
+                    selectorList = new ArrayList<>();
+                    selectorList.add(SelectorUtils.$alias("userId", "userId"));
+                    Page<AppUserRankings> appUserRankingsPage = appUserRankingsStore.getPageList(0, 100, selectorList);
+                    if (appUserRankingsPage != null) {
+                        List<AppUserRankings> appUserRankingsList = appUserRankingsPage.getResultList();
+                        if (appUserRankingsList != null && !appUserRankingsList.isEmpty()) {
+                            Date d = DateFormatUtil.parse("2018-11-26 00:00:00", DateFormatUtil.YMDHMS_PATTERN);
+                            for (AppUserRankings appUserRankings : appUserRankingsList) {
+                                AppUser appUser=appUserRankings.getUserId();
+                                if(appUser!=null){
+                                    System.out.println("push name="+appUser.getNickName());
+                                    String openId = appUser.getOpenId();
+                                    if (StringUtils.isNotBlank(openId)) {
+
+                                        List<Selector> selectorFormList = new ArrayList<>();
+                                        selectorFormList.add(SelectorUtils.$eq("userId.id", appUserRankings.getUserId().getId()));
+                                        selectorFormList.add(SelectorUtils.$ge("created", d));
+                                        selectorFormList.add(SelectorUtils.$order("id", true));
+                                        Page<AppUserForm> appUserFormPage = appUserFormStore.getPageList(0, 1, selectorFormList);
+                                        AppUserForm appUserForm = null;
+                                        if (appUserFormPage != null) {
+                                            List<AppUserForm> appUserFormList = appUserFormPage.getResultList();
+                                            if (appUserFormList != null && !appUserFormList.isEmpty()) {
+                                                appUserForm = appUserFormList.get(0);
+                                            }
+                                        }
+                                        if (appUserForm != null) {
+                                            System.out.println(appUserForm.getFormId());
+                                            if (StringUtils.isNotBlank(openId)) {
+                                                JSONObject stringMap = new JSONObject();
+                                                JSONObject wxObj = new JSONObject();
+                                                JSONObject wxValue = new JSONObject();
+                                                wxValue.put("value", GameUtils.getCommentText(appUserRankings.getComment()));
+                                                wxObj.put("keyword1", wxValue);
+                                                wxValue.put("value", appUserRankings.getScore() + "分");
+                                                wxObj.put("keyword2", wxValue);
+                                                wxValue.put("value", "您的排行版排名已被其他玩家超越");
+                                                wxObj.put("keyword3", wxValue);
+                                                String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=" + accessToken;
+                                                stringMap.put("touser", openId);
+                                                stringMap.put("template_id", "qT8qfWEOad9u-OwaGHc_iEB3ZroXwMLLRA8z1TNGsfE");
+                                                stringMap.put("form_id", appUserForm.getFormId());
+                                                stringMap.put("data", wxObj);
+                                                stringMap.put("page", "pages/index/index");
+                                                stringMap.put("emphasis_keyword", "keyword1.DATA");
+                                                System.out.println(stringMap.toString());
+                                                String r = OKHttpUtil.post(wxUrl, stringMap.toString());
+                                                System.out.println(r);
+                                                if (StringUtils.isNotBlank(r)) {
+                                                    JSONObject pushObj = JSONObject.fromObject(r);
+                                                    if (pushObj != null) {
+                                                        if (pushObj.getInt("errcode") == 0) {
+                                                            AppUserPush appUserPush=new AppUserPush();
+                                                            appUserPush.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                                            appUserPush.setUserId(appUser);
+                                                            appUserPush.setPushId("qT8qfWEOad9u-OwaGHc_iEB3ZroXwMLLRA8z1TNGsfE");
+                                                            appUserPush.setPushData(stringMap.toString());
+                                                            Date cud=DateFormatUtil.getCurrentDate(true);
+                                                            appUserPush.setCreated(cud);
+                                                            appUserPush.setUpdated(cud);
+                                                            appUserPush.setUseYn("Y");
+                                                            appUserPush.setCreatedBy("push");
+                                                            appUserPush.setUpdatedBy("push");
+                                                            appUserPushStore.save(appUserPush, Persistent.SAVE,appUserForm);
+                                                        }else{
+                                                            appUserFormStore.delete(appUserForm);
+                                                            System.out.println(appUserForm.getId()+" 已失效 删除");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }else{
+                                            System.out.println(appUser.getNickName()+" 没有他的formid");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        resultObj.put("result", 0);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+
+
+    @Override
+    public String pushNoGameLady() throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserLadyStore appUserLadyStore=hsfServiceFactory.consumer(AppUserLadyStore.class);
+            AppUserRankingsStore appUserRankingsStore = hsfServiceFactory.consumer(AppUserRankingsStore.class);
+            ResAccessTokenStore resAccessTokenStore = hsfServiceFactory.consumer(ResAccessTokenStore.class);
+            AppUserFormStore appUserFormStore = hsfServiceFactory.consumer(AppUserFormStore.class);
+            AppUserPushStore appUserPushStore=hsfServiceFactory.consumer(AppUserPushStore.class);
+            if (appUserRankingsStore != null && resAccessTokenStore != null && appUserFormStore != null&&appUserPushStore!=null
+                    &&appUserLadyStore!=null) {
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$order("id", false));
+                Page<ResAccessToken> accessTokenPage = resAccessTokenStore.getPageList(0, 1, selectorList);
+                String accessToken = null;
+                if (accessTokenPage != null) {
+                    List<ResAccessToken> accessTokenList = accessTokenPage.getResultList();
+                    if (accessTokenList != null && !accessTokenList.isEmpty()) {
+                        ResAccessToken resAccessToken = accessTokenList.get(0);
+                        if (resAccessToken != null) {
+                            accessToken = resAccessToken.getTokenValue();
+                        }
+                    }
+                }
+                if (StringUtils.isNotBlank(accessToken)) {
+                    selectorList = new ArrayList<>();
+                    selectorList.add(SelectorUtils.$alias("userId", "userId"));
+                    selectorList.add(SelectorUtils.$eq("score", 0));
+                    Page<AppUserLady> appUserLadyPage = appUserLadyStore.getPageList(0, 200, selectorList);
+                    if (appUserLadyPage != null) {
+                        List<AppUserLady> appUserLadyList = appUserLadyPage.getResultList();
+                        if (appUserLadyList != null && !appUserLadyList.isEmpty()) {
+                            Date d = DateFormatUtil.parse("2018-11-26 00:00:00", DateFormatUtil.YMDHMS_PATTERN);
+                            for (AppUserLady appUserLady : appUserLadyList) {
+                                AppUser appUser=appUserLady.getUserId();
+                                if(appUser!=null){
+                                    AppUserRankings appUserRankings= appUserRankingsStore.getByUserId(appUser.getId());
+                                    if(appUserRankings==null){
+                                        System.out.println("push name="+appUser.getNickName());
+                                        String openId = appUser.getOpenId();
+                                        if (StringUtils.isNotBlank(openId)) {
+                                            List<Selector> selectorFormList = new ArrayList<>();
+                                            selectorFormList.add(SelectorUtils.$eq("userId.id", appUser.getId()));
+                                            selectorFormList.add(SelectorUtils.$ge("created", d));
+                                            selectorFormList.add(SelectorUtils.$order("id", true));
+                                            Page<AppUserForm> appUserFormPage = appUserFormStore.getPageList(0, 1, selectorFormList);
+                                            AppUserForm appUserForm = null;
+                                            if (appUserFormPage != null) {
+                                                List<AppUserForm> appUserFormList = appUserFormPage.getResultList();
+                                                if (appUserFormList != null && !appUserFormList.isEmpty()) {
+                                                    appUserForm = appUserFormList.get(0);
+                                                }
+                                            }
+                                            if (appUserForm != null) {
+                                                System.out.println(appUserForm.getFormId());
+                                                if (StringUtils.isNotBlank(openId)) {
+                                                    JSONObject stringMap = new JSONObject();
+                                                    JSONObject wxObj = new JSONObject();
+                                                    JSONObject wxValue = new JSONObject();
+                                                    wxValue.put("value", "体验北漂生活");
+                                                    wxObj.put("keyword1", wxValue);
+                                                    wxValue.put("value", "失败：还有"+appUserLady.getDays()+"天"+appUserLady.getHours()+"小时未完成");
+                                                    wxObj.put("keyword2", wxValue);
+                                                    wxValue.put("value", "混在北京，是好是坏，都能混的下去，再来试试吧！");
+                                                    wxObj.put("keyword3", wxValue);
+                                                    String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token="+accessToken;
+                                                    stringMap.put("touser", "openId");
+                                                    stringMap.put("template_id", "WpdIsCS4vV0Agj5McTKR5L1bfFnmbWvoT5UNxG86YGw");
+                                                    stringMap.put("form_id", appUserForm.getFormId());
+                                                    stringMap.put("data", wxObj);
+                                                    stringMap.put("page", "pages/index/index");
+                                                    System.out.println(stringMap.toString());
+                                                    String r = OKHttpUtil.post(wxUrl, stringMap.toString());
+                                                    System.out.println(r);
+                                                    if (StringUtils.isNotBlank(r)) {
+                                                        JSONObject pushObj = JSONObject.fromObject(r);
+                                                        if (pushObj != null) {
+                                                            if (pushObj.getInt("errcode") == 0) {
+                                                                AppUserPush appUserPush=new AppUserPush();
+                                                                appUserPush.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                                                appUserPush.setUserId(appUser);
+                                                                appUserPush.setPushId("WpdIsCS4vV0Agj5McTKR5L1bfFnmbWvoT5UNxG86YGw");
+                                                                appUserPush.setPushData(stringMap.toString());
+                                                                Date cud=DateFormatUtil.getCurrentDate(true);
+                                                                appUserPush.setCreated(cud);
+                                                                appUserPush.setUpdated(cud);
+                                                                appUserPush.setUseYn("Y");
+                                                                appUserPush.setCreatedBy("push");
+                                                                appUserPush.setUpdatedBy("push");
+                                                                appUserPushStore.save(appUserPush, Persistent.SAVE,appUserForm);
+                                                            }else{
+                                                                appUserFormStore.delete(appUserForm);
+                                                                System.out.println(appUserForm.getId()+" 已失效 删除");
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }else{
+                                                System.out.println(appUser.getNickName()+" 没有他的formid");
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        resultObj.put("result", 0);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof StoreException) {
+                throw new StoreException(ex);
+            } else {
+                throw new BizException(ex);
+            }
+        }
+        return resultObj.toString();
+    }
+
+    @Override
+    public String pushNoGameMan() throws BizException {
+        JSONObject resultObj = new JSONObject();
+        resultObj.put("result", -1);
+        try {
+            AppUserManStore appUserManStore=hsfServiceFactory.consumer(AppUserManStore.class);
+            AppUserRankingsStore appUserRankingsStore = hsfServiceFactory.consumer(AppUserRankingsStore.class);
+            ResAccessTokenStore resAccessTokenStore = hsfServiceFactory.consumer(ResAccessTokenStore.class);
+            AppUserFormStore appUserFormStore = hsfServiceFactory.consumer(AppUserFormStore.class);
+            AppUserPushStore appUserPushStore=hsfServiceFactory.consumer(AppUserPushStore.class);
+            if (appUserRankingsStore != null && resAccessTokenStore != null && appUserFormStore != null&&appUserPushStore!=null
+                    &&appUserManStore!=null) {
+                List<Selector> selectorList = new ArrayList<>();
+                selectorList.add(SelectorUtils.$order("id", false));
+                Page<ResAccessToken> accessTokenPage = resAccessTokenStore.getPageList(0, 1, selectorList);
+                String accessToken = null;
+                if (accessTokenPage != null) {
+                    List<ResAccessToken> accessTokenList = accessTokenPage.getResultList();
+                    if (accessTokenList != null && !accessTokenList.isEmpty()) {
+                        ResAccessToken resAccessToken = accessTokenList.get(0);
+                        if (resAccessToken != null) {
+                            accessToken = resAccessToken.getTokenValue();
+                        }
+                    }
+                }
+                if (StringUtils.isNotBlank(accessToken)) {
+                    selectorList = new ArrayList<>();
+                    selectorList.add(SelectorUtils.$alias("userId", "userId"));
+                    selectorList.add(SelectorUtils.$eq("score", 0));
+                    Page<AppUserMan> appUserManPage = appUserManStore.getPageList(0, 200, selectorList);
+                    if (appUserManPage != null) {
+                        List<AppUserMan> appUserManList = appUserManPage.getResultList();
+                        if (appUserManList != null && !appUserManList.isEmpty()) {
+                            Date d = DateFormatUtil.parse("2018-11-26 00:00:00", DateFormatUtil.YMDHMS_PATTERN);
+                            for (AppUserMan appUserMan : appUserManList) {
+                                AppUser appUser=appUserMan.getUserId();
+                                if(appUser!=null){
+                                    AppUserRankings appUserRankings= appUserRankingsStore.getByUserId(appUser.getId());
+                                    if(appUserRankings==null){
+                                        System.out.println("push name="+appUser.getNickName());
+                                        String openId = appUser.getOpenId();
+                                        if (StringUtils.isNotBlank(openId)) {
+                                            List<Selector> selectorFormList = new ArrayList<>();
+                                            selectorFormList.add(SelectorUtils.$eq("userId.id", appUser.getId()));
+                                            selectorFormList.add(SelectorUtils.$ge("created", d));
+                                            selectorFormList.add(SelectorUtils.$order("id", true));
+                                            Page<AppUserForm> appUserFormPage = appUserFormStore.getPageList(0, 1, selectorFormList);
+                                            AppUserForm appUserForm = null;
+                                            if (appUserFormPage != null) {
+                                                List<AppUserForm> appUserFormList = appUserFormPage.getResultList();
+                                                if (appUserFormList != null && !appUserFormList.isEmpty()) {
+                                                    appUserForm = appUserFormList.get(0);
+                                                }
+                                            }
+                                            if (appUserForm != null) {
+                                                System.out.println(appUserForm.getFormId());
+                                                if (StringUtils.isNotBlank(openId)) {
+                                                    JSONObject stringMap = new JSONObject();
+                                                    JSONObject wxObj = new JSONObject();
+                                                    JSONObject wxValue = new JSONObject();
+                                                    wxValue.put("value", "体验北漂生活");
+                                                    wxObj.put("keyword1", wxValue);
+                                                    wxValue.put("value", "失败：还有"+appUserMan.getDays()+"天"+appUserMan.getHours()+"小时未完成");
+                                                    wxObj.put("keyword2", wxValue);
+                                                    wxValue.put("value", "混在北京，是好是坏，都能混的下去，再来试试吧！");
+                                                    wxObj.put("keyword3", wxValue);
+                                                    String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token="+accessToken;
+                                                    stringMap.put("touser", "openId");
+                                                    stringMap.put("template_id", "WpdIsCS4vV0Agj5McTKR5L1bfFnmbWvoT5UNxG86YGw");
+                                                    stringMap.put("form_id", appUserForm.getFormId());
+                                                    stringMap.put("data", wxObj);
+                                                    stringMap.put("page", "pages/index/index");
+                                                    System.out.println(stringMap.toString());
+                                                    String r = OKHttpUtil.post(wxUrl, stringMap.toString());
+                                                    System.out.println(r);
+                                                    if (StringUtils.isNotBlank(r)) {
+                                                        JSONObject pushObj = JSONObject.fromObject(r);
+                                                        if (pushObj != null) {
+                                                            if (pushObj.getInt("errcode") == 0) {
+                                                                AppUserPush appUserPush=new AppUserPush();
+                                                                appUserPush.setId(DrdsIDUtils.getID(DrdsTable.APP));
+                                                                appUserPush.setUserId(appUser);
+                                                                appUserPush.setPushId("WpdIsCS4vV0Agj5McTKR5L1bfFnmbWvoT5UNxG86YGw");
+                                                                appUserPush.setPushData(stringMap.toString());
+                                                                Date cud=DateFormatUtil.getCurrentDate(true);
+                                                                appUserPush.setCreated(cud);
+                                                                appUserPush.setUpdated(cud);
+                                                                appUserPush.setUseYn("Y");
+                                                                appUserPush.setCreatedBy("push");
+                                                                appUserPush.setUpdatedBy("push");
+                                                                appUserPushStore.save(appUserPush, Persistent.SAVE,appUserForm);
+                                                            }else{
+                                                                appUserFormStore.delete(appUserForm);
+                                                                System.out.println(appUserForm.getId()+" 已失效 删除");
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }else{
+                                                System.out.println(appUser.getNickName()+" 没有他的formid");
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        resultObj.put("result", 0);
+                    }
+                }
             }
         } catch (Exception ex) {
             if (ex instanceof StoreException) {

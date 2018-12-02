@@ -139,6 +139,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserPushStore" class="com.diary.storeImpl.app.AppUserPushStoreImpl"/>
+        <provider id="appUserPushStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserPushStore"
+                  ref="appUserPushStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+        
         <service id="appUserFormStore" class="com.diary.storeImpl.app.AppUserFormStoreImpl"/>
         <provider id="appUserFormStoreProvider"
                   interface="com.diary.providers.store.app.AppUserFormStore"

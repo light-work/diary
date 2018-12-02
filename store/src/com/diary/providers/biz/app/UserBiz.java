@@ -46,6 +46,10 @@ public interface UserBiz {
 
     String coupleRankings() throws BizException;
 
+    String pushRankings() throws BizException;
 
+    String pushNoGameMan() throws BizException;
+
+    String pushNoGameLady() throws BizException;
 
 }

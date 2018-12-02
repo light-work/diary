@@ -98,6 +98,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserPushStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserPushStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="appUserFormStoreConsumer"
                   interface="com.diary.providers.store.app.AppUserFormStore"
                   version="for-dev" clientTimeout="5000">

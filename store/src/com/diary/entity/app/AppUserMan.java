@@ -27,6 +27,7 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     private Integer money;
 
+    private Integer fundMoney;
 
     private Integer ability;
 
@@ -88,6 +89,16 @@ public class AppUserMan extends IdEntity implements Tracker, Cloneable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    @Transient
+    public Integer getFundMoney() {
+        return fundMoney;
+    }
+
+    public void setFundMoney(Integer fundMoney) {
+        this.fundMoney = fundMoney;
     }
 
     @Transient

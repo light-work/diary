@@ -6,6 +6,7 @@ import com.diary.entity.app.AppUserFormLast;
 import com.diary.providers.store.app.AppUserFormStore;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
 import org.guiceside.persistence.Transactional;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -27,6 +28,12 @@ public class AppUserFormService extends HQuery implements AppUserFormStore {
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserForm getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserForm.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public Page<AppUserForm> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+        return $(selectorList).page(AppUserForm.class, start, limit);
     }
 
     @Override
@@ -63,5 +70,9 @@ public class AppUserFormService extends HQuery implements AppUserFormStore {
         $(appUserForms).save(persistent);
     }
 
-
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(AppUserForm appUserForm) throws StoreException {
+        $(appUserForm).delete();
+    }
 }

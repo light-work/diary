@@ -111,118 +111,59 @@ public class GameUtils {
         System.out.println(0 - (-8));
 
 
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("js");
-
-        engine.put("jobLevel", 3);
-        engine.put("carLevel", 5);
-        engine.put("houseLevel", 5);
-        engine.put("coupleLevel", 1);
-        engine.put("money", 900000);
-        engine.put("fundMoney", 500000);
-        engine.put("health", 80);
-        engine.put("comment", "feng");
-        Object result = engine.eval("comment==='feng'");
-        System.out.println(result);
-
-//        Map<Integer,String> stringMap=new HashMap<>();
-//        stringMap.put(0,"hun");
-//        stringMap.put(1,"ming");
-//        stringMap.put(2,"feng");
-//        stringMap.put(3,"lu");
-//        stringMap.put(4,"qiong");
-//        stringMap.put(5,"qiong");
-//        List<String> matchList=new ArrayList<>();
-//        matchList.add("(jobLevel>=5&&carLevel>=5&&houseLevel>=5&&coupleLevel>=1&&money>=2000000&&fundMoney>=500000&&health>=80)");
-//        matchList.add("(jobLevel>=3&&carLevel>=3&&houseLevel>=3&&coupleLevel>=1&&money>=1000000&&fundMoney>=200000&&health>=70)");
-//        matchList.add("(jobLevel>=3&&carLevel>=1&&houseLevel>=1&&coupleLevel>=0&&money>=500000&&fundMoney>=100000&&health>=60)");
-//        matchList.add("(jobLevel>=1&&carLevel>=0&&houseLevel>=0&&coupleLevel>=0&&money>=300000&&fundMoney>=0&&health>=50)");
-//        String str = "(jobLevel>=0&&carLevel==0&&houseLevel==0&&coupleLevel==0&&money<=300000&&fundMoney==0&&health>=50)";
+//        ScriptEngineManager manager = new ScriptEngineManager();
+//        ScriptEngine engine = manager.getEngineByName("js");
 //
-//        int index=0;
-//        for(String ma:matchList){
-//             result = engine.eval(ma);
-//            if(result.toString().equals("true")){
-//                break;
-//            }
-//            index++;
-//        }
-//        System.out.println(stringMap.get(index));
-//
-//        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
+//        engine.put("jobLevel", 3);
+//        engine.put("carLevel", 5);
+//        engine.put("houseLevel", 5);
+//        engine.put("coupleLevel", 1);
+//        engine.put("money", 900000);
+//        engine.put("fundMoney", 500000);
+//        engine.put("health", 80);
+//        engine.put("comment", "feng");
+//        Object result = engine.eval("comment==='feng'");
+//        System.out.println(result);
 
-//        Map<String, String> parMap = new HashMap<>();
-//        parMap.put("userId", "6473068352047239168");
-//        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
-//        System.out.println(r);
-        JSONObject parMap = new JSONObject();
-        parMap.put("scene", "6472372181458386944");
-        parMap.put("page", "pages/index/report");
-        String url="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=";
-        url+="16_ShvGreYnGjz5VyB_O9yM3pICyZIE6OWEQf0o2tSJD2asbAM3_PEmrQOmas4EGdE6zTI1XNgq5zf41Ngq05ldu48UuiL0Aqj267z88ZZUEvE8fRB3O_rzvr7el9Q6vIMyG18Yl38qnHEIUcJNTENdADAEPY";
-        String r = OKHttpUtil.post(url,parMap.toString());
+//        JSONObject stringMap = new JSONObject();
+//        JSONObject wxObj = new JSONObject();
+//        JSONObject wxValue = new JSONObject();
+//        wxValue.put("value", GameUtils.getCommentText("jing"));
+//        wxObj.put("keyword1", wxValue);
+//        wxValue.put("value", "3436100分");
+//        wxObj.put("keyword2", wxValue);
+//        wxValue.put("value", "您的排行版排名已被其他玩家超越");
+//        wxObj.put("keyword3", wxValue);
+//        String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=16_VMIS9nV-C7ucPEgFGE_M6c2ZC4zS59jimInkT-KIS5L6s_zQiVnjGNPWFluBbKF4plWPClL1ckt81kcZBlL8Ecaz0-KJPBTPRkL8NZUDi_YiSyaTToUwf-SfJMMISXcABACMR";
+//        stringMap.put("touser", "oSkOH5EgHKpOLrcdEf-Dp0XVC82I");
+//        stringMap.put("template_id", "qT8qfWEOad9u-OwaGHc_iEB3ZroXwMLLRA8z1TNGsfE");
+//        stringMap.put("form_id", "1543208129635");
+//        stringMap.put("data", wxObj);
+//        stringMap.put("page", "pages/index/index");
+//        stringMap.put("emphasis_keyword", "keyword1.DATA");
+
+
+        JSONObject stringMap = new JSONObject();
+//        JSONObject wxObj = new JSONObject();
+//        JSONObject wxValue = new JSONObject();
+//        wxValue.put("value", "体验北漂生活");
+//        wxObj.put("keyword1", wxValue);
+//        wxValue.put("value", "失败：还有3天4小时未完成");
+//        wxObj.put("keyword2", wxValue);
+//        wxValue.put("value", "混在北京，是好是坏，都能混的下去，再来试试吧！");
+//        wxObj.put("keyword3", wxValue);
+//        String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=16_XSAdmY_MZgYHYdVJgoQVZnyYTg18GvezDjbAf7PfCuayRdERPJrFYqHBELStzjPeuWM2wP24lL_jBrGCJgdJb1jaf55cS64UV8Ocq6OLLbiFHWiLksW0fCDmwxKuHrADA83FteYmzAnTE8QdIDOcACABWH";
+//        stringMap.put("touser", "oSkOH5EgHKpOLrcdEf-Dp0XVC82I");
+//        stringMap.put("template_id", "WpdIsCS4vV0Agj5McTKR5L1bfFnmbWvoT5UNxG86YGw");
+//        stringMap.put("form_id", "1543245895602");
+//        stringMap.put("data", wxObj);
+//        stringMap.put("page", "pages/index/index");
+        //stringMap.put("emphasis_keyword", "keyword3.DATA");
+
+
+       // System.out.println(stringMap.toString());
+        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/pushNoGameLady", stringMap);
         System.out.println(r);
-//        String responseStr = null;
-//        RequestBody body = RequestBody.create(JSON, jsonData);
-//        Request request = (new Request.Builder()).url(url).post(body).build();
-//        Response response = okHttpClient.newCall(request).execute();
-//        if (response.isSuccessful()) {
-//            responseStr = response.body().string();
-//            return responseStr;
-//        } else {
-//            throw new IOException("Unexpected code " + response);
-//        }
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Health", 81);
-        jsonObject.put("Ability", 382);
-        jsonObject.put("Experience", 370);
-        jsonObject.put("Happy", 328);
-        jsonObject.put("Positive", 313);
-        jsonObject.put("Connections", 315);
-        jsonObject.put("Money", 2610514);
-        jsonObject.put("fundMoney", 20364);
-
-
-        Integer HealthScore = GameUtils.getScoreAttr(jsonObject.getInt("Health"), "Health", 1);
-        if (HealthScore >= 150) {
-            HealthScore += 200 * jsonObject.getInt("Health");
-        } else if (HealthScore > 100) {
-            HealthScore += 150 * jsonObject.getInt("Health");
-        } else if (HealthScore > 80) {
-            HealthScore += 100 * jsonObject.getInt("Health");
-        }
-
-        Integer AbilityScore = GameUtils.getScoreAttr(jsonObject.getInt("Ability"), "Ability", 1);
-
-        Integer ExperienceScore = GameUtils.getScoreAttr(jsonObject.getInt("Experience"), "Experience", 1);
-
-        Integer HappyScore = GameUtils.getScoreAttr(jsonObject.getInt("Happy"), "Happy", 1);
-
-        Integer PositiveScore = GameUtils.getScoreAttr(jsonObject.getInt("Positive"), "Positive", 1);
-
-        Integer ConnectionsScore = GameUtils.getScoreAttr(jsonObject.getInt("Connections"), "Connections", 1);
-
-        Integer MoneyScore = GameUtils.getScoreMoney(jsonObject.getInt("Money"));
-
-        Integer fundMoneyScore = GameUtils.getScoreMoney(jsonObject.getInt("fundMoney"));
-
-        Integer sum = HealthScore + AbilityScore + ExperienceScore + HappyScore + PositiveScore + ConnectionsScore + MoneyScore + fundMoneyScore;
-        System.out.println("Health 占比" + NumberUtils.multiply(NumberUtils.divide(HealthScore, sum, 2), 100, 0) + "%");
-        System.out.println("Ability 占比" + NumberUtils.multiply(NumberUtils.divide(AbilityScore, sum, 2), 100, 0) + "%");
-
-        System.out.println("Experience 占比" + NumberUtils.multiply(NumberUtils.divide(ExperienceScore, sum, 2), 100, 0) + "%");
-
-        System.out.println("Happy 占比" + NumberUtils.multiply(NumberUtils.divide(HappyScore, sum, 2), 100, 0) + "%");
-
-        System.out.println("Positive 占比" + NumberUtils.multiply(NumberUtils.divide(PositiveScore, sum, 2), 100, 0) + "%");
-
-        System.out.println("Connections 占比" + NumberUtils.multiply(NumberUtils.divide(ConnectionsScore, sum, 2), 100, 0) + "%");
-
-        System.out.println("Money 占比" + NumberUtils.multiply(NumberUtils.divide(MoneyScore, sum, 2), 100, 0) + "%");
-
-        System.out.println("fundMoney 占比" + NumberUtils.multiply(NumberUtils.divide(fundMoneyScore, sum, 2), 100, 0) + "%");
-
 
     }
 
