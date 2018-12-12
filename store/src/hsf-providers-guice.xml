@@ -407,6 +407,13 @@
                   enableTXC="true">
         </provider>
 
+        <service id="resWbAccessTokenStore" class="com.diary.storeImpl.res.ResWbAccessTokenStoreImpl"/>
+        <provider id="resWbAccessTokenStoreProvider"
+                  interface="com.diary.providers.store.res.ResWbAccessTokenStore"
+                  ref="resWbAccessTokenStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
 
         <service id="commonBiz" class="com.diary.bizImpl.res.CommonBizImp"/>
         <provider id="commonBizProvider"

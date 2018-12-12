@@ -122,7 +122,7 @@ public class AccessTokenTask implements Job {
                                 Date cud=DateFormatUtil.addMinute(resAccessToken.getCreated(),10);
                                 long diff = DateFormatUtil.calendarMinutePlus(cudDate,cud);
                                 System.out.println("access_token diff="+diff);
-                                if (diff == 5) {
+                                if (diff <= 5) {
                                     buildAccessToken(resAccessTokenStore);
                                 }else{
                                     System.out.println("current  access_token effective");

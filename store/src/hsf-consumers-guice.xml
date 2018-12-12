@@ -283,6 +283,12 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resWbAccessTokenStoreConsumer"
+                  interface="com.diary.providers.store.res.ResWbAccessTokenStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+
 
         <consumer id="commonBizConsumer"
                   interface="com.diary.providers.biz.res.CommonBiz"
