@@ -37,6 +37,17 @@ public class ResClothesStoreImpl implements ResClothesStore {
 
     @Override
     @ConnectManager
+    public ResClothes getByTitle(String title) throws StoreException {
+        try {
+            return this.resClothesService.getByTitle(title);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResClothes> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resClothesService.getPageList(start, limit, selectorList);

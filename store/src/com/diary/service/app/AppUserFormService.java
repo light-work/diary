@@ -2,8 +2,11 @@ package com.diary.service.app;
 
 import com.diary.common.StoreException;
 import com.diary.entity.app.AppUserForm;
+import com.diary.entity.app.AppUserFormLast;
 import com.diary.providers.store.app.AppUserFormStore;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.guiceside.commons.Page;
 import org.guiceside.persistence.TransactionType;
 import org.guiceside.persistence.Transactional;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
@@ -18,11 +21,19 @@ import java.util.List;
 @Singleton
 public class AppUserFormService extends HQuery implements AppUserFormStore {
 
+    @Inject
+    private AppUserFormLastService appUserFormLastService;
 
 
     @Transactional(type = TransactionType.READ_ONLY)
     public AppUserForm getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(AppUserForm.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public Page<AppUserForm> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+        return $(selectorList).page(AppUserForm.class, start, limit);
     }
 
     @Override
@@ -46,9 +57,22 @@ public class AppUserFormService extends HQuery implements AppUserFormStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
+    public void save(AppUserForm appUserForm, Persistent persistent, AppUserFormLast appUserFormLast, Persistent persistentLast) throws StoreException {
+        $(appUserForm).save(persistent);
+        if(appUserFormLast!=null){
+            this.appUserFormLastService.save(appUserFormLast,persistentLast);
+        }
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
     public void save(List<AppUserForm> appUserForms, Persistent persistent) throws StoreException {
         $(appUserForms).save(persistent);
     }
 
-
+    @Override
+    @Transactional(type = TransactionType.READ_WRITE)
+    public void delete(AppUserForm appUserForm) throws StoreException {
+        $(appUserForm).delete();
+    }
 }

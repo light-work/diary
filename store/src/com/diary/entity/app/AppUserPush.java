@@ -1,7 +1,5 @@
 package com.diary.entity.app;
 
-import com.diary.entity.res.ResCouple;
-import com.diary.entity.res.ResHouse;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
@@ -16,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_COUPLE")
-public class AppUserCouple extends IdEntity implements Tracker {
+@Table(name = "APP_USER_PUSH")
+public class AppUserPush extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,9 +23,15 @@ public class AppUserCouple extends IdEntity implements Tracker {
 
     private AppUser userId;
 
-    private ResCouple coupleId;
+    private String pushId;
 
-    private Integer value;
+    private String pushData;
+
+    private Integer year;
+
+    private Integer month;
+
+    private Integer day;
 
     private Date created;
 
@@ -48,6 +52,7 @@ public class AppUserCouple extends IdEntity implements Tracker {
         this.id = id;
     }
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     public AppUser getUserId() {
@@ -58,24 +63,51 @@ public class AppUserCouple extends IdEntity implements Tracker {
         this.userId = userId;
     }
 
-    @Column(name = "VALUE")
-    public Integer getValue() {
-        return value;
+    @Column(name = "PUSH_ID")
+    public String getPushId() {
+        return pushId;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUPLE_ID")
-    public ResCouple getCoupleId() {
-        return coupleId;
+    @Column(name = "PUSH_DATA")
+    public String getPushData() {
+        return pushData;
     }
 
-    public void setCoupleId(ResCouple coupleId) {
-        this.coupleId = coupleId;
+    public void setPushData(String pushData) {
+        this.pushData = pushData;
     }
+
+    @Column(name = "YEAR")
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    @Column(name = "MONTH")
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    @Column(name = "DAY")
+    public Integer getDay() {
+        return day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
+    }
+
 
 
     @Column(name = "CREATED", updatable = false)

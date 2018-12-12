@@ -98,8 +98,18 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="appUserPushStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserPushStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
         <consumer id="appUserFormStoreConsumer"
                   interface="com.diary.providers.store.app.AppUserFormStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="appUserFormLastStoreConsumer"
+                  interface="com.diary.providers.store.app.AppUserFormLastStore"
                   version="for-dev" clientTimeout="5000">
         </consumer>
         <!--      res   -->
@@ -252,6 +262,11 @@
                   version="for-dev" clientTimeout="5000">
         </consumer>
 
+        <consumer id="resShareStoreConsumer"
+                  interface="com.diary.providers.store.res.ResShareStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
 
         <consumer id="resCommentStoreConsumer"
                   interface="com.diary.providers.store.res.ResCommentStore"
@@ -260,6 +275,16 @@
 
         <consumer id="resCommentEvalStoreConsumer"
                   interface="com.diary.providers.store.res.ResCommentEvalStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resAccessTokenStoreConsumer"
+                  interface="com.diary.providers.store.res.ResAccessTokenStore"
+                  version="for-dev" clientTimeout="5000">
+        </consumer>
+
+        <consumer id="resWbAccessTokenStoreConsumer"
+                  interface="com.diary.providers.store.res.ResWbAccessTokenStore"
                   version="for-dev" clientTimeout="5000">
         </consumer>
 

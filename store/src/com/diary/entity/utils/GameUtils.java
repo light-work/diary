@@ -3,6 +3,9 @@ package com.diary.entity.utils;
 import com.diary.entity.app.AppUserLady;
 import com.diary.entity.app.AppUserMan;
 import com.diary.entity.res.ResEventResult;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import ognl.NoSuchPropertyException;
@@ -16,8 +19,11 @@ import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
+
+import static org.guiceside.commons.OKHttpUtil.JSON;
 
 public class GameUtils {
 
@@ -26,6 +32,9 @@ public class GameUtils {
     public static final int intDays = 6;
 
     public static final int intHours = 6;
+
+    public static final String appId = "wxadc0c22656d6c116";
+    public static final String secret = "890342da41f48c2dbbd1b4038060b056";
 
     public static double fundMarket(List<Double> doubleList, Double minNum, Double maxNum) {
         Random r = new Random();
@@ -87,6 +96,7 @@ public class GameUtils {
     }
 
     public static void main(String[] args) throws Exception {
+        System.out.println(new Date(1543567649722l));
         JSONObject a = new JSONObject();
         a.put("id", "6453477704225898442");
         System.out.println(a.getLong("id") + "");
@@ -101,54 +111,70 @@ public class GameUtils {
         System.out.println(0 - (-8));
 
 
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("js");
-
-        engine.put("jobLevel", 3);
-        engine.put("carLevel", 5);
-        engine.put("houseLevel", 5);
-        engine.put("coupleLevel", 1);
-        engine.put("money", 900000);
-        engine.put("fundMoney", 500000);
-        engine.put("health", 80);
-        engine.put("comment", "feng");
-        Object result = engine.eval("comment==='feng'");
-        System.out.println(result);
-
-//        Map<Integer,String> stringMap=new HashMap<>();
-//        stringMap.put(0,"hun");
-//        stringMap.put(1,"ming");
-//        stringMap.put(2,"feng");
-//        stringMap.put(3,"lu");
-//        stringMap.put(4,"qiong");
-//        stringMap.put(5,"qiong");
-//        List<String> matchList=new ArrayList<>();
-//        matchList.add("(jobLevel>=5&&carLevel>=5&&houseLevel>=5&&coupleLevel>=1&&money>=2000000&&fundMoney>=500000&&health>=80)");
-//        matchList.add("(jobLevel>=3&&carLevel>=3&&houseLevel>=3&&coupleLevel>=1&&money>=1000000&&fundMoney>=200000&&health>=70)");
-//        matchList.add("(jobLevel>=3&&carLevel>=1&&houseLevel>=1&&coupleLevel>=0&&money>=500000&&fundMoney>=100000&&health>=60)");
-//        matchList.add("(jobLevel>=1&&carLevel>=0&&houseLevel>=0&&coupleLevel>=0&&money>=300000&&fundMoney>=0&&health>=50)");
-//        String str = "(jobLevel>=0&&carLevel==0&&houseLevel==0&&coupleLevel==0&&money<=300000&&fundMoney==0&&health>=50)";
+//        ScriptEngineManager manager = new ScriptEngineManager();
+//        ScriptEngine engine = manager.getEngineByName("js");
 //
-//        int index=0;
-//        for(String ma:matchList){
-//             result = engine.eval(ma);
-//            if(result.toString().equals("true")){
-//                break;
-//            }
-//            index++;
-//        }
-//        System.out.println(stringMap.get(index));
-//
-//        System.out.println(DrdsIDUtils.getID(DrdsTable.APP));
+//        engine.put("jobLevel", 3);
+//        engine.put("carLevel", 5);
+//        engine.put("houseLevel", 5);
+//        engine.put("coupleLevel", 1);
+//        engine.put("money", 900000);
+//        engine.put("fundMoney", 500000);
+//        engine.put("health", 80);
+//        engine.put("comment", "feng");
+//        Object result = engine.eval("comment==='feng'");
+//        System.out.println(result);
 
-        Map<String, String> parMap = new HashMap<>();
-        parMap.put("userId", "6465580136151400448");
-        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/replay", parMap);
+//        JSONObject stringMap = new JSONObject();
+//        JSONObject wxObj = new JSONObject();
+//        JSONObject wxValue = new JSONObject();
+//        wxValue.put("value", GameUtils.getCommentText("jing"));
+//        wxObj.put("keyword1", wxValue);
+//        wxValue.put("value", "3436100分");
+//        wxObj.put("keyword2", wxValue);
+//        wxValue.put("value", "您的排行版排名已被其他玩家超越");
+//        wxObj.put("keyword3", wxValue);
+//        String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=16_VMIS9nV-C7ucPEgFGE_M6c2ZC4zS59jimInkT-KIS5L6s_zQiVnjGNPWFluBbKF4plWPClL1ckt81kcZBlL8Ecaz0-KJPBTPRkL8NZUDi_YiSyaTToUwf-SfJMMISXcABACMR";
+//        stringMap.put("touser", "oSkOH5EgHKpOLrcdEf-Dp0XVC82I");
+//        stringMap.put("template_id", "qT8qfWEOad9u-OwaGHc_iEB3ZroXwMLLRA8z1TNGsfE");
+//        stringMap.put("form_id", "1543208129635");
+//        stringMap.put("data", wxObj);
+//        stringMap.put("page", "pages/index/index");
+//        stringMap.put("emphasis_keyword", "keyword1.DATA");
 
+
+        JSONObject stringMap = new JSONObject();
+//        JSONObject wxObj = new JSONObject();
+//        JSONObject wxValue = new JSONObject();
+//        wxValue.put("value", "体验北漂生活");
+//        wxObj.put("keyword1", wxValue);
+//        wxValue.put("value", "失败：还有3天4小时未完成");
+//        wxObj.put("keyword2", wxValue);
+//        wxValue.put("value", "混在北京，是好是坏，都能混的下去，再来试试吧！");
+//        wxObj.put("keyword3", wxValue);
+//        String wxUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=16_XSAdmY_MZgYHYdVJgoQVZnyYTg18GvezDjbAf7PfCuayRdERPJrFYqHBELStzjPeuWM2wP24lL_jBrGCJgdJb1jaf55cS64UV8Ocq6OLLbiFHWiLksW0fCDmwxKuHrADA83FteYmzAnTE8QdIDOcACABWH";
+//        stringMap.put("touser", "oSkOH5EgHKpOLrcdEf-Dp0XVC82I");
+//        stringMap.put("template_id", "WpdIsCS4vV0Agj5McTKR5L1bfFnmbWvoT5UNxG86YGw");
+//        stringMap.put("form_id", "1543245895602");
+//        stringMap.put("data", wxObj);
+//        stringMap.put("page", "pages/index/index");
+        //stringMap.put("emphasis_keyword", "keyword3.DATA");
+
+
+       // System.out.println(stringMap.toString());
+        String r = OKHttpUtil.post("https://game.jinrongzhushou.com/v1/user/pushNoGameLady", stringMap);
         System.out.println(r);
 
-
     }
+
+    public static String filterNickName(String str) {
+        if (str == null) {
+            return null;
+        }
+        str = str.replaceAll("[^\\u0000-\\uFFFF]", "");
+        return str;
+    }
+
 
     public static Integer dynamicPrice(Integer day, Integer price, Integer offset) throws Exception {
         offset = offset * currentDay(day);
@@ -310,7 +336,7 @@ public class GameUtils {
                 attrName = "快乐";
                 break;
             case "POSITIVE":
-                attrName = "正义";
+                attrName = "正气";
                 break;
             case "CONNECTIONS":
                 attrName = "人脉";
@@ -354,6 +380,62 @@ public class GameUtils {
         return base;
     }
 
+    public static void attributeMan(JSONObject jsonObject) {
+
+        addAttribute(jsonObject,getAttrNameMan("health"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("health"), 160, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameMan("ability"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("ability"), 460, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameMan("experience"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("experience"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameMan("happy"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("happy"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameMan("positive"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("positive"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameMan("connections"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("connections"), 460, 2), 100, 0));
+
+    }
+
+    public static void addAttribute(JSONObject jsonObject, String title, Object value) {
+        if(value instanceof Integer){
+            if ((Integer) value > 100) {
+                value = 100;
+            }
+        }else if(value instanceof Double){
+            if ((Double) value > 100) {
+                value = 100;
+            }
+        }
+        JSONArray attribute = new JSONArray();
+        attribute.add(title);
+        attribute.add(value);
+        if(!jsonObject.containsKey("attribute")){
+            jsonObject.put("attribute",new JSONArray());
+        }
+        jsonObject.getJSONArray("attribute").add(attribute);
+    }
+
+    public static void attributeLady(JSONObject jsonObject)  {
+        addAttribute(jsonObject,getAttrNameLady("health"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("health"), 160, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameLady("ability"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("ability"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameLady("wisdom"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("wisdom"), 460, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameLady("happy"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("happy"), 460, 2), 100, 0));
+
+        addAttribute(jsonObject,getAttrNameLady("beauty"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("beauty"), 460, 2), 100, 0));
+
+
+        addAttribute(jsonObject,getAttrNameLady("popularity"),NumberUtils.multiply(NumberUtils.divide(jsonObject.getInt("popularity"), 460, 2), 100, 0));
+
+
+    }
+
     public static String getAttrNameLady(String attrKey) {
         String attrName = null;
         attrKey = attrKey.toUpperCase();
@@ -381,6 +463,35 @@ public class GameUtils {
                 break;
         }
         return attrName;
+    }
+
+    public static void addAttrAsset(JSONArray jsonArray, Integer gender) {
+        JSONObject operationASSET = new JSONObject();
+        operationASSET.put("text", "资产总额");
+        operationASSET.put("value", "asset");
+        jsonArray.add(operationASSET);
+        if (gender == 1) {
+            JSONObject operationCarASSET = new JSONObject();
+            operationCarASSET.put("text", "车辆估值");
+            operationCarASSET.put("value", "carAsset");
+            jsonArray.add(operationCarASSET);
+
+            JSONObject operationHouseASSET = new JSONObject();
+            operationHouseASSET.put("text", "房屋估值");
+            operationHouseASSET.put("value", "houseAsset");
+            jsonArray.add(operationHouseASSET);
+        } else if (gender == 2) {
+            JSONObject operationClothesASSET = new JSONObject();
+            operationClothesASSET.put("text", "衣品估值");
+            operationClothesASSET.put("value", "clothesAsset");
+            jsonArray.add(operationClothesASSET);
+
+            JSONObject operationLuxuryASSET = new JSONObject();
+            operationLuxuryASSET.put("text", "妆备估值");
+            operationLuxuryASSET.put("value", "luxuryAsset");
+            jsonArray.add(operationLuxuryASSET);
+        }
+
     }
 
     public static void attrList(JSONArray jsonArray, Integer gender, Integer isManage) {
@@ -511,7 +622,7 @@ public class GameUtils {
                             } else {
                                 jsonObject.put("attrName", getAttrNameLady(requireKey));
                             }
-                            jsonObject.put("value",  requireValue);
+                            jsonObject.put("value", requireValue);
                             failArray.add(jsonObject);
                         }
                     }

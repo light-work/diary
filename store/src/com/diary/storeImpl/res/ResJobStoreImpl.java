@@ -37,6 +37,17 @@ public class ResJobStoreImpl implements ResJobStore {
 
     @Override
     @ConnectManager
+    public ResJob getByTitle(String title) throws StoreException {
+        try {
+            return this.resJobService.getByTitle(title);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResJob> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resJobService.getPageList(start, limit, selectorList);

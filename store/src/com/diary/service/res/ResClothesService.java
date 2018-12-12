@@ -21,9 +21,14 @@ public class ResClothesService extends HQuery implements ResClothesStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResClothes getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResClothes.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResClothes getByTitle(String title) throws StoreException {
+        return $($eq("title",title)).get(ResClothes.class);
     }
 
     @Override

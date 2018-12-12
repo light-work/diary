@@ -21,10 +21,16 @@ public class ResJobService extends HQuery implements ResJobStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResJob getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResJob.class);
     }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResJob getByTitle(String title) throws StoreException {
+        return $($eq("title",title)).get(ResJob.class);
+    }
+
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)

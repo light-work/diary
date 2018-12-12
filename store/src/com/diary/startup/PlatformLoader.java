@@ -8,10 +8,15 @@ import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.support.properties.PropertiesConfig;
 import org.guiceside.support.redis.RedisPoolProvider;
 import org.guiceside.web.listener.DefaultGuiceSideListener;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.UnavailableException;
 
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 
 /**
@@ -21,6 +26,8 @@ import javax.servlet.UnavailableException;
  */
 public class PlatformLoader {
     private static final Logger log = Logger.getLogger(PlatformLoader.class);
+    private Scheduler scheduler;
+
     public void init(ServletContext servletContext) throws Exception {
         long tStart = System.currentTimeMillis();
         long tEnd = System.currentTimeMillis();
@@ -56,6 +63,28 @@ public class PlatformLoader {
             if(releaseEnvironment.equals("DIS")){
                 RedisPoolProvider.init(webConfig);
             }
+        }
+
+        try {
+            // Grab the Scheduler instance from the Factory
+            scheduler = StdSchedulerFactory.getDefaultScheduler();
+            JobDataMap jobDataMap = new JobDataMap();
+            jobDataMap.put("injector", injector);
+
+            String timeStart="0 0/1 * * * ?";
+
+            JobDetail jobAccessTokenTask= newJob(AccessTokenTask.class).withIdentity("jobAccessTokenTask", "groupJobAccessTokenTask")
+                    .usingJobData(jobDataMap).build();
+            CronTrigger triggerJobAccessTokenTask = newTrigger()
+                    .withIdentity("triggerAccessTokenTask", "groupJobAccessTokenTask")
+                    .withSchedule(cronSchedule(timeStart))
+                    .build();
+
+            scheduler.scheduleJob(jobAccessTokenTask, triggerJobAccessTokenTask);
+            scheduler.start();
+            System.out.println("启动 task");
+        }catch (SchedulerException se) {
+            se.printStackTrace();
         }
 
 

@@ -37,6 +37,17 @@ public class ResCoupleStoreImpl implements ResCoupleStore {
 
     @Override
     @ConnectManager
+    public ResCouple getByTitle(String title) throws StoreException {
+        try {
+            return this.resCoupleService.getByTitle(title);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResCouple> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resCoupleService.getPageList(start, limit, selectorList);

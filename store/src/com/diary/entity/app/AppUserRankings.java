@@ -27,6 +27,10 @@ public class AppUserRankings extends IdEntity implements Tracker, Cloneable {
 
     private String comment;
 
+    private Integer asset;
+
+    private Integer attrScore;
+
     private Date created;
 
     private String createdBy;
@@ -74,6 +78,24 @@ public class AppUserRankings extends IdEntity implements Tracker, Cloneable {
 
     public void setScore(Integer score) {
         this.score = score;
+    }
+
+    @Column(name = "ASSET")
+    public Integer getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Integer asset) {
+        this.asset = asset;
+    }
+
+    @Column(name = "ATTR_SCORE")
+    public Integer getAttrScore() {
+        return attrScore;
+    }
+
+    public void setAttrScore(Integer attrScore) {
+        this.attrScore = attrScore;
     }
 
     @Column(name = "CREATED", updatable = false)

@@ -21,9 +21,14 @@ public class ResCoupleService extends HQuery implements ResCoupleStore {
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
-
     public ResCouple getById(Long id, Selector... selectors) throws StoreException {
         return $(id, selectors).get(ResCouple.class);
+    }
+
+    @Override
+    @Transactional(type = TransactionType.READ_ONLY)
+    public ResCouple getByTitle(String title) throws StoreException {
+        return $($eq("title",title)).get(ResCouple.class);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.diary.storeImpl.res;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResLuxury;
-import com.diary.providers.store.res.ResLuxuryStore;
-import com.diary.service.res.ResLuxuryService;
+import com.diary.entity.res.ResAccessToken;
+import com.diary.providers.store.res.ResAccessTokenStore;
+import com.diary.service.res.ResAccessTokenService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.guiceside.commons.Page;
@@ -18,17 +18,17 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResLuxuryStoreImpl implements ResLuxuryStore {
+public class ResAccessTokenStoreImpl implements ResAccessTokenStore {
 
     @Inject
-    private ResLuxuryService resLuxuryService;
+    private ResAccessTokenService resAccessTokenService;
 
 
     @Override
     @ConnectManager
-    public ResLuxury getById(Long id, Selector... selectors) throws StoreException {
+    public ResAccessToken getById(Long id, Selector... selectors) throws StoreException {
         try {
-            return this.resLuxuryService.getById(id, selectors);
+            return this.resAccessTokenService.getById(id, selectors);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -37,9 +37,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public ResLuxury getByTitle(String title) throws StoreException {
+    public Page<ResAccessToken> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
-            return this.resLuxuryService.getByTitle(title);
+            return this.resAccessTokenService.getPageList(start, limit, selectorList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -48,9 +48,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public Page<ResLuxury> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+    public List<ResAccessToken> getList(List<Selector> selectorList) throws StoreException {
         try {
-            return this.resLuxuryService.getPageList(start, limit, selectorList);
+            return this.resAccessTokenService.getList( selectorList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -59,9 +59,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public List<ResLuxury> getList(List<Selector> selectorList) throws StoreException {
+    public void delete(ResAccessToken resAccessToken) throws StoreException {
         try {
-            return this.resLuxuryService.getList( selectorList);
+            this.resAccessTokenService.delete(resAccessToken);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -70,20 +70,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public void delete(ResLuxury resLuxury) throws StoreException {
+    public void save(ResAccessToken appUser, Persistent persistent) throws StoreException {
         try {
-            this.resLuxuryService.delete(resLuxury);
-        } catch (HibernateException e) {
-            Throwable throwable = e.getCause() != null ? e.getCause() : e;
-            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
-        }
-    }
-
-    @Override
-    @ConnectManager
-    public void save(ResLuxury appUser, Persistent persistent) throws StoreException {
-        try {
-            this.resLuxuryService.save(appUser, persistent);
+            this.resAccessTokenService.save(appUser, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

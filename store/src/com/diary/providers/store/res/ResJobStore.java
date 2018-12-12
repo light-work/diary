@@ -15,6 +15,8 @@ public interface ResJobStore {
 
     ResJob getById(Long id, Selector... selectors) throws StoreException;
 
+    ResJob getByTitle(String title) throws StoreException;
+
     Page<ResJob> getPageList(int start,
                               int limit, List<Selector> selectorList) throws StoreException;
 

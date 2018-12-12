@@ -1,12 +1,12 @@
-package com.diary.storeImpl.res;
+package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResLuxury;
-import com.diary.providers.store.res.ResLuxuryStore;
-import com.diary.service.res.ResLuxuryService;
+import com.diary.entity.app.AppUserForm;
+import com.diary.entity.app.AppUserPush;
+import com.diary.providers.store.app.AppUserPushStore;
+import com.diary.service.app.AppUserPushService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.ConnectManager;
@@ -18,17 +18,17 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResLuxuryStoreImpl implements ResLuxuryStore {
+public class AppUserPushStoreImpl implements AppUserPushStore {
 
     @Inject
-    private ResLuxuryService resLuxuryService;
+    private AppUserPushService appUserPushService;
 
 
     @Override
     @ConnectManager
-    public ResLuxury getById(Long id, Selector... selectors) throws StoreException {
+    public AppUserPush getById(Long id, Selector... selectors) throws StoreException {
         try {
-            return this.resLuxuryService.getById(id, selectors);
+            return this.appUserPushService.getById(id, selectors);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -37,9 +37,23 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public ResLuxury getByTitle(String title) throws StoreException {
+    public List<AppUserPush> getByUserId(Long userId,Integer year,Integer month,Integer day) throws StoreException {
         try {
-            return this.resLuxuryService.getByTitle(title);
+            return this.appUserPushService.getByUserId(userId,year,month,day);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+
+
+
+    @Override
+    @ConnectManager
+    public void save(AppUserPush appUserPush, Persistent persistent) throws StoreException {
+        try {
+            this.appUserPushService.save(appUserPush, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -48,9 +62,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public Page<ResLuxury> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+    public void save(List<AppUserPush> appUserPushs, Persistent persistent) throws StoreException {
         try {
-            return this.resLuxuryService.getPageList(start, limit, selectorList);
+            this.appUserPushService.save(appUserPushs, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -59,9 +73,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public List<ResLuxury> getList(List<Selector> selectorList) throws StoreException {
+    public void save(AppUserPush appUserPush, Persistent persistent, AppUserForm appUserForm) throws StoreException {
         try {
-            return this.resLuxuryService.getList( selectorList);
+            this.appUserPushService.save(appUserPush, persistent, appUserForm);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -70,20 +84,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public void delete(ResLuxury resLuxury) throws StoreException {
+    public void delete(List<AppUserPush> appUserPushList) throws StoreException {
         try {
-            this.resLuxuryService.delete(resLuxury);
-        } catch (HibernateException e) {
-            Throwable throwable = e.getCause() != null ? e.getCause() : e;
-            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
-        }
-    }
-
-    @Override
-    @ConnectManager
-    public void save(ResLuxury appUser, Persistent persistent) throws StoreException {
-        try {
-            this.resLuxuryService.save(appUser, persistent);
+            this.appUserPushService.delete(appUserPushList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

@@ -37,6 +37,17 @@ public class ResHouseStoreImpl implements ResHouseStore {
 
     @Override
     @ConnectManager
+    public ResHouse getByTitle(String title) throws StoreException {
+        try {
+            return this.resHouseService.getByTitle(title);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResHouse> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resHouseService.getPageList(start, limit, selectorList);

@@ -25,6 +25,8 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     private Integer health;
 
+    private Integer fundMoney;
+
     private Integer money;
 
     private Integer ability;
@@ -49,6 +51,13 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     private String commentText;
 
+    private Integer asset;
+
+    private Integer clothesAsset;
+
+    private Integer luxuryAsset;
+
+    private Integer attrScore;
 
     private String jobTitle;
 
@@ -98,6 +107,14 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
     }
 
 
+    @Transient
+    public Integer getFundMoney() {
+        return fundMoney;
+    }
+
+    public void setFundMoney(Integer fundMoney) {
+        this.fundMoney = fundMoney;
+    }
 
     @Column(name = "MONEY")
     public Integer getMoney() {
@@ -233,6 +250,42 @@ public class AppUserLady extends IdEntity implements Tracker, Cloneable {
 
     public void setLuxuryTitle(String luxuryTitle) {
         this.luxuryTitle = luxuryTitle;
+    }
+
+    @Column(name = "ASSET")
+    public Integer getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Integer asset) {
+        this.asset = asset;
+    }
+
+    @Column(name = "CLOTHES_ASSET")
+    public Integer getClothesAsset() {
+        return clothesAsset;
+    }
+
+    public void setClothesAsset(Integer clothesAsset) {
+        this.clothesAsset = clothesAsset;
+    }
+
+    @Column(name = "LUXURY_ASSET")
+    public Integer getLuxuryAsset() {
+        return luxuryAsset;
+    }
+
+    public void setLuxuryAsset(Integer luxuryAsset) {
+        this.luxuryAsset = luxuryAsset;
+    }
+
+    @Column(name = "ATTR_SCORE")
+    public Integer getAttrScore() {
+        return attrScore;
+    }
+
+    public void setAttrScore(Integer attrScore) {
+        this.attrScore = attrScore;
     }
 
     @Column(name = "CREATED", updatable = false)

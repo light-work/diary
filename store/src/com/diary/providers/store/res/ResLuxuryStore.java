@@ -15,6 +15,8 @@ public interface ResLuxuryStore {
 
     ResLuxury getById(Long id, Selector... selectors) throws StoreException;
 
+    ResLuxury getByTitle(String title) throws StoreException;
+
     Page<ResLuxury> getPageList(int start,
                              int limit, List<Selector> selectorList) throws StoreException;
 

@@ -1,11 +1,12 @@
-package com.diary.entity.app;
+package com.diary.entity.res;
 
-import com.diary.entity.res.ResCouple;
-import com.diary.entity.res.ResHouse;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -16,18 +17,20 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_COUPLE")
-public class AppUserCouple extends IdEntity implements Tracker {
+@Table(name = "RES_SHARE")
+public class ResShare extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private AppUser userId;
+    private String title;
 
-    private ResCouple coupleId;
+    private String imgSrc;
 
-    private Integer value;
+    private Integer gender;
+
+    private String qrCodeTitle;
 
     private Date created;
 
@@ -48,35 +51,42 @@ public class AppUserCouple extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    public AppUser getUserId() {
-        return userId;
+
+    @Column(name = "QRCODE_TITLE")
+    public String getQrCodeTitle() {
+        return qrCodeTitle;
     }
 
-    public void setUserId(AppUser userId) {
-        this.userId = userId;
+    public void setQrCodeTitle(String qrCodeTitle) {
+        this.qrCodeTitle = qrCodeTitle;
     }
 
-    @Column(name = "VALUE")
-    public Integer getValue() {
-        return value;
+    @Column(name = "TITLE")
+    public String getTitle() {
+        return title;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUPLE_ID")
-    public ResCouple getCoupleId() {
-        return coupleId;
+    @Column(name = "IMG_SRC")
+    public String getImgSrc() {
+        return imgSrc;
     }
 
-    public void setCoupleId(ResCouple coupleId) {
-        this.coupleId = coupleId;
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
     }
 
+    @Column(name = "GENDER")
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 
     @Column(name = "CREATED", updatable = false)
     public Date getCreated() {

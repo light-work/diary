@@ -139,10 +139,24 @@
                   enableTXC="true">
         </provider>
 
+        <service id="appUserPushStore" class="com.diary.storeImpl.app.AppUserPushStoreImpl"/>
+        <provider id="appUserPushStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserPushStore"
+                  ref="appUserPushStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+        
         <service id="appUserFormStore" class="com.diary.storeImpl.app.AppUserFormStoreImpl"/>
         <provider id="appUserFormStoreProvider"
                   interface="com.diary.providers.store.app.AppUserFormStore"
                   ref="appUserFormStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="appUserFormLastStore" class="com.diary.storeImpl.app.AppUserFormLastStoreImpl"/>
+        <provider id="appUserFormLastStoreProvider"
+                  interface="com.diary.providers.store.app.AppUserFormLastStore"
+                  ref="appUserFormLastStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
 
@@ -169,7 +183,6 @@
                   ref="resCarEventStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
-
 
 
         <service id="resClothesStore" class="com.diary.storeImpl.res.ResClothesStoreImpl"/>
@@ -335,7 +348,6 @@
         </provider>
 
 
-
         <service id="resEventResultEffectStore" class="com.diary.storeImpl.res.ResEventResultEffectStoreImpl"/>
         <provider id="resEventResultEffectStoreProvider"
                   interface="com.diary.providers.store.res.ResEventResultEffectStore"
@@ -358,11 +370,17 @@
         </provider>
 
 
-
         <service id="resTipStore" class="com.diary.storeImpl.res.ResTipStoreImpl"/>
         <provider id="resTipStoreProvider"
                   interface="com.diary.providers.store.res.ResTipStore"
                   ref="resTipStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resShareStore" class="com.diary.storeImpl.res.ResShareStoreImpl"/>
+        <provider id="resShareStoreProvider"
+                  interface="com.diary.providers.store.res.ResShareStore"
+                  ref="resShareStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
 
@@ -378,6 +396,21 @@
         <provider id="resCommentEvalStoreProvider"
                   interface="com.diary.providers.store.res.ResCommentEvalStore"
                   ref="resCommentEvalStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+
+        <service id="resAccessTokenStore" class="com.diary.storeImpl.res.ResAccessTokenStoreImpl"/>
+        <provider id="resAccessTokenStoreProvider"
+                  interface="com.diary.providers.store.res.ResAccessTokenStore"
+                  ref="resAccessTokenStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
+                  enableTXC="true">
+        </provider>
+
+        <service id="resWbAccessTokenStore" class="com.diary.storeImpl.res.ResWbAccessTokenStoreImpl"/>
+        <provider id="resWbAccessTokenStoreProvider"
+                  interface="com.diary.providers.store.res.ResWbAccessTokenStore"
+                  ref="resWbAccessTokenStore" version="for-dev" clientTimeout="3000" serializeType="hessian"
                   enableTXC="true">
         </provider>
 
@@ -446,7 +479,6 @@
                   enableTXC="true">
         </provider>
 
-        
 
         <service id="luckBiz" class="com.diary.bizImpl.res.LuckBizImp"/>
         <provider id="luckBizProvider"

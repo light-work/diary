@@ -1,12 +1,11 @@
-package com.diary.storeImpl.res;
+package com.diary.storeImpl.app;
 
 import com.diary.common.StoreException;
-import com.diary.entity.res.ResLuxury;
-import com.diary.providers.store.res.ResLuxuryStore;
-import com.diary.service.res.ResLuxuryService;
+import com.diary.entity.app.AppUserFormLast;
+import com.diary.providers.store.app.AppUserFormLastStore;
+import com.diary.service.app.AppUserFormLastService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.guiceside.commons.Page;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.hquery.Selector;
 import org.guiceside.support.hsf.ConnectManager;
@@ -18,17 +17,17 @@ import java.util.List;
  * Created by Lara Croft on 2016/12/21.
  */
 @Singleton
-public class ResLuxuryStoreImpl implements ResLuxuryStore {
+public class AppUserFormLastStoreImpl implements AppUserFormLastStore {
 
     @Inject
-    private ResLuxuryService resLuxuryService;
+    private AppUserFormLastService appUserFormLastService;
 
 
     @Override
     @ConnectManager
-    public ResLuxury getById(Long id, Selector... selectors) throws StoreException {
+    public AppUserFormLast getById(Long id, Selector... selectors) throws StoreException {
         try {
-            return this.resLuxuryService.getById(id, selectors);
+            return this.appUserFormLastService.getById(id, selectors);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -37,9 +36,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public ResLuxury getByTitle(String title) throws StoreException {
+    public AppUserFormLast getByUserId(Long userId) throws StoreException {
         try {
-            return this.resLuxuryService.getByTitle(title);
+            return this.appUserFormLastService.getByUserId(userId);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -48,9 +47,9 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public Page<ResLuxury> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
+    public void save(AppUserFormLast appUserFormLast, Persistent persistent) throws StoreException {
         try {
-            return this.resLuxuryService.getPageList(start, limit, selectorList);
+            this.appUserFormLastService.save(appUserFormLast, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
@@ -59,31 +58,21 @@ public class ResLuxuryStoreImpl implements ResLuxuryStore {
 
     @Override
     @ConnectManager
-    public List<ResLuxury> getList(List<Selector> selectorList) throws StoreException {
+    public void save(List<AppUserFormLast> appUserFormLasts, Persistent persistent) throws StoreException {
         try {
-            return this.resLuxuryService.getList( selectorList);
+            this.appUserFormLastService.save(appUserFormLasts, persistent);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
         }
     }
 
-    @Override
-    @ConnectManager
-    public void delete(ResLuxury resLuxury) throws StoreException {
-        try {
-            this.resLuxuryService.delete(resLuxury);
-        } catch (HibernateException e) {
-            Throwable throwable = e.getCause() != null ? e.getCause() : e;
-            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
-        }
-    }
 
     @Override
     @ConnectManager
-    public void save(ResLuxury appUser, Persistent persistent) throws StoreException {
+    public void delete(List<AppUserFormLast> appUserFormLastList) throws StoreException {
         try {
-            this.resLuxuryService.save(appUser, persistent);
+            this.appUserFormLastService.delete(appUserFormLastList);
         } catch (HibernateException e) {
             Throwable throwable = e.getCause() != null ? e.getCause() : e;
             throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());

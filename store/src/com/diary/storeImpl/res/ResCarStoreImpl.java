@@ -37,6 +37,17 @@ public class ResCarStoreImpl implements ResCarStore {
 
     @Override
     @ConnectManager
+    public ResCar getByTitle(String title) throws StoreException {
+        try {
+            return this.resCarService.getByTitle(title);
+        } catch (HibernateException e) {
+            Throwable throwable = e.getCause() != null ? e.getCause() : e;
+            throw new StoreException(throwable.getLocalizedMessage(), e.fillInStackTrace());
+        }
+    }
+
+    @Override
+    @ConnectManager
     public Page<ResCar> getPageList(int start, int limit, List<Selector> selectorList) throws StoreException {
         try {
             return this.resCarService.getPageList(start, limit, selectorList);

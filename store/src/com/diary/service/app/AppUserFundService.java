@@ -39,19 +39,19 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public List<AppUserFund> getByUserId(Long userId) throws StoreException {
-        return $($alias("fundId","fundId"),$eq("userId.id", userId)).list(AppUserFund.class);
+        return $($alias("fundId", "fundId"), $eq("userId.id", userId)).list(AppUserFund.class);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public Integer getSumByUserId(Long userId) throws StoreException {
-        return $($eq("userId.id", userId), $sum("money")).value(AppUserFund.class,Integer.class);
+        return $($eq("userId.id", userId), $sum("money")).value(AppUserFund.class, Integer.class);
     }
 
     @Override
     @Transactional(type = TransactionType.READ_ONLY)
     public Integer getSumBuyByUserId(Long userId) throws StoreException {
-        return $($eq("userId.id", userId), $sum("buy")).value(AppUserFund.class,Integer.class);
+        return $($eq("userId.id", userId), $sum("buy")).value(AppUserFund.class, Integer.class);
     }
 
     @Override
@@ -63,14 +63,14 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void deleteMan(AppUserFund appUserFund, AppUserMan appUserMan,AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
+    public void deleteMan(AppUserFund appUserFund, AppUserMan appUserMan, AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
                           AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).delete();
-        if(appUserFundMarket!=null){
+        if (appUserFundMarket != null) {
             appUserFundMarketService.delete(appUserFundMarket);
         }
         if (appUserMan != null) {
-            appUserManService.save(appUserMan, Persistent.UPDATE,appUserLimit);
+            appUserManService.save(appUserMan, Persistent.UPDATE, appUserLimit);
         }
         if (appUserFundDetails != null && !appUserFundDetails.isEmpty()) {
             appUserFundDetailService.delete(appUserFundDetails);
@@ -82,11 +82,11 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
     public void deleteLady(AppUserFund appUserFund, AppUserLady appUserLady, AppUserFundMarket appUserFundMarket, List<AppUserFundDetail> appUserFundDetails,
                            AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).delete();
-        if(appUserFundMarket!=null){
+        if (appUserFundMarket != null) {
             appUserFundMarketService.delete(appUserFundMarket);
         }
         if (appUserLady != null) {
-            appUserLadyService.save(appUserLady, Persistent.UPDATE,appUserLimit);
+            appUserLadyService.save(appUserLady, Persistent.UPDATE, appUserLimit);
         }
         if (appUserFundDetails != null && !appUserFundDetails.isEmpty()) {
             appUserFundDetailService.delete(appUserFundDetails);
@@ -114,19 +114,19 @@ public class AppUserFundService extends HQuery implements AppUserFundStore {
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void saveMan(AppUserFund appUserFund, Persistent persistent, AppUserMan appUserMan,AppUserLimit appUserLimit) throws StoreException {
+    public void saveMan(AppUserFund appUserFund, Persistent persistent, AppUserMan appUserMan, AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).save(persistent);
         if (appUserMan != null) {
-            appUserManService.save(appUserMan, Persistent.UPDATE,appUserLimit);
+            appUserManService.save(appUserMan, Persistent.UPDATE, appUserLimit);
         }
     }
 
     @Override
     @Transactional(type = TransactionType.READ_WRITE)
-    public void saveLady(AppUserFund appUserFund, Persistent persistent, AppUserLady appUserLady,AppUserLimit appUserLimit) throws StoreException {
+    public void saveLady(AppUserFund appUserFund, Persistent persistent, AppUserLady appUserLady, AppUserLimit appUserLimit) throws StoreException {
         $(appUserFund).save(persistent);
         if (appUserLady != null) {
-            appUserLadyService.save(appUserLady, Persistent.UPDATE,appUserLimit);
+            appUserLadyService.save(appUserLady, Persistent.UPDATE, appUserLimit);
         }
     }
 

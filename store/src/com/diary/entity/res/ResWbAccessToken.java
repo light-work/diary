@@ -1,7 +1,5 @@
-package com.diary.entity.app;
+package com.diary.entity.res;
 
-import com.diary.entity.res.ResCouple;
-import com.diary.entity.res.ResHouse;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
@@ -16,18 +14,14 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_COUPLE")
-public class AppUserCouple extends IdEntity implements Tracker {
+@Table(name = "RES_WB_ACCESS_TOKEN")
+public class ResWbAccessToken extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private AppUser userId;
-
-    private ResCouple coupleId;
-
-    private Integer value;
+    private String tokenValue;
 
     private Date created;
 
@@ -40,6 +34,7 @@ public class AppUserCouple extends IdEntity implements Tracker {
     private String useYn;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -48,33 +43,13 @@ public class AppUserCouple extends IdEntity implements Tracker {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    public AppUser getUserId() {
-        return userId;
+    @Column(name = "TOKEN_VALUE")
+    public String getTokenValue() {
+        return tokenValue;
     }
 
-    public void setUserId(AppUser userId) {
-        this.userId = userId;
-    }
-
-    @Column(name = "VALUE")
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUPLE_ID")
-    public ResCouple getCoupleId() {
-        return coupleId;
-    }
-
-    public void setCoupleId(ResCouple coupleId) {
-        this.coupleId = coupleId;
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
     }
 
 

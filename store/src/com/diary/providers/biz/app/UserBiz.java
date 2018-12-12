@@ -30,8 +30,26 @@ public interface UserBiz {
 
     String myReport(Long userId) throws BizException;
 
-    String rankings(Long userId,Integer start, Integer limit) throws BizException;
+    String rankings(Long userId,Integer start, Integer limit,String orderType,Integer gender) throws BizException;
 
     String replay(Long userId) throws BizException;
+
+    byte[] QRCode(Long userId) throws BizException;
+
+    String accessToken(Long userId) throws BizException;
+
+    String help() throws BizException;
+
+    String share(Integer gender) throws BizException;
+
+    String refreshRankings() throws BizException;
+
+    String coupleRankings() throws BizException;
+
+    String pushRankings() throws BizException;
+
+    String pushNoGameMan() throws BizException;
+
+    String pushNoGameLady() throws BizException;
 
 }

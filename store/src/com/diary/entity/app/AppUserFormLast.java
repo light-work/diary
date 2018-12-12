@@ -1,7 +1,5 @@
 package com.diary.entity.app;
 
-import com.diary.entity.res.ResCouple;
-import com.diary.entity.res.ResHouse;
 import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Tracker;
 
@@ -16,8 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "APP_USER_COUPLE")
-public class AppUserCouple extends IdEntity implements Tracker {
+@Table(name = "APP_USER_FORM_LAST")
+public class AppUserFormLast extends IdEntity implements Tracker {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,9 +23,15 @@ public class AppUserCouple extends IdEntity implements Tracker {
 
     private AppUser userId;
 
-    private ResCouple coupleId;
+    private Integer lossDay;
 
-    private Integer value;
+    private Integer year;
+
+    private Integer month;
+
+    private Integer day;
+
+    private String lastAction;
 
     private Date created;
 
@@ -48,6 +52,7 @@ public class AppUserCouple extends IdEntity implements Tracker {
         this.id = id;
     }
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     public AppUser getUserId() {
@@ -58,23 +63,49 @@ public class AppUserCouple extends IdEntity implements Tracker {
         this.userId = userId;
     }
 
-    @Column(name = "VALUE")
-    public Integer getValue() {
-        return value;
+    @Column(name = "LOSS_DAY")
+    public Integer getLossDay() {
+        return lossDay;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setLossDay(Integer lossDay) {
+        this.lossDay = lossDay;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUPLE_ID")
-    public ResCouple getCoupleId() {
-        return coupleId;
+    @Column(name = "LAST_ACTION")
+    public String getLastAction() {
+        return lastAction;
     }
 
-    public void setCoupleId(ResCouple coupleId) {
-        this.coupleId = coupleId;
+    public void setLastAction(String lastAction) {
+        this.lastAction = lastAction;
+    }
+
+    @Column(name = "YEAR")
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    @Column(name = "MONTH")
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    @Column(name = "DAY")
+    public Integer getDay() {
+        return day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
     }
 
 
